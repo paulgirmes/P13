@@ -127,3 +127,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Django dev settings
+CC_ERP/settings.py
+
+/frontpage/static/frontpage/.*
+/frontpage/static/frontpage/*.js
+/frontpage/static/frontpage/*.json
+/frontpage/static/frontpage/*.md
+/frontpage/static/frontpage/scss
+
+.vscode/
