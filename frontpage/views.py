@@ -1,5 +1,4 @@
-from django.shortcuts import render, HttpResponse
-from django.views import View
+from django.shortcuts import render
 from django.views.generic import TemplateView
 
 

@@ -19,8 +19,9 @@ from  django.conf import settings
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path("", include("frontpage.urls", namespace="frontpage"))
+    path('2233ddffaq6e85rg46ern/', admin.site.urls),
+    path("", include("frontpage.urls", namespace="frontpage")),
+    path("auth/", include("auth_access_admin.urls", namespace="auth")),
 ]
 
 
