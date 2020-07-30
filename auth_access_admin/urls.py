@@ -17,8 +17,9 @@ Including another URLconf
 from django.urls import path
 from . import views
 
-app_name = "frontpage"
+app_name = "auth"
 
 urlpatterns = [
-    path("login/", views.Login_page.as_view(), name="loging_page"),
+    path("login/", views.Login_page.as_view(), name="login"),
+    path("index/", views.Index.as_view(), name="index"),
 ]

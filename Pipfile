@@ -15,6 +15,7 @@ django = "*"
 psycopg2 = "*"
 sentry-sdk = "*"
 gunicorn = "*"
+pillow = "*"
 
 [requires]
 python_version = "3.8"
