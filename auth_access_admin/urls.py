@@ -22,4 +22,5 @@ app_name = "auth"
 urlpatterns = [
     path("login/", views.Login_page.as_view(), name="login"),
     path("index/", views.Index.as_view(), name="index"),
+    path("logout/", views.Logout.as_view(), name="logout"),
 ]

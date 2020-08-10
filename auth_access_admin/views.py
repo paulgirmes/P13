@@ -15,3 +15,11 @@ class Index(LoginRequiredMixin, TemplateView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
     template_name = "auth_access_admin/index.html"
+
+    def get(self, request, *args, **kwargs):
+        extra_context = request.user
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context)
+
+class Logout(LoginRequiredMixin, auth_views.LogoutView):
+    next_page = "/"
