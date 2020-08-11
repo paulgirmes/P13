@@ -1,20 +1,20 @@
-from django.shortcuts import render
+from django.shortcuts import render, reverse
 from django.views.generic import FormView, TemplateView
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.urls import reverse_lazy
 
 from .forms import Login
 
 class Login_page(auth_views.LoginView):
     authentication_form = Login
-    template_name = "auth_access_admin/login.html"
+    template_name = "auth_access_admin/_login.html"
 
 
 class Index(LoginRequiredMixin, TemplateView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    template_name = "auth_access_admin/index.html"
+    template_name = "auth_access_admin/_index.html"
 
     def get(self, request, *args, **kwargs):
         extra_context = request.user
@@ -23,3 +23,19 @@ class Index(LoginRequiredMixin, TemplateView):
 
 class Logout(LoginRequiredMixin, auth_views.LogoutView):
     next_page = "/"
+
+class Reset_Password(auth_views.PasswordResetView):
+    template_name = "auth_access_admin/_forgot-password.html"
+    email_template_name = "auth_access_admin/password_reset_email.html"
+    success_url = reverse_lazy("auth:password_reset_done")
+
+
+class PasswordResetDoneView(auth_views.PasswordResetDoneView):
+    template_name = "auth_access_admin/_password_reset_done.html"
+
+
+class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    pass
+
+class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+    pass
