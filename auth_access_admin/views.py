@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 
-from .forms import Login
+from .forms import Login, Password_reset_form
 
 class Login_page(auth_views.LoginView):
     authentication_form = Login
@@ -35,7 +35,9 @@ class PasswordResetDoneView(auth_views.PasswordResetDoneView):
 
 
 class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
-    pass
+    template_name = "auth_access_admin/_password_reset_confirm.html"
+    form_class = Password_reset_form
+    success_url = reverse_lazy("auth:password_reset_complete")
 
 class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
-    pass
+    template_name = "auth_access_admin/_password_reset_complete.html"

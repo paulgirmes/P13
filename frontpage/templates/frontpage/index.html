@@ -165,17 +165,34 @@
   </section>
 
   <!-- Call to Action -->
-  <section class="content-section bg-primary text-white">
+  <section id="contact" class="content-section bg-primary text-white">
     <div class="container text-center">
-      <h2 class="mb-4">Notre Equipe</h2>
-
-      <a href="#!" class="btn btn-xl btn-light mr-4">Click Me!</a>
-      <a href="#!" class="btn btn-xl btn-dark">Look at Me!</a>
+      <h2 class="mb-4">Contactez Nouz !</h2>
+      <div class="row">
+        <div class="col-lg-6 col-md-6 mb-5 mb-lg-0">
+          <span class="service-icon rounded-circle mx-auto mb-3">
+            <i class="icon-phone"></i>
+          </span>
+          <h4>
+            <strong>{{ child_care_facility.phone }}</strong>
+          </h4>
+          <p class="text-faded mb-0">Allo !</p>
+        </div>
+        <div class="col-lg-6 col-md-6 mb-5 mb-lg-0">
+          <span class="service-icon rounded-circle mx-auto mb-3">
+            <i class="icon-envelope-letter"></i>
+          </span>
+          <h4>
+            <strong>{{ child_care_facility.email }}</strong>
+          </h4>
+          <p class="text-faded mb-0">@Bonjour !</p>
+        </div
+      </div>
     </div>
   </section>
 
   <!-- Map -->
-  <div id="contact" class="map">
+  <div class="map">
     <iframe src="https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=fr&amp;geocode=&amp;q={{ gg_adress }}&amp;aq=0&amp;ie=UTF8&amp;hq={{ gg_adress }}&amp;t=m&amp;z=15&amp;iwloc=A&amp;output=embed"></iframe>
     <br />
     <small>

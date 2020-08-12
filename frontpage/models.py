@@ -49,6 +49,8 @@ class Child_care_facility(models.Model):
         "auth_access_admin.Address",
         on_delete=models.CASCADE,
     )
+    # contact_phone = models.CharField("Téléphone", max_length=14, blank=True)
+    # e_mail = models.EmailField("Adresse email", blank=True)
 
     class Meta:
         verbose_name = "Structure"
