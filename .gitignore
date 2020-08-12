@@ -137,6 +137,8 @@ CC_ERP/settings.py
 /frontpage/static/frontpage/*.json
 /frontpage/static/frontpage/*.md
 /frontpage/static/frontpage/scss
+/frontpage/static/frontpage/node_modules
+
 
 #auth_access_admin app src
 
@@ -145,6 +147,9 @@ CC_ERP/settings.py
 /auth_access_admin/static/auth_access_admin/*.json
 /auth_access_admin/static/auth_access_admin/*.md
 /auth_access_admin/static/auth_access_admin/scss
+/auth_access_admin/static/auth_access_admin/node_modules
+
 
 .vscode/
 
+settings/__init__.py
