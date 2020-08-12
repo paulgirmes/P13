@@ -148,3 +148,4 @@ CC_ERP/settings.py
 
 .vscode/
 
+settings/__init__.py
