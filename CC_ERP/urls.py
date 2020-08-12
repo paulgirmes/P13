@@ -1,4 +1,4 @@
-"""CC_ERP URL Configuration
+"""CC_ERPP URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -24,6 +24,9 @@ urlpatterns = [
     path("auth/", include("auth_access_admin.urls", namespace="auth")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+
+handler404 = "frontpage.views.page_not_found_view"
+handler500 = 'frontpage.views.error_view'
 
 if settings.DEBUG:
     import debug_toolbar
