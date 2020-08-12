@@ -19,13 +19,16 @@
         <a class="js-scroll-trigger" href="#about">A propos</a>
       </li>
       <li class="sidebar-nav-item">
-        <a class="js-scroll-trigger" href="#services">Services</a>
+        <a class="js-scroll-trigger" href="#services">Notre Approche</a>
       </li>
       <li class="sidebar-nav-item">
-        <a class="js-scroll-trigger" href="#portfolio">Nouvelles</a>
+        <a class="js-scroll-trigger" href="#news">Les News</a>
       </li>
       <li class="sidebar-nav-item">
         <a class="js-scroll-trigger" href="#contact">Contact</a>
+      </li>
+      <li class="sidebar-nav-item">
+        <a class="js-scroll-trigger" href="#acces">Acces</a>
       </li>
       <li class="sidebar-nav-item">
         <a class="js-scroll-trigger" href={% url "auth:login" %}>Connexion</a>
@@ -52,7 +55,7 @@
         <div class="col-lg-10 mx-auto">
           <h2>La {{ child_care_facility.type_of_facility }} qui s'adapte à vos besoins!</h2>
           <p class="lead mb-5">{{ child_care_facility.name }} est une {{ child_care_facility.type_of_facility }} qui tient compte de vos contraintes et des besoins de vos enfants</p>
-          <a class="btn btn-dark btn-xl js-scroll-trigger" href="#services">Ce que nous proposons</a>
+          <a class="btn btn-dark btn-xl js-scroll-trigger" href="#services">Notre Approche</a>
         </div>
       </div>
     </div>
@@ -62,8 +65,8 @@
   <section class="content-section bg-primary text-white text-center" id="services">
     <div class="container">
       <div class="content-section-heading">
-        <h3 class="text-secondary mb-0">Services</h3>
-        <h2 class="mb-5">Ce que nous proposons</h2>
+        <h3 class="text-secondary mb-0">Plan d'Accueil Spécifique</h3>
+        <h2 class="mb-5">Ce Que Nous Vous Proposons</h2>
       </div>
       <div class="row">
         <div class="col-lg-3 col-md-6 mb-5 mb-lg-0">
@@ -111,13 +114,13 @@
   <!-- Callout -->
   <section class="callout">
     <div class="container text-center">
-      <h2 class="mx-auto mb-3">Venez Visiter !</h2>
-      <a class="btn btn-primary btn-xl js-scroll-trigger" href="#contact">Adresse</a>
+      <h2 class="mx-auto mb-3">Venez Nous Rendre Visite !</h2>
+      <a class="btn btn-primary btn-xl js-scroll-trigger" href="#acces">ICI</a>
     </div>
   </section>
 
   <!-- Portfolio -->
-  <section class="content-section" id="portfolio">
+  <section class="content-section" id="news">
     <div class="container">
       <div class="content-section-heading text-center">
         <h3 class="text-secondary mb-0">Vie de la Structure</h3>
@@ -144,7 +147,7 @@
   <!-- Call to Action -->
   <section id="contact" class="content-section bg-primary text-white">
     <div class="container text-center">
-      <h2 class="mb-4">Contactez Nous !</h2>
+      <h2 class="mb-4">Pour Nous Contacter</h2>
       <div class="row">
         <div class="col-lg-6 col-md-6 mb-5 mb-lg-0">
           <span class="service-icon rounded-circle mx-auto mb-3">
@@ -169,7 +172,7 @@
   </section>
 
   <!-- Map -->
-  <div class="map">
+  <div id="acces" class="map">
     <iframe src="https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=fr&amp;geocode=&amp;q={{ gg_adress }}&amp;aq=0&amp;ie=UTF8&amp;hq={{ gg_adress }}&amp;t=m&amp;z=15&amp;iwloc=A&amp;output=embed"></iframe>
     <br />
     <small>

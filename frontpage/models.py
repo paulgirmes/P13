@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 # custom user model
 class User(AbstractUser):
     username = models.EmailField(
-        ('email address'),
+        _('email address'),
         unique=True,
         error_messages={
             'unique': _("A user with that username already exists."),

@@ -8,7 +8,7 @@ class Login(AuthenticationForm):
 
     username = UsernameField(widget=forms.TextInput(
         attrs={'autofocus': True, 'class': "form-control form-control-user",
-            'placeholder': "Entrez Votre Adresse Mail",
+            'placeholder': "Entrez Votre Adresse Email",
             }
         )
     )
@@ -19,7 +19,7 @@ class Login(AuthenticationForm):
         widget=forms.PasswordInput(
             attrs={'autocomplete': 'current-password',
                 'class': "form-control form-control-user",
-                'placeholder': "EntrezVotre Mot de Passe",
+                'placeholder': "Entrez Votre Mot de Passe",
             }
         ),
     )
