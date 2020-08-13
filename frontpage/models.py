@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 # custom user model
 class User(AbstractUser):
+
     username = models.EmailField(
         _('email address'),
         unique=True,
@@ -11,8 +12,12 @@ class User(AbstractUser):
             'unique': _("A user with that username already exists."),
         },
         )
+
+    EMAIL_FIELD = "username"
+
     def __str__(self):
         return self.username
+
 
 class Child_care_facility(models.Model):
     name = models.CharField(

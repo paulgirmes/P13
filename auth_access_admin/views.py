@@ -18,25 +18,31 @@ class Login_page(auth_views.LoginView):
 class Index(LoginRequiredMixin, TemplateView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    # template_name = "auth_access_admin/_index.html"
     child_care_facility = Child_care_facility.objects.get(name__icontains=STRUCTURE)
     extra_context = {"child_care_facility" : child_care_facility}
-
+    template_name = "auth_access_admin/_index.html"
+    
     def get(self, request, *args, **kwargs):
         try:
-            user = Employee.objects.get(username__contains=request.user.username)
-            if user.Is_manager:
-                self.extra_context["employee"] = user
-                self.template_name = "auth_access_admin/_index.html"
+            if request.user.is_superuser:
+                self.extra_context["employee"] = request.user
                 return self.render_to_response(self.get_context_data())
             else:
-                redirect(reverse("day_to_day:index"))
+                user = Employee.objects.get(username__contains=request.user.username)
+                if user.Is_manager:
+                    self.extra_context["employee"] = user
+                    return self.render_to_response(self.get_context_data())
+                else:
+                    self.extra_context["employee"] = user
+                    redirect(reverse("day_to_day:index"))
         except:
             try: 
                 user = FamilyMember.objects.get(username__contains=request.user.username)
                 if user.Is_parent:
                     self.extra_context["parent"] = user
                     redirect(reverse("day_to_day:index"))
+                else:
+                    raise PermissionDenied
             except:
                 raise PermissionDenied
 

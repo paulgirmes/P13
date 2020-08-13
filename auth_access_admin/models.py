@@ -13,6 +13,7 @@ class FamilyMember(User):
     address = models.ForeignKey(
         "auth_access_admin.Address", on_delete=models.CASCADE
         )
+
     class Meta:
         verbose_name = "Membre Famille"
         verbose_name_plural = "Membres Famille"
