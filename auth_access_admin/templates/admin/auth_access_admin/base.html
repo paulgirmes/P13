@@ -3,7 +3,7 @@
 <html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
     <head>
         <title>Admin / {{ child_care_facility.name }}</title>
-        <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}">
+        <!-- <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}"> -->
         <!-- {% block extrastyle %}{% endblock %} -->
         {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
         {% block extrahead %}{% endblock %}
@@ -73,7 +73,7 @@
                     <div id="collapseStructure" class="collapse" aria-labelledby="headingStructure" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Structure:</h6>
-                            <a class="collapse-item" href="utilities-color.html">Colors</a>
+                            <a class="collapse-item" href="{% url "auth:admin:index" %}">Colors</a>
                             <a class="collapse-item" href="utilities-border.html">Borders</a>
                             <a class="collapse-item" href="utilities-animation.html">Animations</a>
                             <a class="collapse-item" href="utilities-other.html">Other</a>
@@ -178,7 +178,7 @@
             
                         <!-- Topbar Navbar -->
                         <ul class="navbar-nav ml-auto">
-                            
+                            <div class="topbar-divider d-none d-sm-block"></div>
                             <!-- Nav Item - User Information -->
                             <li class="nav-item dropdown no-arrow">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -189,7 +189,7 @@
                                 </a>
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="{% url "auth:admin:auth_access_admin_employee_change" user.pk %}">
+                                <a class="dropdown-item" href="{% url "auth:admin:auth_access_admin_employee_change" employee.pk %}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>

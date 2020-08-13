@@ -25,7 +25,6 @@ class ChildCareAdmin(AdminSite):
             )
         except:
             raise Exception
-        context = super().each_context(request)
         context.update(
             {"child_care_facility" : self.child_care_facility}
         )
