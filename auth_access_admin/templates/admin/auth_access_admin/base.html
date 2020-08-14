@@ -3,8 +3,8 @@
 <html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
     <head>
         <title>Admin / {{ child_care_facility.name }}</title>
-        <!-- <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}"> -->
-        <!-- {% block extrastyle %}{% endblock %} -->
+        <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "auth_access_admin/css/base.css" %}{% endblock %}">
+        {% block extrastyle %}{% endblock %}
         {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
         {% block extrahead %}{% endblock %}
         {% block responsive %}
@@ -59,7 +59,7 @@
                     <div id="collapseWeb" class="collapse" aria-labelledby="Web" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Page d'Accueil:</h6>
-                        <a class="collapse-item" href="buttons.html">Ajout de News</a>
+                        <a class="collapse-item" href="{% url "structure_admin:frontpage_new_add" %}">Ajouter une News !</a>
                     </div>
                     </div>
                 </li>
@@ -73,7 +73,7 @@
                     <div id="collapseStructure" class="collapse" aria-labelledby="headingStructure" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Structure:</h6>
-                            <a class="collapse-item" href="{% url "auth:admin:index" %}">Colors</a>
+                            <a class="collapse-item" href="{% url "structure_admin:index" %}">admin</a>
                             <a class="collapse-item" href="utilities-border.html">Borders</a>
                             <a class="collapse-item" href="utilities-animation.html">Animations</a>
                             <a class="collapse-item" href="utilities-other.html">Other</a>
@@ -103,48 +103,6 @@
                 </li>
 
                 <!-- Divider -->
-                <hr class="sidebar-divider">
-
-                <!-- Heading -->
-                <div class="sidebar-heading">
-                    Addons
-                </div>
-
-                <!-- Nav Item - Pages Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
-                    </a>
-                    <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Login Screens:</h6>
-                            <a class="collapse-item" href="login.html">Login</a>
-                            <a class="collapse-item" href="register.html">Register</a>
-                            <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-                            <div class="collapse-divider"></div>
-                            <h6 class="collapse-header">Other Pages:</h6>
-                            <a class="collapse-item" href="404.html">404 Page</a>
-                            <a class="collapse-item" href="blank.html">Blank Page</a>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- Nav Item - Charts -->
-                <li class="nav-item">
-                    <a class="nav-link" href="charts.html">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span></a>
-                </li>
-
-                <!-- Nav Item - Tables -->
-                <li class="nav-item">
-                    <a class="nav-link" href="tables.html">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
-                </li>
-
-                <!-- Divider -->
                 <hr class="sidebar-divider d-none d-md-block">
 
                 <!-- Sidebar Toggler (Sidebar) -->
@@ -154,14 +112,6 @@
 
             </ul>
             <!-- End of Sidebar -->
-            {% load i18n %}
-            {% block messages %}
-                {% if messages %}
-                <ul class="messagelist">{% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
-                {% endfor %}</ul>
-                {% endif %}
-            {% endblock messages %}
             <!-- Content Wrapper -->
             <div id="content-wrapper" class="d-flex flex-column">
 
@@ -178,9 +128,17 @@
             
                         <!-- Topbar Navbar -->
                         <ul class="navbar-nav ml-auto">
+                            {% load i18n %}
+                            {% block messages %}
+                                {% if messages %}
+                                <ul class="messagelist">{% for message in messages %}
+                                <li{% if message.tags %} class="{{ message.tags }}nav-item dropdown no-arrow"{% endif %}>{{ message|capfirst }}</li>
+                                {% endfor %}</ul>
+                                {% endif %}
+                            {% endblock messages %}
                             <div class="topbar-divider d-none d-sm-block"></div>
                             <!-- Nav Item - User Information -->
-                            <li class="nav-item dropdown no-arrow">
+                            <li class="nav-item dropdown no-arrow" style="list-style: none;">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ user.first_name }}</span>
                                 {% if employee.IdScan %}
@@ -189,13 +147,9 @@
                                 </a>
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="{% url "auth:admin:auth_access_admin_employee_change" employee.pk %}">
+                                <a class="dropdown-item" href="{% url  "structure_admin:auth_access_admin_employee_change" employee.pk %}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profile
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Settings
+                                    Mon Profil
                                 </a>
                                 </a>
                                 <div class="dropdown-divider"></div>
@@ -215,20 +169,18 @@
                     <div class="container-fluid">
             
                         <!-- Page Heading -->
-                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <!-- <div class="d-sm-flex align-items-center justify-content-between mb-4">
                             <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        </div>
+                        </div> -->
                         <!-- Content Row -->
                         <div class="row">
-                            <div class="{% block coltype %}colM{% endblock %}">
+                            <div class="col">
                                 {% block pretitle %}{% endblock %}
-                                {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+                                {% block content_title %}{% if title %}<h1 class="h3 mb-0 text-gray-800">{{ title }}</h1>{% endif %}{% endblock %}
                                 {% block content %}
                                 {% block object-tools %}{% endblock %}
                                 {{ content }}
                                 {% endblock %}
-                                {% block sidebar %}{% endblock %}
-                                <br class="clear">
                             </div>
                         </div>
                     </div>
@@ -260,15 +212,15 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Prêts à vous déconnecter ?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-body">Selectionner "Déconnexion" ci-dessous si vous êtes prêts terminer votre session.</div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href={% url "auth:logout" %}>Logout</a>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Annuler</button>
+                    <a class="btn btn-primary" href={% url "auth:logout" %}>Déconnexion</a>
                 </div>
                 </div>
             </div>

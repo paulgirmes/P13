@@ -1,30 +1,41 @@
-from django.contrib.admin import AdminSite
+from django.contrib import admin
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, reverse, redirect
+from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.admin import ModelAdmin
 from django.contrib.auth.forms import (
     UserCreationForm, UserChangeForm,
 )
+from django.views.decorators.cache import never_cache
 from frontpage.models import New
 from .models import FamilyMember, Employee, Address
 from frontpage.models import Child_care_facility
+from .forms import Login
 from settings import STRUCTURE
+from django.utils.translation import gettext as _
 
-
-class ChildCareAdmin(AdminSite):
+class ChildCareAdmin(admin.AdminSite):
     child_care_facility = Child_care_facility.objects.get(name__icontains=STRUCTURE)
     app_index_template = "admin/auth_access_admin/app_index.html"
     index_template = "admin/auth_access_admin/index.html"
+    password_change_template= "admin/auth_access_admin/user/change_password.html"
+    # password_change_done_template=
     site_header = "administration de la structure"
-
+    site_title = "administration"
+    login_template = "auth_access_admin/_login.html"
+    login_form = Login
 
     def each_context(self, request):
         context = super().each_context(request)
-        try:
-            employee = Employee.objects.get(username__contains=request.user.username)
-            context.update(
-            {"employee" : employee}
-            )
-        except:
-            raise Exception
+        if request.user.username:
+            try:
+                employee = Employee.objects.get(username__contains=request.user.username)
+                context.update(
+                {"employee" : employee}
+                )
+            except:
+                raise Exception
         context.update(
             {"child_care_facility" : self.child_care_facility}
         )
@@ -58,6 +69,8 @@ class FamilyCreationForm(UserCreationForm):
         )
 
 class FamilyUserAdmin(UserAdmin):
+    add_form_template = "admin/auth_access_admin/change_form.html"
+    change_user_password_template = "admin/auth_access_admin/user/change_password.html"
     add_form = FamilyCreationForm
     add_fieldsets = (
         (None, {
@@ -81,7 +94,8 @@ class FamilyUserAdmin(UserAdmin):
 
 
 class EmployeeUserAdmin(UserAdmin):
-    
+    change_user_password_template = "admin/auth_access_admin/user/change_password.html"
+    add_form_template = "admin/auth_access_admin/change_form.html"
     add_form = EmployeeCreationForm
     add_fieldsets = (
         (None, {
@@ -110,7 +124,20 @@ class EmployeeUserAdmin(UserAdmin):
         }),
     )
 
-admin_site.register(New)
+class CustomModelAdmin(ModelAdmin):
+    add_form_template = "admin/auth_access_admin/change_form.html"
+    change_form_template = "admin/auth_access_admin/change_form.html"
+    change_list_template = "admin/auth_access_admin/change_list.html"
+    delete_confirmation_template = "admin/auth_access_admin/delete_confirmation.html"
+    delete_selected_confirmation_template = "admin/auth_access_admin/delete_selected_confirmation.html"
+    object_history_template = "admin/auth_access_admin/object_history.html"
+    popup_response_template = "admin/auth_access_admin/popup_response.html"
+
+
+class NewAdmin(CustomModelAdmin):
+    pass
+
+admin_site.register(New, NewAdmin)
 admin_site.register(FamilyMember, FamilyUserAdmin)
 admin_site.register(Employee, EmployeeUserAdmin)
 admin_site.register(Address)

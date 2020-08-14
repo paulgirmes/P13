@@ -3,9 +3,9 @@
 
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}">{% endblock %}
 
-{% block coltype %}colMS{% endblock %}
+<!-- {% block coltype %}colMS{% endblock %}
 
-{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %} -->
 
 
 
@@ -14,30 +14,30 @@
 
 {% if app_list %}
     {% for app in app_list %}
-        <div class="app-{{ app.app_label }} module">
-        <table>
-        <caption>
-            <a href="{{ app.app_url }}" class="section" title="{% blocktrans with name=app.name %}Models in the {{ name }} application{% endblocktrans %}">{{ app.name }}</a>
+        <div class="card shadow mb-4">
+        <table class="card-body">
+        <caption class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-secondary">{{ app.name }}</h6>
         </caption>
         {% for model in app.models %}
             <tr class="model-{{ model.object_name|lower }}">
             {% if model.admin_url %}
-                <th scope="row"><a href="{{ model.admin_url }}">{{ model.name }}</a></th>
+                <th scope="row"><h3 class="small font-weight-bold">{{ model.name }}</h3></th>
             {% else %}
-                <th scope="row">{{ model.name }}</th>
+                <th scope="row"><h3 class="small font-weight-bold">{{ model.name }}</h3></th>
             {% endif %}
 
             {% if model.add_url %}
-                <td><a href="{{ model.add_url }}" class="addlink">{% trans 'Add' %}</a></td>
+                <td><a href="{{ model.add_url }}" class="addlink small font-weight-bold text-secondary">{% trans 'Add' %}</a></td>
             {% else %}
                 <td>&nbsp;</td>
             {% endif %}
 
             {% if model.admin_url %}
                 {% if model.view_only %}
-                <td><a href="{{ model.admin_url }}" class="viewlink">{% trans 'View' %}</a></td>
+                <td><div><a href="{{ model.admin_url }}" class="viewlink small font-weight-bold text-secondary">{% trans 'View' %}</a></td>
                 {% else %}
-                <td><a href="{{ model.admin_url }}" class="changelink">{% trans 'Change' %}</a></td>
+                <td><a href="{{ model.admin_url }}" class="changelink small font-weight-bold text-secondary">{% trans 'Change' %}</a></td>
                 {% endif %}
             {% else %}
                 <td>&nbsp;</td>
@@ -55,8 +55,10 @@
 
 {% block sidebar %}
 <div id="content-related">
-    <div class="module" id="recent-actions-module">
-        <h2>{% trans 'Recent actions' %}</h2>
+    <div class="card shadow mb-4" id="recent-actions-module">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-secondary">{% trans 'Recent actions' %}</h6>
+        </div>
         <h3>{% trans 'My actions' %}</h3>
             {% load log %}
             {% get_admin_log 10 as admin_log for_user user %}

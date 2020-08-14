@@ -86,9 +86,11 @@ class New(models.Model):
         Child_care_facility,
         on_delete=models.CASCADE,
     )
+    cc_facility.verbose_name = "Structure"
+    
     class Meta:
-        verbose_name = "Nouvelle"
-        verbose_name_plural = "Nouvelles"
+        verbose_name = "News"
+        verbose_name_plural = "News"
 
     def __str__(self):
         return self.title
