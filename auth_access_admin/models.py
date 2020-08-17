@@ -17,6 +17,10 @@ class FamilyMember(User):
     class Meta:
         verbose_name = "Membre Famille"
         verbose_name_plural = "Membres Famille"
+    
+    def __str__(self):
+        return self.first_name+" "+self.last_name
+
 
 class Employee(User):
     phone = models.CharField("Téléphone d'urgence", max_length=14)
@@ -26,7 +30,7 @@ class Employee(User):
         )
     occupation = models.CharField("Métier", max_length=100)
     employee_nr = models.PositiveSmallIntegerField(
-        "Numéro d'employé", primary_key=True
+        "Numéro d'employé", primary_key=True,
         )
     diploma = models.CharField("Plus haut diplôme obtenu", max_length=100)
     Is_manager = models.BooleanField("Direction")
@@ -36,6 +40,9 @@ class Employee(User):
     class Meta:
         verbose_name = "Employé"
         verbose_name_plural = "Employés"
+
+    def __str__(self):
+        return self.first_name+" "+self.last_name
 
 
 class Address(models.Model):
@@ -49,7 +56,11 @@ class Address(models.Model):
     class Meta:
         verbose_name = "Adresse"
         verbose_name_plural = "Adresses"
-        
+
+    def __str__(self):
+        return "{1}, {2} {3}, {4} {5}".format(self.number, self.place_type, self.place_name, self.postal_code, self.city_name)
+
+
     #helper to pas the address formatteds to the template for GoogleMapAPI
     def gg_adress_format(self):
         return quote(str(self.number))+\
