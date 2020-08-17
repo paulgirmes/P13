@@ -12,7 +12,7 @@ def error_view(request, exception=None):
 
 class HomePage(TemplateView):
     template_name = "frontpage/_index.html"
-    cc_facility = Child_care_facility.objects.get(name__icontains=STRUCTURE)
+    cc_facility = Child_care_facility.objects.get(name=STRUCTURE)
     news = list(New.objects.filter(cc_facility__name=cc_facility.name).order_by("date_time"))
     extra_context = {
         "child_care_facility": cc_facility,

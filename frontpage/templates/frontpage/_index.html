@@ -128,8 +128,8 @@
       </div>
       <div class="row no-gutters">
         {% for new in news %}
-        <div class="col-lg-6">
-          <a class="portfolio-item" href="#!">
+        <div class="col-lg-6 border-primary">
+          <div class="portfolio-item">
             <div class="caption">
               <div class="caption-content">
                 <div class="h2">{{ new.title }}</div>
@@ -137,7 +137,7 @@
               </div>
             </div>
             <img class="img-fluid" src={{ new.img_url.url }} alt="image">
-          </a>
+          </div>
         </div>
         {% endfor %}
       </div>

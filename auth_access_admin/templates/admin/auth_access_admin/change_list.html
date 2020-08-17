@@ -5,7 +5,7 @@
   {{ block.super }}
   <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}">
   {% if cl.formset %}
-    <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "auth_access_admin/css/forms.css" %}">
   {% endif %}
   {% if cl.formset or action_form %}
     <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
@@ -56,16 +56,16 @@
       {% block search %}{% search_form cl %}{% endblock %}
       {% block date_hierarchy %}{% if cl.date_hierarchy %}{% date_hierarchy cl %}{% endif %}{% endblock %}
 
-      {% block filters %}
+      <!-- {% block filters %}
         {% if cl.has_filters %}
           <div id="changelist-filter">
             <h2>{% trans 'Filter' %}</h2>
             {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}
           </div>
         {% endif %}
-      {% endblock %}
+      {% endblock %} -->
 
-      <form id="changelist-form" method="post"{% if cl.formset and cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %} novalidate>{% csrf_token %}
+      <form id="changelist-form" class="row card shadow py-2" method="post"{% if cl.formset and cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %} novalidate>{% csrf_token %}
       {% if cl.formset %}
         <div>{{ cl.formset.management_form }}</div>
       {% endif %}

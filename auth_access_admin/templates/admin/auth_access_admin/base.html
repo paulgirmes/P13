@@ -59,7 +59,9 @@
                     <div id="collapseWeb" class="collapse" aria-labelledby="Web" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Page d'Accueil:</h6>
+                        <a class="collapse-item" href="{% url "frontpage:homepage" %}">Voir Le Site</a>
                         <a class="collapse-item" href="{% url "structure_admin:frontpage_new_add" %}">Ajouter une News !</a>
+                        <a class="collapse-item" href="{% url "structure_admin:frontpage_new_changelist" %}">Modifier les News</a>
                     </div>
                     </div>
                 </li>
@@ -72,7 +74,7 @@
                     </a>
                     <div id="collapseStructure" class="collapse" aria-labelledby="headingStructure" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Structure:</h6>
+                            <h6 class="collapse-header">Enfants:</h6>
                             <a class="collapse-item" href="{% url "structure_admin:index" %}">admin</a>
                             <a class="collapse-item" href="utilities-border.html">Borders</a>
                             <a class="collapse-item" href="utilities-animation.html">Animations</a>
@@ -89,19 +91,17 @@
                     <div id="collapseUser" class="collapse" aria-labelledby="headingUser" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Employés:</h6>
-                            <a class="collapse-item" href="utilities-color.html">Colors</a>
-                            <a class="collapse-item" href="utilities-border.html">Borders</a>
-                            <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                            <a class="collapse-item" href="utilities-other.html">Other</a>
+                            <a class="collapse-item" href="{% url "structure_admin:auth_access_admin_employee_add" %}""">Ajouter</a>
+                            <a class="collapse-item" href="{% url "structure_admin:auth_access_admin_employee_changelist" %}"">Modifier</a>
                             <h6 class="collapse-header">Familles:</h6>
-                            <a class="collapse-item" href="utilities-color.html">Colors</a>
-                            <a class="collapse-item" href="utilities-border.html">Borders</a>
-                            <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                            <a class="collapse-item" href="utilities-other.html">Other</a>
+                            <a class="collapse-item" href="{% url "structure_admin:auth_access_admin_familymember_add" %}"">Ajouter</a>
+                            <a class="collapse-item" href="{% url "structure_admin:auth_access_admin_familymember_changelist" %}"">Modifier</a>
+                            <h6 class="collapse-header">Adresses:</h6>
+                            <a class="collapse-item" href="{% url "structure_admin:auth_access_admin_address_add" %}""">Ajouter</a>
+                            <a class="collapse-item" href="{% url "structure_admin:auth_access_admin_address_changelist" %}"">Modifier</a>
                         </div>
                     </div>
                 </li>
-
                 <!-- Divider -->
                 <hr class="sidebar-divider d-none d-md-block">
 

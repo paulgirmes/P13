@@ -40,7 +40,7 @@ class Index(LoginRequiredMixin, TemplateView):
                 user = FamilyMember.objects.get(username__contains=request.user.username)
                 if user.Is_parent:
                     self.extra_context["parent"] = user
-                    redirect(reverse("day_to_day:index"))
+                    redirect(reverse("parent_interface:index"))
                 else:
                     raise PermissionDenied
             except:
