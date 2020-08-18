@@ -5,7 +5,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from frontpage.models import Child_care_facility
-from settings import STRUCTURE
+from django.conf import settings
 from .models import Employee, FamilyMember
 
 from .forms import Login, Password_reset_form
@@ -18,7 +18,7 @@ class Login_page(auth_views.LoginView):
 class Index(LoginRequiredMixin, TemplateView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(name__icontains=STRUCTURE)
+    child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
     extra_context = {"child_care_facility" : child_care_facility}
     template_name = "auth_access_admin/_index.html"
     

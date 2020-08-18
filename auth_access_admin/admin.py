@@ -12,12 +12,12 @@ from frontpage.models import New
 from .models import FamilyMember, Employee, Address
 from frontpage.models import Child_care_facility
 from .forms import Login
-from settings import STRUCTURE
+from django.conf import settings
 from django.utils.translation import gettext as _
 
 
 class ChildCareAdmin(admin.AdminSite):
-    child_care_facility = Child_care_facility.objects.get(name__icontains=STRUCTURE)
+    child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
     app_index_template = "admin/auth_access_admin/app_index.html"
     index_template = "admin/auth_access_admin/index.html"
     password_change_template= "admin/auth_access_admin/user/change_password.html"
@@ -147,7 +147,7 @@ class NewAdmin(CustomModelAdmin):
         "cc_facility",
     )
     def save_model(self, request, obj, form, change):
-        obj.cc_facility = Child_care_facility.objects.get(name=STRUCTURE)
+        obj.cc_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
         super().save_model(request, obj, form, change)
 
 
