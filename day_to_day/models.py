@@ -3,7 +3,7 @@ from frontpage.models import Child_care_facility
 from auth_access_admin.models import Employee, FamilyMember
 from django.conf import settings
 
-class EmployeePlanifiedDay(models.Model):
+class EmployeeScheduledDay(models.Model):
     employee = models.ForeignKey(
         Employee, 
         on_delete=models.CASCADE,
@@ -23,7 +23,7 @@ class EmployeePlanifiedDay(models.Model):
 
         )
     true_departure_time_stamp = models.TimeField(
-        "Heure de Départ réel",
+        "Heure de Départ réelle",
         auto_now_add=True,
         blank=True,
     )
@@ -32,14 +32,14 @@ class EmployeePlanifiedDay(models.Model):
         )
 
     class Meta:
-        verbose_name = "Jour de Planification Employés"
-        verbose_name_plural = "Jours de Planification Employés"
+        verbose_name = "Jour de Planification Employé"
+        verbose_name_plural = "Jours de Planification Employé"
 
     def __str__(self):
         return self.open_day+" "+self.employee
 
 
-class ChildPlanifiedDay(EmployeePlanifiedDay):
+class ChildScheduledDay(EmployeeScheduledDay):
     employee = None
     child = models.ForeignKey(
         "child", 
@@ -54,8 +54,8 @@ class ChildPlanifiedDay(EmployeePlanifiedDay):
         return self.open_day+" "+self.child
 
 class Child(models.Model):
-    last_name = models.CharField("Nom", max_length=50)
-    first_name = models.CharField("Prénom", max_length=50)
+    last_name = models.CharField("Nom", max_length=100)
+    first_name = models.CharField("Prénom", max_length=100)
     birth_date = models.DateField("Date de Naissance")
     vaccine_next_due_date = models.DateField("Date de Prochaine Vaccination")
     cc_facility = models.ForeignKey(Child_care_facility,
@@ -98,8 +98,8 @@ class Family_link(models.Model):
         default=False,
     )
     class Meta:
-        verbose_name = "Lien Familial"
-        verbose_name_plural = "Liens Familiaux"
+        verbose_name = "Lien de parenté"
+        verbose_name_plural = "Liens de parenté"
 
     def __str__(self):
         return self.child+" "+self.relative
@@ -107,8 +107,8 @@ class Family_link(models.Model):
 
 class OpenDay(models.Model):
     date = models.DateField("Date")
-    opening_H = models.TimeField("Heure d'ouverture")
-    closing_H = models.TimeField("Heure de fermeture")
+    opening_H = models.TimeField("Heure d'Ouverture")
+    closing_H = models.TimeField("Heure de Fermeture")
     planified_employee = models.ManyToManyField(
         Employee, through="EmployeePlanifiedDay",
         verbose_name= "Employé planifié",
@@ -180,16 +180,19 @@ class Sleep(models.Model):
         return self.length_minutes+" minutes"
 
 
-class MidDayMeal(models.Model):
+class Meal(models.Model):
 
     starter_qtty_gr = models.PositiveSmallIntegerField("Entrée", blank=True)
-    main_course_qtty_gr = models.PositiveSmallIntegerField("Plat de résistance", blank= True)
+    main_course_qtty_gr = models.PositiveSmallIntegerField(
+            "Plat de résistance",
+            blank= True
+            )
     desert_qtty_gr = models.PositiveSmallIntegerField("Déssert", blank=True)
     daily_fact = models.ForeignKey(
         DailyFact,
         on_delete= models.CASCADE,
         verbose_name= "Transmission"
-    )
+        )
 
     class Meta:
         verbose_name = "Repas"
@@ -207,7 +210,9 @@ class MidDayMeal(models.Model):
 
 class FeedingBottle(models.Model):
 
-    prepared_qtty_ml = models.PositiveSmallIntegerField("Quantité Préparée ml")
+    prepared_qtty_ml = models.PositiveSmallIntegerField(
+            "Quantité Préparée ml"
+        )
     drank_qtty_ml = models.PositiveSmallIntegerField("Quantité Bue ml")
     daily_fact = models.ForeignKey(
         DailyFact,
@@ -271,7 +276,7 @@ class MedicalEvent(models.Model):
 
     class Meta:
         verbose_name = "Evènement Médical"
-        verbose_name_plural = "Evènements Médical"
+        verbose_name_plural = "Evènements Médicaux"
 
     def __str__(self):
         return self.description

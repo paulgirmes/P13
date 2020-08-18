@@ -59,7 +59,8 @@ class Child_care_facility(models.Model):
     email = models.EmailField(_('email address'))
     day_open = models.ManyToManyField(
         OpenDay,
-        verbose_name="Jours et Heures d'Ouverture"
+        verbose_name="Jour et Heures d'Ouverture",
+        blank=True,
     )
     
     class Meta:
