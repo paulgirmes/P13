@@ -110,12 +110,12 @@ class OpenDay(models.Model):
     opening_H = models.TimeField("Heure d'Ouverture")
     closing_H = models.TimeField("Heure de Fermeture")
     planified_employee = models.ManyToManyField(
-        Employee, through="EmployeePlanifiedDay",
+        Employee, through="EmployeeScheduledDay",
         verbose_name= "Employé planifié",
         blank=True,
     )
     planified_child = models.ManyToManyField(
-        Child, through="ChildPlanifiedDay",
+        Child, through="ChildScheduledDay",
         verbose_name= "Enfant planifié",
         blank=True,
     )
