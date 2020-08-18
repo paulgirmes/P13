@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser
-from day_to_day.models import OpenDay
 
 # custom user model
 class User(AbstractUser):
@@ -57,11 +56,6 @@ class Child_care_facility(models.Model):
     )
     phone = models.CharField("Téléphone", max_length=14)
     email = models.EmailField(_('email address'))
-    day_open = models.ManyToManyField(
-        OpenDay,
-        verbose_name="Jour et Heures d'Ouverture",
-        blank=True,
-    )
     
     class Meta:
         verbose_name = "Structure de Garde"

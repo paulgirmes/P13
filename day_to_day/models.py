@@ -119,6 +119,10 @@ class OpenDay(models.Model):
         verbose_name= "Enfant planifié",
         blank=True,
     )
+    planified_Structure = models.ManyToManyField(
+        Child_care_facility,
+        verbose_name="Jour d'Ouverture Structure"
+    )
 
     class Meta:
         verbose_name = "Jour et heure d'ouverture"
