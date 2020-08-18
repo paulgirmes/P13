@@ -64,7 +64,7 @@ class Child(models.Model):
     )
     relative = models.ManyToManyField(
         FamilyMember,
-        through="family_link"
+        through="family_link",
     )
     class Meta:
         verbose_name = "Enfant"

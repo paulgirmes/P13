@@ -93,4 +93,4 @@ class New(models.Model):
         verbose_name_plural = "News"
 
     def __str__(self):
-        return self.title+" "+self.date_time
+        return self.title

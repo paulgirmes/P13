@@ -3,27 +3,27 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, reverse, redirect
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.admin import UserAdmin
+from django.conf import settings
+from django.utils.translation import gettext as _
 from django.contrib.admin import ModelAdmin
+from django.contrib.admin.options import InlineModelAdmin
 from django.contrib.auth.forms import (
     UserCreationForm, UserChangeForm, UsernameField
 )
 from django.views.decorators.cache import never_cache
-from frontpage.models import New
+from frontpage.models import New, Child_care_facility
 from .models import FamilyMember, Employee, Address
-from frontpage.models import Child_care_facility
+from day_to_day.models import Child, Family_link
 from .forms import Login
-from django.conf import settings
-from django.utils.translation import gettext as _
-
 
 class ChildCareAdmin(admin.AdminSite):
     child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
-    app_index_template = "admin/auth_access_admin/app_index.html"
-    index_template = "admin/auth_access_admin/index.html"
-    password_change_template= "admin/auth_access_admin/user/change_password.html"
+    app_index_template = "admin/auth_access_admin/admin/admin/admin/app_index.html"
+    index_template = "admin/auth_access_admin/admin/admin/admin/index.html"
+    password_change_template= "admin/auth_access_admin/admin/admin/admin/user/change_password.html"
     site_header = "administration de la structure"
     site_title = "administration"
-    login_template = "auth_access_admin/_login.html"
+    login_template = "auth_access_admin/admin/admin/admin/_login.html"
     login_form = Login
 
     def each_context(self, request):
@@ -35,7 +35,9 @@ class ChildCareAdmin(admin.AdminSite):
                 {"employee" : employee}
                 )
             except:
-                raise Exception
+               context.update(
+                {"employee" : request.user}
+                )
         context.update(
             {"child_care_facility" : self.child_care_facility}
         )
@@ -79,8 +81,15 @@ class FamilyCreationForm(UserCreationForm):
         )
 
 class FamilyUserAdmin(UserAdmin):
-    add_form_template = "admin/auth_access_admin/change_form.html"
-    change_user_password_template = "admin/auth_access_admin/user/change_password.html"
+    add_form_template = "admin/auth_access_admin/admin/change_form.html"
+    change_form_template = "admin/auth_access_admin/admin/change_form.html"
+    change_list_template = "admin/auth_access_admin/admin/change_list.html"
+    delete_confirmation_template = "admin/auth_access_admin/admin/delete_confirmation.html"
+    delete_selected_confirmation_template = "admin/auth_access_admin/admin/delete_selected_confirmation.html"
+    object_history_template = "admin/auth_access_admin/admin/object_history.html"
+    popup_response_template = "admin/auth_access_admin/admin/popup_response.html"
+    add_form_template = "admin/auth_access_admin/admin/change_form.html"
+    change_user_password_template = "admin/auth_access_admin/admin/user/change_password.html"
     add_form = FamilyCreationForm
     add_fieldsets = (
         (None, {
@@ -104,8 +113,15 @@ class FamilyUserAdmin(UserAdmin):
 
 
 class EmployeeUserAdmin(UserAdmin):
-    change_user_password_template = "admin/auth_access_admin/user/change_password.html"
-    add_form_template = "admin/auth_access_admin/change_form.html"
+    add_form_template = "admin/auth_access_admin/admin/change_form.html"
+    change_form_template = "admin/auth_access_admin/admin/change_form.html"
+    change_list_template = "admin/auth_access_admin/admin/change_list.html"
+    delete_confirmation_template = "admin/auth_access_admin/admin/delete_confirmation.html"
+    delete_selected_confirmation_template = "admin/auth_access_admin/admin/delete_selected_confirmation.html"
+    object_history_template = "admin/auth_access_admin/admin/object_history.html"
+    popup_response_template = "admin/auth_access_admin/admin/popup_response.html"
+    change_user_password_template = "admin/auth_access_admin/admin/user/change_password.html"
+    add_form_template = "admin/auth_access_admin/admin/change_form.html"
     add_form = EmployeeCreationForm
     add_fieldsets = (
         (None, {
@@ -133,13 +149,13 @@ class EmployeeUserAdmin(UserAdmin):
     )
 
 class CustomModelAdmin(ModelAdmin):
-    add_form_template = "admin/auth_access_admin/change_form.html"
-    change_form_template = "admin/auth_access_admin/change_form.html"
-    change_list_template = "admin/auth_access_admin/change_list.html"
-    delete_confirmation_template = "admin/auth_access_admin/delete_confirmation.html"
-    delete_selected_confirmation_template = "admin/auth_access_admin/delete_selected_confirmation.html"
-    object_history_template = "admin/auth_access_admin/object_history.html"
-    popup_response_template = "admin/auth_access_admin/popup_response.html"
+    add_form_template = "admin/auth_access_admin/admin/change_form.html"
+    change_form_template = "admin/auth_access_admin/admin/change_form.html"
+    change_list_template = "admin/auth_access_admin/admin/change_list.html"
+    delete_confirmation_template = "admin/auth_access_admin/admin/delete_confirmation.html"
+    delete_selected_confirmation_template = "admin/auth_access_admin/admin/delete_selected_confirmation.html"
+    object_history_template = "admin/auth_access_admin/admin/object_history.html"
+    popup_response_template = "admin/auth_access_admin/admin/popup_response.html"
 
 
 class NewAdmin(CustomModelAdmin):
@@ -150,9 +166,17 @@ class NewAdmin(CustomModelAdmin):
         obj.cc_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
         super().save_model(request, obj, form, change)
 
+class FamilyLinkInline(admin.TabularInline):
+    model = Family_link
+    extra = 1
+    template = "admin/auth_access_admin/admin//edit_inline/tabular.html"
+
+class ChildAdmin(NewAdmin):
+        inlines = (FamilyLinkInline,)
 
 admin_site.register(New, NewAdmin)
 admin_site.register(FamilyMember, FamilyUserAdmin)
 admin_site.register(Employee, EmployeeUserAdmin)
 admin_site.register(Address)
+admin_site.register(Child, ChildAdmin)
 

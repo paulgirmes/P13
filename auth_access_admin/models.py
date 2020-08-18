@@ -15,8 +15,8 @@ class FamilyMember(User):
         )
 
     class Meta:
-        verbose_name = "Membre Famille"
-        verbose_name_plural = "Membres Famille"
+        verbose_name = "Membre Familial"
+        verbose_name_plural = "Membres de la Famille"
     
     def __str__(self):
         return self.first_name+" "+self.last_name
@@ -38,8 +38,8 @@ class Employee(User):
         "Scanner du contrat de travail", upload_to="e_contracts"
         )
     class Meta:
-        verbose_name = "Employé"
-        verbose_name_plural = "Employés"
+        verbose_name = "Salarié"
+        verbose_name_plural = "Salariés"
 
     def __str__(self):
         return self.first_name+" "+self.last_name
@@ -58,7 +58,7 @@ class Address(models.Model):
         verbose_name_plural = "Adresses"
 
     def __str__(self):
-        return "{1}, {2} {3}, {4} {5}".format(self.number, self.place_type, self.place_name, self.postal_code, self.city_name)
+        return "{}, {} {}, {} {}".format(self.number, self.place_type, self.place_name, self.postal_code, self.city_name)
 
 
     #helper to pas the address formatteds to the template for GoogleMapAPI

@@ -7,4 +7,4 @@ register = template.Library()
 
 @register.tag(name='custom_submit_row')
 def submit_row_tag(parser, token):
-    return InclusionAdminNode(parser, token, func=submit_row, template_name='auth_access_admin/submit_line.html')
+    return InclusionAdminNode(parser, token, func=submit_row, template_name='auth_access_admin/admin/submit_line.html')
