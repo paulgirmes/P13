@@ -1,3 +1,4 @@
+import datetime
 from django.shortcuts import render, reverse, redirect
 from django.core.exceptions import PermissionDenied
 from django.views.generic import FormView, TemplateView
@@ -5,6 +6,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from frontpage.models import Child_care_facility
+from day_to_day.models import Child, MedicalEvent, DailyFact
 from django.conf import settings
 from .models import Employee, FamilyMember
 
@@ -18,8 +20,16 @@ class Login_page(auth_views.LoginView):
 class Index(LoginRequiredMixin, TemplateView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
+    child_number = Child.objects.all().count()
     child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
-    extra_context = {"child_care_facility" : child_care_facility}
+    events_today = DailyFact.objects.filter(time_stamp__date=datetime.datetime.now().date())
+    medical_event_today = MedicalEvent.objects.filter(daily_fact__time_stamp__date=datetime.datetime.now().date())
+    extra_context = {"child_care_facility" : child_care_facility,
+        "child_number" : child_number,
+        "fill_ratio" : int(child_number/child_care_facility.max_child_number*100),
+        "events_today" : events_today.count(),
+        "medical_event_today": medical_event_today.count(),
+        }
     template_name = "auth_access_admin/_index.html"
     
     def get(self, request, *args, **kwargs):

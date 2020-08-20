@@ -2,6 +2,7 @@ from django.db import models
 from frontpage.models import Child_care_facility
 from auth_access_admin.models import Employee, FamilyMember
 from django.conf import settings
+from django.utils import dateparse
 
 class EmployeeScheduledDay(models.Model):
     employee = models.ForeignKey(
@@ -36,7 +37,8 @@ class EmployeeScheduledDay(models.Model):
         verbose_name_plural = "Jours de Planification Employé"
 
     def __str__(self):
-        return self.open_day+" "+self.employee
+
+        return str(self.open_day)+" "+str(self.employee)
 
 
 class ChildScheduledDay(EmployeeScheduledDay):
@@ -51,7 +53,7 @@ class ChildScheduledDay(EmployeeScheduledDay):
         verbose_name_plural = "Jours de Planification Enfants"
 
     def __str__(self):
-        return self.open_day+" "+self.child
+        return str(self.open_day)+" "+str(self.child)
 
 class Child(models.Model):
     last_name = models.CharField("Nom", max_length=100)
@@ -102,7 +104,7 @@ class Family_link(models.Model):
         verbose_name_plural = "Liens de parenté"
 
     def __str__(self):
-        return self.child+" "+self.relative
+        return self.link_type
 
 
 class OpenDay(models.Model):
@@ -129,10 +131,7 @@ class OpenDay(models.Model):
         verbose_name_plural = "Jours et heures d'ouverture"
     
     def __str__(self):
-        return " {1}, ouverture à {2}, fermeture à {3}".format(
-            self.date, self.opening_H, self.closing_H
-            )
-
+        return str(self.date)
 
 class DailyFact(models.Model):
 
@@ -145,7 +144,7 @@ class DailyFact(models.Model):
     employee = models.ForeignKey(
         Employee,
         on_delete= models.CASCADE,
-        verbose_name= "Employé"
+        verbose_name= "Employé",
     )
 
     time_stamp = models.DateTimeField(
@@ -164,16 +163,17 @@ class DailyFact(models.Model):
         verbose_name_plural = "Données de Transmission"
 
     def __str__(self):
-        return self.time_stamp+", "+self.employee+"/"+self.child
+        eur_date = "{0}-{1}-{2}".format(self.time_stamp.day, self.time_stamp.month, self.time_stamp.year)
+        return eur_date+", "+str(self.child)+ " écrit par " +str(self.employee)
 
 
 class Sleep(models.Model):
 
-    length_minutes = models.PositiveSmallIntegerField("Durée")
+    length_minutes = models.PositiveSmallIntegerField("Durée en Minutes")
     daily_fact = models.ForeignKey(
         DailyFact,
         on_delete= models.CASCADE,
-        verbose_name= "Transmission"
+        verbose_name= "Transmission",
     )
 
     class Meta:
@@ -181,21 +181,21 @@ class Sleep(models.Model):
         verbose_name_plural = "Siestes"
 
     def __str__(self):
-        return self.length_minutes+" minutes"
+        return str(self.length_minutes)+" minutes"
 
 
 class Meal(models.Model):
 
-    starter_qtty_gr = models.PositiveSmallIntegerField("Entrée", blank=True)
+    starter_qtty_gr = models.PositiveSmallIntegerField("Quantité Entrée mangée en gr", blank=True)
     main_course_qtty_gr = models.PositiveSmallIntegerField(
-            "Plat de résistance",
+            "Quantité Plat de résistance mangée en gr",
             blank= True
             )
-    desert_qtty_gr = models.PositiveSmallIntegerField("Déssert", blank=True)
+    desert_qtty_gr = models.PositiveSmallIntegerField("Quantité Déssert mangée en gr", blank=True)
     daily_fact = models.ForeignKey(
         DailyFact,
         on_delete= models.CASCADE,
-        verbose_name= "Transmission"
+        verbose_name= "Transmission",
         )
 
     class Meta:
@@ -203,14 +203,7 @@ class Meal(models.Model):
         verbose_name_plural = "Repas"
 
     def __str__(self):
-        name= ""
-        if self.starter_qtty_gr:
-            name += "Entrée : "+self.starter_qtty_gr+" gr. "
-        if self.main_course_qtty_gr:
-            name += "Plat de résistance"+self.main_course_qtty_gr+" gr. "
-        if self.desert_qtty_gr:
-            name += "Désert"+self.desert_qtty_gr+" gr. "
-        return name
+        return "repas "+str(self.id)
 
 class FeedingBottle(models.Model):
 
@@ -221,7 +214,7 @@ class FeedingBottle(models.Model):
     daily_fact = models.ForeignKey(
         DailyFact,
         on_delete= models.CASCADE,
-        verbose_name= "Transmission"
+        verbose_name= "Transmission",
     )
 
     class Meta:
@@ -229,7 +222,7 @@ class FeedingBottle(models.Model):
         verbose_name_plural = "Biberons"
 
     def __str__(self):
-        return self.drank_qtty_ml
+        return "Biberon "+str(self.id)
 
 
 class Activity(models.Model):
@@ -248,7 +241,7 @@ class Activity(models.Model):
     daily_fact = models.ForeignKey(
         DailyFact,
         on_delete= models.CASCADE,
-        verbose_name= "Transmission"
+        verbose_name= "Transmission",
     )
 
     class Meta:
@@ -264,18 +257,18 @@ class MedicalEvent(models.Model):
     description = models.CharField("Description",
             max_length = 200,
         )
-    body_temp_deg_C = models.DecimalField("Température",
+    body_temp_deg_C = models.DecimalField("Température en °C",
         max_digits = 3,
-        decimal_places= 2,
+        decimal_places= 1,
         blank= True,
     )
-    given_paracetamol_qtty_mg = models.PositiveSmallIntegerField ("Paracétamol donné / mg",
+    given_paracetamol_qtty_mg = models.PositiveSmallIntegerField ("Paracétamol donné en MG",
         blank= True,
     )
     daily_fact = models.ForeignKey(
         DailyFact,
         on_delete= models.CASCADE,
-        verbose_name= "Transmission"
+        verbose_name= "Transmission",
     )
 
     class Meta:
@@ -283,6 +276,28 @@ class MedicalEvent(models.Model):
         verbose_name_plural = "Evènements Médicaux"
 
     def __str__(self):
-        return self.description
+        return "Médical "+str(self.id)
 
+class Message(models.Model):
+    title = models.CharField("Titre",
+        max_length = 50,
+    )
+    time_stamp = models.DateTimeField(
+        "Horodatage",
+        auto_now_add=True,
+        )
+    content = models.TextField("Contenu",
+        max_length = 200,
+    )
+    cc_facility =  models.ForeignKey(
+        Child_care_facility,
+        on_delete= models.CASCADE,
+        verbose_name= "Structure",
+        )
+    class Meta:
+        verbose_name = "Message de la Direction"
+        verbose_name_plural = "Messages de la Direction"
+
+    def __str__(self):
+        return self.title
 

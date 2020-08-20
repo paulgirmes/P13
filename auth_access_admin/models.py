@@ -11,7 +11,8 @@ class FamilyMember(User):
     phone = models.CharField("Téléphone d'urgence", max_length=14)
     IdScan = models.ImageField("Pièce d'identité", upload_to="ids")
     address = models.ForeignKey(
-        "auth_access_admin.Address", on_delete=models.CASCADE
+        "auth_access_admin.Address", on_delete=models.CASCADE,
+        verbose_name="Adresse",
         )
 
     class Meta:
@@ -26,7 +27,8 @@ class Employee(User):
     phone = models.CharField("Téléphone d'urgence", max_length=14)
     IdScan = models.ImageField("Pièce d'identité", upload_to="ids")
     address = models.ForeignKey(
-        "auth_access_admin.Address", on_delete=models.CASCADE
+        "auth_access_admin.Address", on_delete=models.CASCADE,
+        verbose_name="Adresse",
         )
     occupation = models.CharField("Métier", max_length=100)
     employee_nr = models.PositiveSmallIntegerField(

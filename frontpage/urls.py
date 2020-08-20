@@ -21,4 +21,5 @@ app_name = "frontpage"
 
 urlpatterns = [
     path("", views.HomePage.as_view(), name="homepage"),
+    path("conditions-generales/", views.Legal.as_view(), name="legal"),
 ]

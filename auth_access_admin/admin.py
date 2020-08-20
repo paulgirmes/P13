@@ -13,7 +13,10 @@ from django.contrib.auth.forms import (
 from django.views.decorators.cache import never_cache
 from frontpage.models import New, Child_care_facility
 from .models import FamilyMember, Employee, Address
-from day_to_day.models import Child, Family_link
+from day_to_day.models import (Child, OpenDay, EmployeeScheduledDay,
+        ChildScheduledDay, Family_link, DailyFact, Sleep, Meal,
+        FeedingBottle, Activity, MedicalEvent, Message
+        )
 from .forms import Login
 
 class ChildCareAdmin(admin.AdminSite):
@@ -23,7 +26,7 @@ class ChildCareAdmin(admin.AdminSite):
     password_change_template= "admin/auth_access_admin/admin/admin/admin/user/change_password.html"
     site_header = "administration de la structure"
     site_title = "administration"
-    login_template = "auth_access_admin/admin/admin/admin/_login.html"
+    login_template = "auth_access_admin/_login.html"
     login_form = Login
 
     def each_context(self, request):
@@ -46,12 +49,49 @@ class ChildCareAdmin(admin.AdminSite):
 admin_site = ChildCareAdmin(name='structure_admin')
 
 
+class FamilyLinkInline(admin.TabularInline):
+    model = Family_link
+    extra = 1
+    template = "admin/auth_access_admin/admin//edit_inline/tabular.html"
+
+
+class SleepInline(admin.TabularInline):
+    model = Sleep
+    extra = 1
+    template = "admin/auth_access_admin/admin//edit_inline/tabular.html"
+
+
+class MealInline(admin.TabularInline):
+    model = Meal
+    extra = 1
+    template = "admin/auth_access_admin/admin//edit_inline/tabular.html"
+
+
+class FeedingBottleInline(admin.TabularInline):
+    model = FeedingBottle
+    extra = 1
+    template = "admin/auth_access_admin/admin//edit_inline/tabular.html"
+
+
+class ActivityInline(admin.TabularInline):
+    model = Activity
+    extra = 1
+    template = "admin/auth_access_admin/admin//edit_inline/tabular.html"
+
+
+class MedicalEventInline(admin.TabularInline):
+    model = MedicalEvent
+    extra = 1
+    template = "admin/auth_access_admin/admin//edit_inline/tabular.html"
+
 
 class EmployeeCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = Employee
         fields = UserCreationForm.Meta.fields + (
+            "first_name",
+            "last_name",
             "phone",
             "IdScan",
             "address",
@@ -75,6 +115,8 @@ class FamilyCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = FamilyMember
         fields = UserCreationForm.Meta.fields + (
+            "first_name",
+            "last_name",
             "phone",
             "IdScan",
             "address",
@@ -94,22 +136,35 @@ class FamilyUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2',
-            "phone",
-            "IdScan",
-            "address",
-            ),
+                'fields': (
+                    "first_name",
+                    "last_name",
+                    'username',
+                    'password1',
+                    'password2',
+                    "phone",
+                    "IdScan",
+                    "address",
+                    ),
         }),
     )
     fieldsets = (
             (None, {
                 'classes': ('wide',),
-                'fields': ('username', 'password', "phone",
+                'fields': (
+                    "first_name",
+                    "last_name",
+                    'username',
+                    'password',
+                    "phone",
                     "IdScan",
                     "address",
                     ),
             }),
         )
+    inlines = [
+            FamilyLinkInline,
+        ]
 
 
 class EmployeeUserAdmin(UserAdmin):
@@ -126,7 +181,13 @@ class EmployeeUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2', "phone",
+            'fields': (
+                "first_name",
+                "last_name",
+                'username',
+                'password1',
+                'password2',
+                "phone",
                 "IdScan",
                 "address",
                 "occupation",
@@ -138,13 +199,19 @@ class EmployeeUserAdmin(UserAdmin):
     fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'password', "phone",
-                "IdScan",
-                "address",
-                "occupation",
-                "diploma",
-                "Is_manager",
-                "employee_contract",),
+            'fields': (
+                    "first_name",
+                    "last_name",
+                    'username',
+                    'password',
+                    "phone",
+                    "IdScan",
+                    "address",
+                    "occupation",
+                    "diploma",
+                    "Is_manager",
+                    "employee_contract",
+                ),
         }),
     )
 
@@ -166,17 +233,35 @@ class NewAdmin(CustomModelAdmin):
         obj.cc_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
         super().save_model(request, obj, form, change)
 
-class FamilyLinkInline(admin.TabularInline):
-    model = Family_link
-    extra = 1
-    template = "admin/auth_access_admin/admin//edit_inline/tabular.html"
+
+class MessageAdmin(NewAdmin):
+    pass
+
+
+class AdressAdmin(NewAdmin):
+    pass
+
 
 class ChildAdmin(NewAdmin):
-        inlines = (FamilyLinkInline,)
+        inlines = [
+            FamilyLinkInline,
+        ]
+
+
+class DailyFactAdmin(NewAdmin):
+    inlines = [
+                SleepInline,
+                MealInline,
+                FeedingBottleInline,
+                ActivityInline,
+                MedicalEventInline,
+            ]
 
 admin_site.register(New, NewAdmin)
 admin_site.register(FamilyMember, FamilyUserAdmin)
 admin_site.register(Employee, EmployeeUserAdmin)
-admin_site.register(Address)
+admin_site.register(Address, AdressAdmin)
 admin_site.register(Child, ChildAdmin)
+admin_site.register(DailyFact, DailyFactAdmin)
+admin_site.register(Message, MessageAdmin)
 
