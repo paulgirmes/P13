@@ -18,8 +18,8 @@
         <div class="input-group">
           <select class="custom-select" id="inputGroupSelect04" aria-label="Example select with button addon" onchange="location = this.value;">
             <option selected value="#">Choisir...</option>
-            {% for child in object_list %}
-            <option value="{% url "d_to_d:Child_facts" child.pk %}">{{ child.first_name }}, {{ child.last_name }}</option>
+            {% for trans in object_list %}
+            <option value="#">{{ trans }}</option>
             {% endfor %}
           </select>
       </div>

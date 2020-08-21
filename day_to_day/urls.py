@@ -20,12 +20,12 @@ from . import views
 app_name = "d_to_d"
 
 urlpatterns = [
-    path("employé/", views.EmployeeView.as_view(), name="employee"),
-    path("employé/enfants/", views.ChildListView.as_view(), name="child_list"),
-    path("employé/transmissions/", views.TransmissionsListView.as_view(), name="tr_list"),
-    path("employé/enfants/<str:first_n>-<str:last_n>/", views.ChildView.as_view(), name="Child_facts"),
-    path("employé/enfants/<str:first_n>-<str:last_n>/transmissions/", views.ChildTransmissionsView.as_view(), name="Child_transmissions"),
-    path("employé/enfants/<str:first_n>-<str:last_n>/transmissions/ajouter/<int:id>", views.ChildTransmissionsAddView.as_view(), name="transmission_add"),
-    path("employé/enfants/<str:first_n>-<str:last_n>/transmissions/modifier/<int:id>", views.ChildTransmissionsChangeView.as_view(), name="transmissions_change"),
+    path("employe/", views.EmployeeView.as_view(), name="employee"),
+    path("employe/enfants/", views.ChildListView.as_view(), name="child_list"),
+    path("employe/transmissions/", views.TransmissionsListView.as_view(), name="tr_list"),
+    path("employe/enfants/<int:pk>/", views.ChildView.as_view(), name="Child_facts"),
+    path("employe/enfants/<int:pk>/transmissions/", views.ChildTransmissionsView.as_view(), name="Child_transmissions"),
+    path("employe/enfants/<int:pk>/transmissions/ajouter/", views.ChildTransmissionsAddView.as_view(), name="transmission_add"),
+    path("employe/enfants/<int:pk>/transmissions/modifier/<int:id>", views.ChildTransmissionsChangeView.as_view(), name="transmissions_change"),
     path("parent/", views.ParentView.as_view(), name="parent"),
 ]

@@ -26,7 +26,13 @@
                     <img class="img-fluid" src={% static "auth_access_admin/img/undraw_welcome_3gvl.svg" %} alt="">
                     <div class="sidebar-brand-text mx-3">{{ child_care_facility.name }}</div>
                 </div>
-
+                <!-- Divider -->
+                <hr class="sidebar-divider my-0">
+                <li class="nav-item active">
+                    <a class="nav-link" href={% url "d_to_d:employee" %}>
+                    <i class="fas fa-fw fa-home"></i>
+                    <span>Accueil</span></a>
+                </li>
                 <!-- Divider -->
                 <hr class="sidebar-divider my-0 mb-3">
 
@@ -105,7 +111,7 @@
                     </div>
                     <!-- END Content -->
                     <!-- Footer -->
-                    <footer class="sticky-footer bg-white">
+                    <footer class="sticky-footer bg-white mr-2">
                         <div class="container my-auto">
                             <div class="copyright text-center my-auto">
                             <span>Copyright &copy; pgs 2020</span>
