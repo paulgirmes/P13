@@ -1,11 +1,11 @@
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from frontpage.models import Child_care_facility
 from auth_access_admin.models import Employee, FamilyMember
-from .models import Message
+from .models import Message, Child, DailyFact
 
 class EmployeeView(LoginRequiredMixin, TemplateView):
     child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
@@ -27,6 +27,33 @@ class EmployeeView(LoginRequiredMixin, TemplateView):
                 return self.render_to_response(self.get_context_data())
         except:
             raise PermissionDenied
+
+
+class ChildListView(LoginRequiredMixin, ListView):
+    child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
+    model = Child
+    template_name = "day_to_day/_child_list.html"
+    extra_context = {"child_care_facility" : child_care_facility,
+        }
+
+class TransmissionsListView(LoginRequiredMixin, ListView):
+    model = DailyFact
+    template_name = "day_to_day/_trans_list.html"
+
+
+class ChildView(LoginRequiredMixin, TemplateView):
+    pass
+
+class ChildTransmissionsView(LoginRequiredMixin, TemplateView):
+    pass
+
+
+class ChildTransmissionsAddView(LoginRequiredMixin, TemplateView):
+    pass
+
+
+class ChildTransmissionsChangeView(LoginRequiredMixin, TemplateView):
+    pass
 
 
 class ParentView(LoginRequiredMixin, TemplateView):

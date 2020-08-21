@@ -37,17 +37,15 @@
                 <!-- Nav Item - Collapse Menu -->
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseStructure" aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-building"></i>
-                    <span>Structure</span>
+                    <i class="fas fa-fw fa-baby"></i>
+                    <span>Enfants/Transmissions</span>
                     </a>
                     <div id="collapseStructure" class="collapse" aria-labelledby="headingStructure" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Enfants:</h6>
-                            <a class="collapse-item" href="{% url "structure_admin:day_to_day_child_add" %}">Ajouter</a>
-                            <a class="collapse-item" href="{% url "structure_admin:day_to_day_child_changelist" %}">Modifier</a>
-                            <h6 class="collapse-header">Transmissions:</h6>
-                            <a class="collapse-item" href="{% url "structure_admin:day_to_day_dailyfact_add" %}">Ajouter</a>
-                            <a class="collapse-item" href="{% url "structure_admin:day_to_day_dailyfact_changelist" %}">Modifier</a>
+                            <a class="collapse-item" href="{% url "d_to_d:child_list" %}">Liste des inscrits</a>
+                            <h6 class="collapse-header">Mes Transmissions:</h6>
+                            <a class="collapse-item" href="{% url "d_to_d:tr_list" %}">Liste de mes transmissions</a>
                         </div>
                     </div>
                 </li>
