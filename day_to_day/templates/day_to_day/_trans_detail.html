@@ -1,0 +1,179 @@
+{% extends "day_to_day/base.html" %}
+{% block content %}
+{% load static %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-gray-800">Fiche de Transmission : {{ trans }}</h1>
+</div>
+
+<div class="row">
+
+  <div class="col mb-4 mr-3">
+
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Veuillez Effectuer les Modifications Désirées:</h6>
+      </div>
+      <div class="card-body">
+        <!-- Button trigger modal -->
+        <div class="row justify-content-center">
+          <button type="button" class="btn btn-primary btn-lg  ml-2 mr-2 mt-1" data-toggle="modal" data-target="#comment">
+            commentaire
+          </button>
+          <button type="button" class="btn btn-primary btn-lg  ml-2 mr-2 mt-1" data-toggle="modal" data-target="#sleep">
+            sieste
+          </button>
+          <button type="button" class="btn btn-primary btn-lg  ml-2 mr-2 mt-1" data-toggle="modal" data-target="#meal">
+            repas
+          </button>
+          <button type="button" class="btn btn-primary btn-lg  ml-2 mr-2 mt-1" data-toggle="modal" data-target="#activity">
+            activités
+          </button>
+          <button type="button" class="btn btn-primary btn-lg  ml-2 mr-2 mt-1" data-toggle="modal" data-target="#feeding_bttle">
+            biberons
+          </button>
+          <button type="button" class="btn btn-primary btn-lg  ml-2 mr-2 mt-1" data-toggle="modal" data-target="#medical">
+            médical
+          </button>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal comment -->
+<div class="modal fade" id="comment" tabindex="-1" data-backdrop="static" aria-labelledby="comment_label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="comment_Label">commentaire</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="post" action="{% url "d_to_d:transmissions_change" trans.pk %}">
+      <div class="modal-body">
+          {% csrf_token %}
+          {{ form.comment }}
+      </div>
+      <div class="modal-footer">
+        <input class="btn btn-primary" type="submit" value="Submit">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Modal sleep -->
+<div class="modal fade" id="sleep" tabindex="-1" data-backdrop="static" aria-labelledby="sleep_label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="sleep_Label">Sieste</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <form method="post">
+            {% csrf_token %}
+          {{ sleep_form.as_p }}
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal meal-->
+<div class="modal fade" id="meal" tabindex="-1" data-backdrop="static" aria-labelledby="meal_label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="meal_Label">Repas</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post">
+          {% csrf_token %}
+          {{ meal_form.as_p }}
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal activity-->
+<div class="modal fade" id="activity" tabindex="-1" data-backdrop="static" aria-labelledby="activity_label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="activity_Label">Activités</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post">
+          {% csrf_token %}
+          {{ activity_form.as_p }}
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal feeding_bttle-->
+<div class="modal fade" id="feeding_bttle" tabindex="-1" data-backdrop="static" aria-labelledby="feeding_bttle_label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="feeding_bttle_Label">Biberons</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post">
+          {% csrf_token %}
+          {{ feeding_bttle_form.as_p }}
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal medical-->
+<div class="modal fade" id="medical" tabindex="-1" data-backdrop="static" aria-labelledby="medical_label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="medical_Label">Médical</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post">
+          {% csrf_token %}
+          {{ medical_form.as_p }}
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

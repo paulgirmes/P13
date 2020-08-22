@@ -36,7 +36,7 @@
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <a class="dropdown-item" href="{% url "d_to_d:transmission_add" child.pk %}">ajouter</a>
-              <a class="dropdown-item" href="{% url "d_to_d:Child_transmissions" child.pk %}">modifier</a>
+              <a class="dropdown-item" href="{% url "d_to_d:Child_transmissions" child.pk %}">Voir Les Transmissions Enregistrées pour {{ object.first_name }}</a>
             </div>
           </div>
         </div>

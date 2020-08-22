@@ -1,5 +1,6 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView, ListView, DetailView
+from django.shortcuts import render,reverse
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, ListView, DetailView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
@@ -8,6 +9,11 @@ from django.utils.translation import gettext as _
 from frontpage.models import Child_care_facility
 from auth_access_admin.models import Employee, FamilyMember
 from .models import Message, Child, DailyFact
+from .forms import (
+    DailyFactForm, SleepFormSet, MealFormSet,
+    FeedingBottleFormSet, ActivityFormSet,
+    MedicalEventFormSet,
+)
 
 
 class EmployeeView(LoginRequiredMixin, TemplateView):
@@ -43,7 +49,6 @@ class ChildListView(LoginRequiredMixin, ListView):
         allow_empty = self.get_allow_empty()
         user = Employee.objects.get(username__contains=request.user.username)
         self.extra_context["employee"] = user
-
         if not allow_empty:
             # When pagination is enabled and object_list is a queryset,
             # it's better to do a cheap query than to load the unpaginated
@@ -66,12 +71,13 @@ class ChildTransmissionsView(LoginRequiredMixin, ListView):
         }
     model = DailyFact
     template_name = "day_to_day/_trans_list.html"
+    pk= None
     def get(self, request, *args, **kwargs):
-        self.object_list = self.get_queryset().filter(child=kwargs.get(pk))
+        self.object_list = self.get_queryset().filter(child=kwargs.get(self.pk))
         allow_empty = self.get_allow_empty()
         user = Employee.objects.get(username__contains=request.user.username)
         self.extra_context["employee"] = user
-
+        self.extra_context["child"] = Child.objects.get(pk=kwargs.get(self.pk))
         if not allow_empty:
             # When pagination is enabled and object_list is a queryset,
             # it's better to do a cheap query than to load the unpaginated
@@ -118,14 +124,54 @@ class ChildView(LoginRequiredMixin, DetailView):
 class TransmissionsListView(LoginRequiredMixin, ListView):
     model = DailyFact
     template_name = "day_to_day/_trans_list.html"
+    
 
 
-class ChildTransmissionsAddView(LoginRequiredMixin, TemplateView):
-    pass
+class ChildTransmissionsAddView(LoginRequiredMixin, FormView):
+    child_care_facility = Child_care_facility.objects.get(
+                                name__icontains=settings.STRUCTURE,
+                            )
+    extra_context = {"child_care_facility" : child_care_facility,
+        }
+    template_name = "day_to_day/_trans_detail.html"
+    initial = {}
+    form_class = DailyFactForm
+    def get(self, request, *args, **kwargs):
+        user = Employee.objects.get(username__contains=request.user.username)
+        self.extra_context["employee"] = user
+        return self.render_to_response(self.get_context_data())
 
 
-class ChildTransmissionsChangeView(LoginRequiredMixin, TemplateView):
-    pass
+class TransmissionsChangeView(LoginRequiredMixin, FormView):
+    pk =None
+    child_care_facility = Child_care_facility.objects.get(
+                                name__icontains=settings.STRUCTURE,
+                            )
+    extra_context = {"child_care_facility" : child_care_facility,
+        }
+    template_name = "day_to_day/_trans_detail.html"
+    success_url = None
+    form_class = DailyFactForm
+    def get(self, request, *args, **kwargs):
+        user = Employee.objects.get(username__contains=request.user.username)
+        self.extra_context["employee"] = user
+        transmission = DailyFact.objects.get(pk=kwargs.get(self.pk))
+        self.initial = {"child" : transmission.child, 
+                    "comment" : transmission.comment,
+                }
+        self.extra_context["trans"] = transmission
+        self.extra_context["sleep_form"] = SleepFormSet(instance=transmission)
+        self.extra_context["meal_form"] = MealFormSet(instance=transmission)
+        self.extra_context["activity_form"] = ActivityFormSet(instance=transmission)
+        self.extra_context["feeding_bttle_form"] = FeedingBottleFormSet(instance=transmission)
+        self.extra_context["medical_form"] = MedicalEventFormSet(instance=transmission)
+        return self.render_to_response(self.get_context_data())
+
+    def post(self, request, *args, **kwargs):
+        transmission = DailyFact.objects.get(pk=kwargs.get(self.pk))
+        self.success_url = str(transmission.pk)
+        super().post(self, request, args, kwargs)
+    
 
 
 class ParentView(LoginRequiredMixin, TemplateView):
@@ -143,6 +189,7 @@ class ParentView(LoginRequiredMixin, TemplateView):
             user = FamilyMember.objects.get(username__contains=request.user.username)
             if user.Is_parent:
                 self.extra_context["parent"] = user
+               
                 return self.render_to_response(self.get_context_data())
             else:
                 raise PermissionDenied

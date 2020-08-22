@@ -154,7 +154,6 @@ class DailyFact(models.Model):
 
     comment = models.CharField(
         "Commentaire général",
-        blank= True,
         max_length= 200,
         )
 
@@ -164,7 +163,7 @@ class DailyFact(models.Model):
 
     def __str__(self):
         eur_date = "{0}-{1}-{2}".format(self.time_stamp.day, self.time_stamp.month, self.time_stamp.year)
-        return eur_date+", "+str(self.child)+ " écrit par " +str(self.employee)
+        return eur_date+", "+str(self.child)+ " écrite par " +str(self.employee)
 
 
 class Sleep(models.Model):
@@ -186,12 +185,17 @@ class Sleep(models.Model):
 
 class Meal(models.Model):
 
-    starter_qtty_gr = models.PositiveSmallIntegerField("Quantité Entrée mangée en gr", blank=True)
+    starter_qtty_gr = models.PositiveSmallIntegerField(
+        "Quantité Entrée mangée en gr", blank=True, null= True,
+        )
     main_course_qtty_gr = models.PositiveSmallIntegerField(
             "Quantité Plat de résistance mangée en gr",
-            blank= True
+            null= True,
+            blank = True,
             )
-    desert_qtty_gr = models.PositiveSmallIntegerField("Quantité Déssert mangée en gr", blank=True)
+    desert_qtty_gr = models.PositiveSmallIntegerField(
+        "Quantité Déssert mangée en gr", blank=True, null= True,
+        )
     daily_fact = models.ForeignKey(
         DailyFact,
         on_delete= models.CASCADE,
@@ -203,7 +207,14 @@ class Meal(models.Model):
         verbose_name_plural = "Repas"
 
     def __str__(self):
-        return "repas "+str(self.id)
+        meal = ""
+        if self.starter_qtty_gr:
+            meal += "entrée "+str(self.starter_qtty_gr)+" gr. "
+        if self.main_course_qtty_gr:
+            meal += "principal "+str(self.main_course_qtty_gr)+" gr. "
+        if self.desert_qtty_gr:
+            meal += "principal "+str(self.desert_qtty_gr)+" gr. "
+        return meal
 
 class FeedingBottle(models.Model):
 
@@ -222,7 +233,7 @@ class FeedingBottle(models.Model):
         verbose_name_plural = "Biberons"
 
     def __str__(self):
-        return "Biberon "+str(self.id)
+        return str(self.drank_qtty_ml)+ "ml. "
 
 
 class Activity(models.Model):
@@ -249,7 +260,11 @@ class Activity(models.Model):
         verbose_name_plural = "Activités"
 
     def __str__(self):
-        return self.activity_type+", "+self.period
+        activity = self.period+" : "
+        for choice in settings.ACTIVITIES_CHOICES:
+            if choice[0] == self.activity_type:
+                activity += choice[1]
+        return activity+" ."
 
 
 class MedicalEvent(models.Model):
@@ -261,9 +276,11 @@ class MedicalEvent(models.Model):
         max_digits = 3,
         decimal_places= 1,
         blank= True,
+        null= True,
     )
     given_paracetamol_qtty_mg = models.PositiveSmallIntegerField ("Paracétamol donné en MG",
         blank= True,
+        null= True,
     )
     daily_fact = models.ForeignKey(
         DailyFact,
@@ -276,7 +293,12 @@ class MedicalEvent(models.Model):
         verbose_name_plural = "Evènements Médicaux"
 
     def __str__(self):
-        return "Médical "+str(self.id)
+        event_desc = self.description+". "
+        if self.body_temp_deg_C:
+            event_desc += "température : "+str(self.body_temp_deg_C)+" °C "
+        if self.given_paracetamol_qtty_mg:
+            event_desc += "Quantité de paracétamol donnée : "+str(self.body_temp_deg_C)+" mg. "
+        return event_desc
 
 class Message(models.Model):
     title = models.CharField("Titre",

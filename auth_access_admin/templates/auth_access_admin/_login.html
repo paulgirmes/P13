@@ -42,14 +42,6 @@
                         {% endfor %}
                       </div>
                     {% endif %}
-                    {% if user.is_authenticated %}
-                    <p class="errornote">
-                    
-                        Vous êtes authentifié comme {{ username }}, mais vous n'êtes pas authorisé(e) à voir cette page.
-                        Voulez-vous vous connecter avec un autre compte ?
-                    
-                    </p>
-                    {% endif %}
                     <hr>
                   </form>
                   <div class="text-center">
