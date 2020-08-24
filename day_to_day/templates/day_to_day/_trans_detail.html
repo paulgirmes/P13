@@ -1,6 +1,7 @@
 {% extends "day_to_day/base.html" %}
 {% block content %}
 {% load static %}
+{% load tz %}
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
   <h1 class="h3 mb-0 text-gray-800">Fiche de Transmission : {{ trans }}</h1>
@@ -12,7 +13,11 @@
 
     <div class="card shadow mb-4">
       <div class="card-header py-3">
+        {% if message %}
+        <h6 class="m-0 font-weight-bold text-danger">{{ message }}</h6>
+        {% else %}
         <h6 class="m-0 font-weight-bold text-primary">Veuillez Effectuer les Modifications Désirées:</h6>
+        {% endif %}
       </div>
       <div class="card-body">
         <!-- Button trigger modal -->
@@ -58,7 +63,7 @@
           {{ form.comment }}
       </div>
       <div class="modal-footer">
-        <input class="btn btn-primary" type="submit" value="Submit">
+        <input class="btn btn-primary" type="submit" value="Modifier">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
       </div>
       </form>
@@ -76,13 +81,14 @@
         </button>
       </div>
       <div class="modal-body">
-          <form method="post">
-            {% csrf_token %}
+        <form method="post" action="{% url "d_to_d:transmissions_change" trans.pk %}">
+          {% csrf_token %}
           {{ sleep_form.as_p }}
-          </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+        <div class="modal-footer">
+          <input class="btn btn-primary" type="submit" value="Modifier">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+        </div>
+        </form>
       </div>
     </div>
   </div>
@@ -101,10 +107,11 @@
         <form method="post">
           {% csrf_token %}
           {{ meal_form.as_p }}
+          <div class="modal-footer">
+            <input class="btn btn-primary" type="submit" value="Modifier">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
       </div>
     </div>
   </div>
@@ -123,10 +130,11 @@
         <form method="post">
           {% csrf_token %}
           {{ activity_form.as_p }}
+          <div class="modal-footer">
+            <input class="btn btn-primary" type="submit" value="Modifier">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
       </div>
     </div>
   </div>
@@ -145,10 +153,11 @@
         <form method="post">
           {% csrf_token %}
           {{ feeding_bttle_form.as_p }}
+          <div class="modal-footer">
+            <input class="btn btn-primary" type="submit" value="Modifier">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
       </div>
     </div>
   </div>
@@ -167,10 +176,11 @@
         <form method="post">
           {% csrf_token %}
           {{ medical_form.as_p }}
+          <div class="modal-footer">
+            <input class="btn btn-primary" type="submit" value="Modifier">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
       </div>
     </div>
   </div>

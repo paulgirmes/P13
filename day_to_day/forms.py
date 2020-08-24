@@ -4,7 +4,8 @@ from django.conf import settings
 
 SleepFormSet = forms.inlineformset_factory(
     DailyFact, Sleep, fields=("length_minutes",),
-    widgets={'length_minutes': forms.NumberInput(attrs={
+    widgets={'length_minutes': forms.NumberInput(
+        attrs={
             'class': "form-control form-control-user",
         })},
     extra=1,
@@ -67,7 +68,7 @@ MedicalEventFormSet = forms.inlineformset_factory(
 class DailyFactForm(forms.ModelForm):
     class Meta:
         model = DailyFact
-        fields = ["comment"]
+        fields = ["child", "comment", "employee"]
         widgets = {
             'comment': forms.Textarea(attrs={
                 'cols': 40, 'rows': 5,

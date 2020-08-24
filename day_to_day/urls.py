@@ -22,7 +22,7 @@ app_name = "d_to_d"
 urlpatterns = [
     path("employe/", views.EmployeeView.as_view(), name="employee"),
     path("employe/enfants/", views.ChildListView.as_view(), name="child_list"),
-    path("employe/transmissions/", views.TransmissionsListView.as_view(), name="tr_list"),
+    path("employe/transmissions/", views.EmployeeTransmissionsListView.as_view(), name="tr_list"),
     path("employe/enfants/<int:pk>/", views.ChildView.as_view(), name="Child_facts"),
     path("employe/enfants/<int:pk>/transmissions/", views.ChildTransmissionsView.as_view(pk="pk"), name="Child_transmissions"),
     path("employe/enfants/<int:pk>/transmissions/ajouter/", views.ChildTransmissionsAddView.as_view(), name="transmission_add"),

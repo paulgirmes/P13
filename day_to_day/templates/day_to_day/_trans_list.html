@@ -1,9 +1,11 @@
 {% extends "day_to_day/base.html" %}
 {% block content %}
 {% load static %}
+{% load tz %}
+
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-  <h1 class="h3 mb-0 text-gray-800">Liste des transmissions enregistrées pour {{ child.first_name }} {{ child.last_name }}</h1>
+  <h1 class="h3 mb-0 text-gray-800">Liste des transmissions enregistrées {% if child.name %}pour {{ child.first_name }} {{ child.last_name }}{% else %}par {{ user.first_name }} {{ user.last_name }}{% endif %}</h1>
 </div>
 
 <div class="row">
@@ -18,9 +20,11 @@
         <div class="input-group">
           <select class="custom-select" id="inputGroupSelect04" aria-label="Example select with button addon" onchange="location = this.value;">
             <option selected value="#">Choisir...</option>
+            {% localtime on %}
             {% for trans in object_list %}
-            <option value="#" data-toggle="modal" href="#{{ trans.child|slugify }}{{ trans.employee|slugify }}{{ trans.comment|slugify }}">{{ trans }}</option>
+            <option value="#" data-toggle="modal" href="#{{ trans.child|slugify }}{{ trans.employee|slugify }}{{ trans.comment|slugify }}">{{ trans.child }}, {{ trans.time_stamp|localtime }}</option>
             {% endfor %}
+            {% endlocaltime %}
           </select>
       </div>
     </div>
@@ -40,7 +44,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <p><h5> "{{ trans.comment }}"</h5></p>
+        <p><h5>Commentaire :</h5>"{{ trans.comment }}"</p>
         {% if trans.sleep_set.all %}<p><h5>Siestes :</h5>{% for sleep in trans.sleep_set.all %} {{ sleep }} {% endfor %}</p>{% endif %}
         {% if trans.meal_set.all %}<p><h5>Alimentation : </h5>{% for meal in trans.meal_set.all %} {{ meal }} {% endfor %}</p>{% endif %}
         {% if trans.feedingbottle_set.all %}<p><h5>Biberons : </h5>{% for feedingbottle in trans.feedingbottle_set.all %} {{ feedingbottle }} {% endfor %}</p>{% endif %}
