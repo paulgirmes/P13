@@ -45,7 +45,7 @@
       </div>
     </div>
   </div>
-</div>
+
 
 <!-- Modal comment -->
 <div class="modal fade" id="comment" tabindex="-1" data-backdrop="static" aria-labelledby="comment_label" aria-hidden="true">
@@ -57,7 +57,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form method="post" action="{% url "d_to_d:transmissions_change" trans.pk %}">
+      <form method="post">
       <div class="modal-body">
           {% csrf_token %}
           {{ form.comment }}
@@ -81,7 +81,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form method="post" action="{% url "d_to_d:transmissions_change" trans.pk %}">
+        <form method="post">
           {% csrf_token %}
           {{ sleep_form.as_p }}
         <div class="modal-footer">

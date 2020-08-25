@@ -1,7 +1,11 @@
 from django.shortcuts import render,reverse
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.views.generic import TemplateView, ListView, DetailView, FormView
+from django.views.generic import (
+    TemplateView, ListView, DetailView,
+    FormView, CreateView,
+)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
@@ -156,26 +160,65 @@ class EmployeeTransmissionsListView(LoginRequiredMixin, ListView):
                 })
         context = self.get_context_data()
         return self.render_to_response(context)
-    
 
 
-class ChildTransmissionsAddView(LoginRequiredMixin, FormView):
+class ChildTransmissionsAddView(LoginRequiredMixin, CreateView):
+    pk = None
     child_care_facility = Child_care_facility.objects.get(
                                 name__icontains=settings.STRUCTURE,
                             )
     extra_context = {"child_care_facility" : child_care_facility,
         }
-    template_name = "day_to_day/_trans_detail.html"
-    initial = {}
+    template_name = "day_to_day/_trans_add.html"
     form_class = DailyFactForm
+    child=None
+    success_url = None
+
     def get(self, request, *args, **kwargs):
-        user = Employee.objects.get(username__contains=request.user.username)
-        self.extra_context["employee"] = user
-        return self.render_to_response(self.get_context_data())
+        self.child = Child.objects.get(pk=kwargs.get("pk"))
+        self.user = Employee.objects.get(username__contains=request.user.username)
+        self.extra_context["employee"] = self.user
+        self.extra_context["child"] = self.child
+        self.success_url = "employe/enfants/"+str(self.child)+"/transmissions/"
+        self.extra_context["sleep_form"] = SleepFormSet()
+        self.extra_context["meal_form"] = MealFormSet()
+        self.extra_context["activity_form"] = ActivityFormSet()
+        self.extra_context["feeding_bttle_form"] = FeedingBottleFormSet()
+        self.extra_context["medical_form"] = MedicalEventFormSet()
+        self.object = None
+        return super().get(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        self.child = Child.objects.get(pk=kwargs.get("pk"))
+        self.user = Employee.objects.get(username__contains=request.user.username)
+        self.object = None
+        self.extra_context["post"]=True
+        form = self.form_class(data={"child": self.child,
+                    "employee": self.user,
+                    "comment" : request.POST.get("comment"),
+                })
+        if form.is_valid():
+            new_transmission = form.save(commit=False)
+            formlist =[SleepFormSet(request.POST, instance=new_transmission),
+            MealFormSet(request.POST, instance=new_transmission),
+            ActivityFormSet(request.POST, instance=new_transmission),
+            FeedingBottleFormSet(request.POST, instance=new_transmission),
+            MedicalEventFormSet(request.POST, instance=new_transmission),
+            ]
+            for formset in formlist:
+                if form.is_valid():
+                    form.save()
+                else:
+                    self.extra_context[form.__name__] = formset
+                    return self.render_to_response(self.get_context_data(form=form))
+            self.extra_context["message"] = "La Transmission a bien été enregistrée"
+            return HttpResponseRedirect(self.get_success_url())
+        else:
+            return self.form_invalid(form)
 
 
 class TransmissionsChangeView(LoginRequiredMixin, FormView):
-    pk =None
+    pk = None
     child_care_facility = Child_care_facility.objects.get(
                                 name__icontains=settings.STRUCTURE,
                             )
@@ -184,10 +227,16 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
     template_name = "day_to_day/_trans_detail.html"
     success_url = None
     form_class = DailyFactForm
-    transmission= None
+    transmission = None
     def get(self, request, *args, **kwargs):
+        
+        if self.extra_context.get("post")==True:
+            self.extra_context["post"]=False
+        else:
+            self.extra_context["message"]=None
+
         user = Employee.objects.get(username__contains=request.user.username)
-        self.transmission = DailyFact.objects.get(pk=kwargs.get(self.pk))
+        self.transmission = DailyFact.objects.get(pk=kwargs.get("pk"))
         if self.transmission.employee == user:
             self.extra_context["employee"] = user
             self.initial = {"child" : self.transmission.child, 
@@ -234,6 +283,7 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
         return [form_name, form]
 
     def post(self, request, *args, **kwargs):
+        self.extra_context["post"]=True
         user = Employee.objects.get(username__contains=request.user.username)
         self.transmission = DailyFact.objects.get(pk=kwargs.get(self.pk))
         if self.transmission.employee == user:
@@ -248,6 +298,7 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
                 return self.form_valid(formset[1])
             elif formset[1].is_valid():
                 formset[1].save()
+                self.extra_context["message"] = "La modification a bien été enregistrée"
                 return self.form_valid(formset[1])
             else:
                 return self.form_invalid(formset)
