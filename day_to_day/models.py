@@ -149,7 +149,7 @@ class DailyFact(models.Model):
 
     time_stamp = models.DateTimeField(
         "Horodatage",
-        auto_now_add=True,
+        auto_now=True,
         )
 
     comment = models.CharField(
@@ -281,6 +281,9 @@ class MedicalEvent(models.Model):
     given_paracetamol_qtty_mg = models.PositiveSmallIntegerField ("Paracétamol donné en MG",
         blank= True,
         null= True,
+    )
+    paracetamol_given_time = models.TimeField("Heure d'administration",
+        blank=True,
     )
     daily_fact = models.ForeignKey(
         DailyFact,

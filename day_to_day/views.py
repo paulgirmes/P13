@@ -78,15 +78,17 @@ class ChildTransmissionsView(LoginRequiredMixin, ListView):
         }
     model = DailyFact
     template_name = "day_to_day/_trans_list.html"
-    pk= None
+
     def get(self, request, *args, **kwargs):
-        self.object_list = self.get_queryset().filter(child=kwargs.get(self.pk)).filter(
+        self.object_list = self.get_queryset().filter(child=kwargs.get("pk")).filter(
             time_stamp__date=timezone.now().date()
-            )
+            ).order_by("-time_stamp")
         allow_empty = self.get_allow_empty()
         user = Employee.objects.get(username__contains=request.user.username)
         self.extra_context["employee"] = user
-        self.extra_context["child"] = Child.objects.get(pk=kwargs.get(self.pk))
+        self.extra_context["child"] = Child.objects.get(pk=kwargs.get("pk"))
+        if kwargs.get("success", False)== "True":
+            self.extra_context["transmission_recorded"]="votre transmission a bien été enregistrée"
         if not allow_empty:
             # When pagination is enabled and object_list is a queryset,
             # it's better to do a cheap query than to load the unpaginated
@@ -131,6 +133,7 @@ class ChildView(LoginRequiredMixin, DetailView):
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 
+
 class EmployeeTransmissionsListView(LoginRequiredMixin, ListView):
     child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
     extra_context = {"child_care_facility" : child_care_facility,
@@ -143,7 +146,7 @@ class EmployeeTransmissionsListView(LoginRequiredMixin, ListView):
                 employee__username=user.username
                 ).filter(
                 time_stamp__date=timezone.now().date()
-                )
+                ).order_by("-time_stamp")
         allow_empty = self.get_allow_empty()
         self.extra_context["employee"] = user
         if not allow_empty:
@@ -163,7 +166,6 @@ class EmployeeTransmissionsListView(LoginRequiredMixin, ListView):
 
 
 class ChildTransmissionsAddView(LoginRequiredMixin, CreateView):
-    pk = None
     child_care_facility = Child_care_facility.objects.get(
                                 name__icontains=settings.STRUCTURE,
                             )
@@ -171,15 +173,17 @@ class ChildTransmissionsAddView(LoginRequiredMixin, CreateView):
         }
     template_name = "day_to_day/_trans_add.html"
     form_class = DailyFactForm
-    child=None
     success_url = None
 
     def get(self, request, *args, **kwargs):
+        if self.extra_context.get("post")==True:
+            self.extra_context["post"]=False
+        else:
+            self.extra_context["message"]=None
         self.child = Child.objects.get(pk=kwargs.get("pk"))
         self.user = Employee.objects.get(username__contains=request.user.username)
         self.extra_context["employee"] = self.user
         self.extra_context["child"] = self.child
-        self.success_url = "employe/enfants/"+str(self.child)+"/transmissions/"
         self.extra_context["sleep_form"] = SleepFormSet()
         self.extra_context["meal_form"] = MealFormSet()
         self.extra_context["activity_form"] = ActivityFormSet()
@@ -189,31 +193,42 @@ class ChildTransmissionsAddView(LoginRequiredMixin, CreateView):
         return super().get(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
-        self.child = Child.objects.get(pk=kwargs.get("pk"))
         self.user = Employee.objects.get(username__contains=request.user.username)
         self.object = None
+        self.child = Child.objects.get(pk=kwargs.get("pk"))
         self.extra_context["post"]=True
+        self.success_url=reverse("d_to_d:Child_transmissions", args=(self.child.pk, True), current_app=self.request.resolver_match.namespace)
         form = self.form_class(data={"child": self.child,
                     "employee": self.user,
                     "comment" : request.POST.get("comment"),
                 })
         if form.is_valid():
-            new_transmission = form.save(commit=False)
-            formlist =[SleepFormSet(request.POST, instance=new_transmission),
-            MealFormSet(request.POST, instance=new_transmission),
-            ActivityFormSet(request.POST, instance=new_transmission),
-            FeedingBottleFormSet(request.POST, instance=new_transmission),
-            MedicalEventFormSet(request.POST, instance=new_transmission),
+            new_transmission = form.save()
+            formlist = [
+                (SleepFormSet(request.POST, instance=new_transmission), ["sleep_form", "Sieste"]),
+                (MealFormSet(request.POST, instance=new_transmission), ["meal_form", "Repas"]),
+                (ActivityFormSet(request.POST, instance=new_transmission), ["activity_form", "Activités"]),
+                (FeedingBottleFormSet(request.POST, instance=new_transmission), ["feeding_bttle_form", "Biberons"]),
+                (MedicalEventFormSet(request.POST, instance=new_transmission), ["medical_form", "Médical"]),
             ]
-            for formset in formlist:
-                if form.is_valid():
-                    form.save()
+            error=[]
+            for formset, formset_name in formlist:
+                #commit=False won't allow to save the instance of formset...thus formset.save() and .delete if any errors
+                if formset.is_valid():
+                    pass
                 else:
-                    self.extra_context[form.__name__] = formset
-                    return self.render_to_response(self.get_context_data(form=form))
-            self.extra_context["message"] = "La Transmission a bien été enregistrée"
-            return HttpResponseRedirect(self.get_success_url())
+                    self.extra_context[formset_name[0]] = formset
+                    error.append(formset_name[1])
+            if error:
+                new_transmission.delete()
+                self.extra_context["message"] = "Veuillez corriger les erreurs dans les champs suivants : "+ ", ".join(error)
+                return self.render_to_response(self.get_context_data(form=form))
+            else:
+                for formset, formset_name in formlist:
+                    formset.save()
+                return self.form_valid(form)
         else:
+            self.extra_context["message"] = "Veuillez corriger les erreurs dans le commentaire"
             return self.form_invalid(form)
 
 
@@ -223,20 +238,20 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
                                 name__icontains=settings.STRUCTURE,
                             )
     extra_context = {"child_care_facility" : child_care_facility,
+        "success":None,
         }
     template_name = "day_to_day/_trans_detail.html"
     success_url = None
     form_class = DailyFactForm
-    transmission = None
     def get(self, request, *args, **kwargs):
-        
-        if self.extra_context.get("post")==True:
-            self.extra_context["post"]=False
+        if self.extra_context["success"]==True:
+            self.extra_context["success"]=False
+            self.extra_context["transmission_recorded"] = "Votre Modification a bien été enregistrée"
+            self.extra_context["message"] = None
         else:
-            self.extra_context["message"]=None
-
+            self.extra_context["transmission_recorded"] = None
         user = Employee.objects.get(username__contains=request.user.username)
-        self.transmission = DailyFact.objects.get(pk=kwargs.get("pk"))
+        self.transmission = DailyFact.objects.get(pk=kwargs.get(self.pk))
         if self.transmission.employee == user:
             self.extra_context["employee"] = user
             self.initial = {"child" : self.transmission.child, 
@@ -256,24 +271,29 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
         """If the form is invalid, render the invalid form."""
         self.extra_context["message"] = "La modification de la donnée "+formset[0][1]+" n'a pas été effectuée merci de vérifier les erreurs"
         self.extra_context[formset[0][0]] = formset[1]
+        self.initial = {"child" : self.transmission.child, 
+            "comment" : self.transmission.comment,
+        }
+        form = self.form_class(initial=self.initial)
+        self.extra_context["form"]=form
         return self.render_to_response(self.get_context_data())
     
     def get_formset(self, post_data, user):
         if post_data.get("sleep_set-TOTAL_FORMS"):
             form_name = ["sleep_form", "Sieste"]
-            form = SleepFormSet(self.request.POST, instance=self.transmission)
+            form = SleepFormSet(post_data, instance=self.transmission)
         elif post_data.get("meal_set-TOTAL_FORMS"):
             form_name = ["meal_form", "Repas"]
-            form = MealFormSet(self.request.POST, instance=self.transmission)
+            form = MealFormSet(post_data, instance=self.transmission)
         elif post_data.get("activity_set-TOTAL_FORMS"):
             form_name = ["activity_form", "Activités"]
-            form = ActivityFormSet(self.request.POST, instance=self.transmission)
+            form = ActivityFormSet(post_data, instance=self.transmission)
         elif post_data.get("feedingbottle_set-TOTAL_FORMS"):
             form_name = ["feeding_bttle_form", "Biberons"]
-            form = FeedingBottleFormSet(self.request.POST, instance=self.transmission)
+            form = FeedingBottleFormSet(post_data, instance=self.transmission)
         elif post_data.get("medicalevent_set-TOTAL_FORMS"):
             form_name = ["medical_form", "Médical"]
-            form = MedicalEventFormSet(self.request.POST, instance=self.transmission)
+            form = MedicalEventFormSet(post_data, instance=self.transmission)
         else :
             form_name = ["form", "Commentaire"]
             form = self.form_class(data={"child": self.transmission.child,
@@ -283,24 +303,34 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
         return [form_name, form]
 
     def post(self, request, *args, **kwargs):
-        self.extra_context["post"]=True
         user = Employee.objects.get(username__contains=request.user.username)
         self.transmission = DailyFact.objects.get(pk=kwargs.get(self.pk))
+        self.extra_context["employee"] = user
+        self.initial = {"child" : self.transmission.child, 
+                        "comment" : self.transmission.comment,
+                    }
+        self.extra_context["trans"] = self.transmission
+        self.extra_context["sleep_form"] = SleepFormSet(instance=self.transmission)
+        self.extra_context["meal_form"] = MealFormSet(instance=self.transmission)
+        self.extra_context["activity_form"] = ActivityFormSet(instance=self.transmission)
+        self.extra_context["feeding_bttle_form"] = FeedingBottleFormSet(instance=self.transmission)
+        self.extra_context["medical_form"] = MedicalEventFormSet(instance=self.transmission)
+        self.success_url = str(self.transmission.pk)
         if self.transmission.employee == user:
-            self.transmission = DailyFact.objects.get(pk=kwargs.get(self.pk))
-            self.success_url = str(self.transmission.pk)
             formset = self.get_formset(request.POST, user)
 
             if formset[1].is_valid() and formset[0][0]=="form" :
                 self.transmission.comment = formset[1].cleaned_data["comment"]
                 self.transmission.save()
-                self.extra_context["message"] = "La modification a bien été enregistrée"
-                return self.form_valid(formset[1])
+                self.extra_context["success"]=True
+                self.transmission = DailyFact.objects.get(pk=self.transmission.pk)
+                return self.form_valid(self.form_class())
             elif formset[1].is_valid():
                 formset[1].save()
-                self.extra_context["message"] = "La modification a bien été enregistrée"
-                return self.form_valid(formset[1])
+                self.extra_context["success"]=True
+                return self.form_valid(self.form_class())
             else:
+                self.extra_context["success"]=False
                 return self.form_invalid(formset)
         else:
             raise PermissionDenied

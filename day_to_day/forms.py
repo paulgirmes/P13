@@ -54,11 +54,15 @@ MedicalEventFormSet = forms.inlineformset_factory(
     widgets={'description': forms.Textarea(attrs={
                 'class': "form-control form-control-user",
                 'cols': 40, 'rows': 5,
+                "placeholder": "Votre commentaire (OBLIGATOIRE)"
             }),
             'body_temp_deg_C': forms.NumberInput(attrs={
                 'class': "form-control form-control-user",
             }),
             'given_paracetamol_qtty_mg': forms.NumberInput(attrs={
+                'class': "form-control form-control-user",
+            }),
+            'paracetamol_given_time': forms.TimeInput (attrs={
                 'class': "form-control form-control-user",
             }),
         },

@@ -13,11 +13,7 @@
 
     <div class="card shadow mb-4">
       <div class="card-header py-3">
-        {% if message %}
-        <h6 class="m-0 font-weight-bold text-danger">{{ message }}</h6>
-        {% else %}
         <h6 class="m-0 font-weight-bold text-primary">Veuillez renseigner les éléments Désirés (Commentaire Obligatoire): </h6>
-        {% endif %}
       </div>
       <div class="card-body">
         <form method="post">
@@ -26,26 +22,26 @@
                 {{ form.comment }}
           </div>
           <div class="row justify-content-center">
-                <button type="button" class="btn btn-primary btn-lg  ml-2 mr-2 mt-1" data-toggle="modal" data-target="#sleep">
+                <button type="button" class="btn  {% if sleep_form.errors %}btn-danger{% else %}btn-primary{% endif %} ml-2 mr-2 mt-1" data-toggle="modal" data-target="#sleep">
                   Ajouter une sieste
                 </button>
-                <button type="button" class="btn btn-primary btn-lg  ml-2 mr-2 mt-1" data-toggle="modal" data-target="#meal">
+                <button type="button" class="btn {% if meal_form.errors %}btn-danger{% else %}btn-primary{% endif %} ml-2 mr-2 mt-1" data-toggle="modal" data-target="#meal">
                   Ajouter un repas
                 </button>
-                <button type="button" class="btn btn-primary btn-lg  ml-2 mr-2 mt-1" data-toggle="modal" data-target="#activity">
+                <button type="button" class="btn {% if activity_form.errors %}btn-danger{% else %}btn-primary{% endif %} ml-2 mr-2 mt-1" data-toggle="modal" data-target="#activity">
                   Ajouter une activité
                 </button>
-                <button type="button" class="btn btn-primary btn-lg  ml-2 mr-2 mt-1" data-toggle="modal" data-target="#feeding_bttle">
+                <button type="button" class="btn {% if feeding_bttle_form.errors %}btn-danger{% else %}btn-primary{% endif %} ml-2 mr-2 mt-1" data-toggle="modal" data-target="#feeding_bttle">
                   Ajouter un biberon
                 </button>
-                <button type="button" class="btn btn-primary btn-lg  ml-2 mr-2 mt-1" data-toggle="modal" data-target="#medical">
+                <button type="button" class="btn {% if medical_form.errors %}btn-danger{% else %}btn-primary{% endif %} ml-2 mr-2 mt-1" data-toggle="modal" data-target="#medical">
                   Ajouter un évènement médical 
                 </button>
           </div>
-            
-          <input class="btn btn-primary" type="submit" value="Modifier">
-          <a type="button" class="btn btn-secondary" href="{% url "d_to_d:Child_facts" child.pk %}">annuler</a>
-          
+          <div class="row justify-content-center mt-5">
+          <input class="btn btn-success btn-lg mr-1" type="submit" value="Valider La Transmission">
+          <a type="button" class="btn btn-secondary btn-lg ml-1" href="{% url "d_to_d:Child_facts" child.pk %}">annuler</a>
+          </div>
           <!-- Modal sleep -->
           <div class="modal fade" id="sleep" tabindex="-1" data-backdrop="static" aria-labelledby="sleep_label" aria-hidden="true">
             <div class="modal-dialog">
@@ -57,14 +53,10 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  
-                    
                     {{ sleep_form.as_p }}
                   <div class="modal-footer">
-                    
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                   </div>
-                
                 </div>
               </div>
             </div>
@@ -80,13 +72,10 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  
-                    
                     {{ meal_form.as_p }}
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                     </div>
-                  
                 </div>
               </div>
             </div>
@@ -102,13 +91,10 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  
-                    
                     {{ activity_form.as_p }}
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                     </div>
-                  
                 </div>
               </div>
             </div>
@@ -124,13 +110,10 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  
-                    
                     {{ feeding_bttle_form.as_p }}
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                     </div>
-                  
                 </div>
               </div>
             </div>
@@ -146,13 +129,10 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  
-                    
                     {{ medical_form.as_p }}
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                     </div>
-                  
                 </div>
               </div>
             </div>
@@ -162,7 +142,4 @@
     </div>
   </div>
 </div>
-
-
-
 {% endblock content %}

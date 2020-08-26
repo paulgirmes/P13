@@ -79,7 +79,8 @@
                         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                         </button>
-            
+                        {% if transmission_recorded %}<div class="alert alert-success align-self-center mt-3 ml-5" role="alert">{{transmission_recorded }}</div>{% endif %}
+                        {% if message %}<div class="alert alert-danger align-self-center mt-3 ml-5" role="alert">{{ message }}</div>{% endif %}
                         <!-- Topbar Navbar -->
                         <ul class="navbar-nav ml-auto">
                             <div class="topbar-divider d-none d-sm-block"></div>
