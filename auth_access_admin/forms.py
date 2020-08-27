@@ -1,16 +1,20 @@
 from django import forms
 from django.contrib.auth import password_validation
-from django.contrib.auth.forms import AuthenticationForm, UsernameField, SetPasswordForm
+from django.contrib.auth.forms import (
+    AuthenticationForm, UsernameField,
+    SetPasswordForm,
+)
 from django.utils.translation import gettext, gettext_lazy as _
+from .models import Employee, FamilyMember
 
 
 class Login(AuthenticationForm):
 
     username = UsernameField(widget=forms.TextInput(
         attrs={'autofocus': True, 'class': "form-control form-control-user",
-            'placeholder': "Entrez Votre Adresse Email",
-            }
-        )
+               'placeholder': "Entrez Votre Adresse Email",
+               }
+    )
     )
 
     password = forms.CharField(
@@ -18,11 +22,12 @@ class Login(AuthenticationForm):
         strip=False,
         widget=forms.PasswordInput(
             attrs={'autocomplete': 'current-password',
-                'class': "form-control form-control-user",
-                'placeholder': "Entrez Votre Mot de Passe",
-            }
+                   'class': "form-control form-control-user",
+                   'placeholder': "Entrez Votre Mot de Passe",
+                   }
         ),
     )
+
 
 class Password_reset_form(SetPasswordForm):
     new_password1 = forms.CharField(
@@ -30,7 +35,7 @@ class Password_reset_form(SetPasswordForm):
         widget=forms.PasswordInput(attrs={
             'autocomplete': 'new-password',
             'class': "form-control form-control-user",
-            }
+        }
         ),
         strip=False,
         help_text=password_validation.password_validators_help_text_html(),
@@ -41,6 +46,6 @@ class Password_reset_form(SetPasswordForm):
         widget=forms.PasswordInput(attrs={
             'autocomplete': 'new-password',
             'class': "form-control form-control-user",
-            }
+        }
         ),
     )

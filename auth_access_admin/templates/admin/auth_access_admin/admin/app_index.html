@@ -1,0 +1,10 @@
+{% extends "admin/auth_access_admin/admin/base_site.html" %}
+{% load i18n %}
+
+{% block bodyclass %}{{ block.super }} app-{{ app_label }}{% endblock %}
+
+{% if not is_popup %}
+
+{% endif %}
+
+{% block sidebar %}{% endblock %}

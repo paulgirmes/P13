@@ -1,0 +1,94 @@
+{% extends "day_to_day/base.html" %}
+{% block content %}
+{% load static %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-gray-800">Fiche enfant</h1>
+</div>
+
+<div class="row">
+
+  <div class="col mb-4 mr-3">
+
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">{{ object.first_name }} {{ object.last_name }}</h6>
+      </div>
+      <div class="card-body">
+        <!-- Button trigger modal -->
+        <div class="row justify-content-center">
+          <button type="button" class="btn btn-danger btn-lg  ml-2 mr-2 mt-1" data-toggle="modal" data-target="#emergency_contacts">
+            Contacts d'urgence
+          </button>
+          <div class="dropdown">
+            <button class="btn btn-success dropdown-toggle btn-lg ml-2 mr-2 mt-1" style="white-space: unset;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Personnes Autorisées à prendre en charge l'enfant
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              {% for contact in authorized_familly %}
+              <a class="dropdown-item" data-toggle="modal" href="#{{ contact.first_name|slugify }}{{ contact.last_name|slugify }}">{{ contact.first_name }} {{ contact.last_name }}</a>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle btn-lg ml-2 mr-2 mt-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              transmissions
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="{% url "d_to_d:transmission_add" child.pk %}">ajouter</a>
+              <a class="dropdown-item" href="{% url "d_to_d:Child_transmissions" child.pk False %}">Voir Les Transmissions Enregistrées pour {{ object.first_name }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="emergency_contacts" tabindex="-1" aria-labelledby="emergency_contacts_label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="emergency_contacts_Label">Contacts en cas d'urgences</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% for contact in emergency_contacts %}
+        <div class="alert alert-danger text-center" role="alert">
+          {{ contact.first_name }}
+          {{ contact.last_name }}
+          <h1>{{ contact.phone }}</h1>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% for contact in authorized_familly %}
+<!-- Modal -->
+<div class="modal fade" id="{{ contact.first_name|slugify }}{{ contact.last_name|slugify }}" tabindex="-1" aria-labelledby="{{ contact.first_name|slugify }}{{ contact.last_name|slugify }}Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="{{ contact.first_name|slugify }}{{ contact.last_name|slugify }}Label">{{ contact.first_name }} {{ contact.last_name }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img class="col-12" src="/media/{{ contact.IdScan }}" alt="">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% endblock content %}

@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractUser
 
 # custom user model
 class User(AbstractUser):
+    first_name = models.CharField(_('first name'), max_length=30,)
+    last_name = models.CharField(_('last name'), max_length=150,)
     username = models.EmailField(
         _('email address'),
         unique=True,
@@ -11,8 +13,12 @@ class User(AbstractUser):
             'unique': _("A user with that username already exists."),
         },
         )
+
+    EMAIL_FIELD = "username"
+
     def __str__(self):
         return self.username
+
 
 class Child_care_facility(models.Model):
     name = models.CharField(
@@ -53,8 +59,8 @@ class Child_care_facility(models.Model):
     email = models.EmailField(_('email address'))
     
     class Meta:
-        verbose_name = "Structure"
-        verbose_name_plural = "Structures"
+        verbose_name = "Structure de Garde"
+        verbose_name_plural = "Structures de Garde"
 
     def __str__(self):
         return self.name
@@ -71,7 +77,7 @@ class New(models.Model):
     content = models.CharField(
         "Contenu texte",
         max_length=200,
-        blank=True
+        blank=True,
     )
     img_url = models.ImageField(
         "image",
@@ -80,10 +86,12 @@ class New(models.Model):
     cc_facility = models.ForeignKey(
         Child_care_facility,
         on_delete=models.CASCADE,
+        verbose_name="Structure de Garde",
     )
+    
     class Meta:
-        verbose_name = "Nouvelle"
-        verbose_name_plural = "Nouvelles"
+        verbose_name = "News"
+        verbose_name_plural = "News"
 
     def __str__(self):
         return self.title

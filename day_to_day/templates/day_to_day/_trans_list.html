@@ -1,0 +1,68 @@
+{% extends "day_to_day/base.html" %}
+{% block content %}
+{% load static %}
+{% load tz %}
+
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-gray-800">Liste des transmissions enregistrées {% if child %}pour {{ child.first_name }} {{ child.last_name }}{% else %}par {{ user.first_name }} {{ user.last_name }}{% endif %}</h1>
+</div>
+
+<div class="row">
+
+  <div class="col mb-4">
+
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Veuillez effectuer une sélection pour accéder aux données / modifier une transmission :</h6>
+      </div>
+      <div class="card-body">
+        <div class="input-group">
+          <select class="custom-select" id="inputGroupSelect04" aria-label="Example select with button addon" onchange="location = this.value;">
+            <option selected value="#">Choisir...</option>
+            {% localtime on %}
+            {% for trans in object_list %}
+            <option value="#" data-toggle="modal" href="#{{ trans.child|slugify }}{{ trans.employee|slugify }}{{ trans.comment|slugify }}">{{ trans.child }}, {{ trans.time_stamp|localtime }}</option>
+            {% endfor %}
+            {% endlocaltime %}
+          </select>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% for trans in object_list %}
+<!-- Modal -->
+<div class="modal fade" id="{{ trans.child|slugify }}{{ trans.employee|slugify }}{{ trans.comment|slugify }}" tabindex="-1" aria-labelledby="{{ trans.child|slugify }}{{ trans.employee|slugify }}{{ trans.comment|slugify }}Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="{{ trans.child|slugify }}{{ trans.employee|slugify }}{{ trans.comment|slugify }}Label">{{ trans }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p><h5>Commentaire :</h5>"{{ trans.comment }}"</p>
+        {% if trans.sleep_set.all %}<p><h5>Siestes :</h5>{% for sleep in trans.sleep_set.all %} {{ sleep }} {% endfor %}</p>{% endif %}
+        {% if trans.meal_set.all %}<p><h5>Alimentation : </h5>{% for meal in trans.meal_set.all %} {{ meal }} {% endfor %}</p>{% endif %}
+        {% if trans.feedingbottle_set.all %}<p><h5>Biberons : </h5>{% for feedingbottle in trans.feedingbottle_set.all %} {{ feedingbottle }} {% endfor %}</p>{% endif %}
+        {% if trans.activity_set.all %}<p><h5>Activités : </h5>{% for activity in trans.activity_set.all %} {{ activity }} {% endfor %}</p>{% endif %}
+        {% if trans.medicalevent_set.all %}<p><h5>Médical : </h5>{% for medicalevent in trans.medicalevent_set.all %} {{ medicalevent }} {% endfor %}</p>{% endif %}
+      </div>
+      <div class="modal-footer">
+        {% if employee.id != trans.employee.id %}
+        <div class="alert alert-warning" role="alert">
+          Vous ne pouvez pas modifier cette transmission.
+        </div>
+        {% endif %}
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+        <a href={% if employee.id != trans.employee.id %}#{% else %}"{% url "d_to_d:transmissions_change" trans.pk %}"{% endif %} class="btn btn-primary {% if employee.id != trans.employee.id %}disabled{% endif %}" role="button" >modifier</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock content %}
