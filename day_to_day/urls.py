@@ -28,4 +28,5 @@ urlpatterns = [
     path("employe/enfants/<int:pk>/transmissions/ajouter/", views.ChildTransmissionsAddView.as_view(), name="transmission_add"),
     path("employe/transmission/modifier/<int:pk>", views.TransmissionsChangeView.as_view(pk="pk"), name="transmissions_change"),
     path("parent/", views.ParentView.as_view(), name="parent"),
+    path("child/<int:pk>/", views.Child_transmissions_report.as_view(), name="child"),
 ]

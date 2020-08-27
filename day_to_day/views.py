@@ -356,7 +356,7 @@ class ParentView(LoginRequiredMixin, TemplateView):
     redirect_field_name = 'redirect_to'
     extra_context = {"child_care_facility" : child_care_facility,
         }
-    template_name = "day_to_day/_parents_index.html"
+    template_name = "day_to_day/_parent_trans_list.html"
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
 
@@ -364,11 +364,46 @@ class ParentView(LoginRequiredMixin, TemplateView):
         try: 
             user = FamilyMember.objects.get(username=request.user.username)
             childs = Child.objects.filter(relative=user)
-            transmissions = DailyFact.objects.filter(child=childs)
+            # transmissions = DailyFact.objects.filter(child=childs)
             self.extra_context["parent"] = user
-            self.extra_context["parent"] = user
+            self.extra_context["childs"] = childs
             return self.render_to_response(self.get_context_data())
         except:
             if request.user.is_superuser:
                 return self.render_to_response(self.get_context_data())
             raise PermissionDenied
+
+class Child_transmissions_report(LoginRequiredMixin, ListView):
+    login_url = '/auth/login/'
+    redirect_field_name = 'redirect_to'
+    child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
+    extra_context = {"child_care_facility" : child_care_facility,
+        }
+    model = DailyFact
+    template_name = "day_to_day/_parent_child_trans_list.html"
+    def get(self, request, *args, **kwargs):
+        try:
+            user = FamilyMember.objects.get(username=request.user.username)
+        except:
+            if request.user.is_superuser:
+                pass
+            raise PermissionDenied
+        self.object_list = self.get_queryset().filter(
+                child = self.kwargs.get("pk")
+                ).order_by("-time_stamp")
+        allow_empty = self.get_allow_empty()
+        if not allow_empty:
+            # When pagination is enabled and object_list is a queryset,
+            # it's better to do a cheap query than to load the unpaginated
+            # queryset in memory.
+            if self.get_paginate_by(self.object_list) is not None and hasattr(self.object_list, 'exists'):
+                is_empty = not self.object_list.exists()
+            else:
+                is_empty = not self.object_list
+            if is_empty:
+                raise Http404(_('Empty list and “%(class_name)s.allow_empty” is False.') % {
+                    'class_name': self.__class__.__name__,
+                })
+        self.extra_context["child"]= Child.objects.get(pk=self.kwargs.get("pk"))
+        context = self.get_context_data()
+        return self.render_to_response(context)
