@@ -301,6 +301,8 @@ class MedicalEvent(models.Model):
             event_desc += "température : "+str(self.body_temp_deg_C)+" °C "
         if self.given_paracetamol_qtty_mg:
             event_desc += "Quantité de paracétamol donnée : "+str(self.body_temp_deg_C)+" mg. "
+        if self.paracetamol_given_time:
+            event_desc += "à "+str(self.paracetamol_given_time)
         return event_desc
 
 class Message(models.Model):

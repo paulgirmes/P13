@@ -1,10 +1,11 @@
 import datetime
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, reverse, redirect
 from django.core.exceptions import PermissionDenied
 from django.views.generic import FormView, TemplateView
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from frontpage.models import Child_care_facility
 from day_to_day.models import Child, MedicalEvent, DailyFact
 from django.conf import settings
@@ -38,23 +39,20 @@ class Index(LoginRequiredMixin, TemplateView):
                 self.extra_context["employee"] = request.user
                 return self.render_to_response(self.get_context_data())
             else:
-                user = Employee.objects.get(username__contains=request.user.username)
+                user = Employee.objects.get(username=request.user.username)
                 if user.Is_manager:
                     self.extra_context["employee"] = user
                     return self.render_to_response(self.get_context_data())
                 else:
                     self.extra_context["employee"] = user
-                    redirect(reverse("day_to_day:employee"))
+                    return redirect(reverse("d_to_d:employee"))
         except:
-            try: 
-                user = FamilyMember.objects.get(username__contains=request.user.username)
-                if user.Is_parent:
+                user = FamilyMember.objects.get(username=request.user.username)
+                if user.has_daylyfact_access:
                     self.extra_context["parent"] = user
-                    redirect(reverse("day_to_day:parent"))
+                    return redirect(reverse("d_to_d:parent"))
                 else:
                     raise PermissionDenied
-            except:
-                raise PermissionDenied
 
 
 

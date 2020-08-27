@@ -37,11 +37,14 @@
             médical
           </button>
         </div>
-        </div>
       </div>
     </div>
   </div>
-
+</div>
+<div class="row justify-content-center">
+  <a class="btn btn-secondary mr-1 mb-3" href="{% url "d_to_d:Child_transmissions" trans.child.pk False %}">Retour à la liste de transmissions de {{ trans.child.first_name}}</a>
+  <a class="btn btn-secondary ml-1 mb-3" href="{% url "d_to_d:Child_facts" trans.child.pk %}">Retour à la fiche détails de {{ trans.child.first_name}}</a>
+</div>
 
 <!-- Modal comment -->
 <div class="modal fade" id="comment" tabindex="-1" data-backdrop="static" aria-labelledby="comment_label" aria-hidden="true">

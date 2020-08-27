@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.forms import ModelForm, Textarea
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, reverse, redirect
 from django.contrib.auth import REDIRECT_FIELD_NAME
@@ -120,6 +121,7 @@ class FamilyCreationForm(UserCreationForm):
             "phone",
             "IdScan",
             "address",
+            "has_daylyfact_access",
         )
 
 class FamilyUserAdmin(UserAdmin):
@@ -145,6 +147,7 @@ class FamilyUserAdmin(UserAdmin):
                     "phone",
                     "IdScan",
                     "address",
+                    "has_daylyfact_access",
                     ),
         }),
     )
@@ -159,6 +162,7 @@ class FamilyUserAdmin(UserAdmin):
                     "phone",
                     "IdScan",
                     "address",
+                    "has_daylyfact_access",
                     ),
             }),
         )
@@ -248,6 +252,17 @@ class ChildAdmin(NewAdmin):
         ]
 
 
+class DailyFactForm(ModelForm):
+ class Meta:
+        widgets = {
+            'comment': Textarea(attrs={
+                'cols': 40, 'rows': 5,
+                'class': "form-control form-control-user",
+                "placeholder": "Votre commentaire"
+            }),
+        }
+
+
 class DailyFactAdmin(NewAdmin):
     inlines = [
                 SleepInline,
@@ -256,6 +271,7 @@ class DailyFactAdmin(NewAdmin):
                 ActivityInline,
                 MedicalEventInline,
             ]
+    form = DailyFactForm
 
 admin_site.register(New, NewAdmin)
 admin_site.register(FamilyMember, FamilyUserAdmin)

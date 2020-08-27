@@ -33,6 +33,7 @@ class FamilyCreationForm(UserCreationForm):
             "phone",
             "IdScan",
             "address",
+            "has_daylyfact_access",
         )
 
 class FamilyUserAdmin(UserAdmin):
@@ -41,12 +42,30 @@ class FamilyUserAdmin(UserAdmin):
         (None, {
             'classes': ('wide',),
             'fields': ('username', 'password1', 'password2',
+            "first_name",
+            "last_name",
             "phone",
             "IdScan",
             "address",
+            "has_daylyfact_access",
             ),
         }),
     )
+    fieldsets = (
+            (None, {
+                'classes': ('wide',),
+                'fields': (
+                    "first_name",
+                    "last_name",
+                    'username',
+                    'password',
+                    "phone",
+                    "IdScan",
+                    "address",
+                    "has_daylyfact_access",
+                    ),
+            }),
+        )
 
 class EmployeeUserAdmin(UserAdmin):
     add_form = EmployeeCreationForm

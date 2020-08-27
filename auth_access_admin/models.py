@@ -14,7 +14,9 @@ class FamilyMember(User):
         "auth_access_admin.Address", on_delete=models.CASCADE,
         verbose_name="Adresse",
         )
-
+    has_daylyfact_access = models.BooleanField("Accès aux transmissions",
+        default=False,
+    )
     class Meta:
         verbose_name = "Membre Familial"
         verbose_name_plural = "Membres de la Famille"

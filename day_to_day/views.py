@@ -44,6 +44,8 @@ class EmployeeView(LoginRequiredMixin, TemplateView):
 
 
 class ChildListView(LoginRequiredMixin, ListView):
+    login_url = '/auth/login/'
+    redirect_field_name = 'redirect_to'
     child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
     model = Child
     template_name = "day_to_day/_child_list.html"
@@ -71,6 +73,8 @@ class ChildListView(LoginRequiredMixin, ListView):
 
 
 class ChildTransmissionsView(LoginRequiredMixin, ListView):
+    login_url = '/auth/login/'
+    redirect_field_name = 'redirect_to'
     child_care_facility = Child_care_facility.objects.get(
         name__icontains=settings.STRUCTURE
         )
@@ -107,6 +111,8 @@ class ChildTransmissionsView(LoginRequiredMixin, ListView):
 
 
 class ChildView(LoginRequiredMixin, DetailView):
+    login_url = '/auth/login/'
+    redirect_field_name = 'redirect_to'
     child_care_facility = Child_care_facility.objects.get(
                                 name__icontains=settings.STRUCTURE,
                             )
@@ -135,6 +141,8 @@ class ChildView(LoginRequiredMixin, DetailView):
 
 
 class EmployeeTransmissionsListView(LoginRequiredMixin, ListView):
+    login_url = '/auth/login/'
+    redirect_field_name = 'redirect_to'
     child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
     extra_context = {"child_care_facility" : child_care_facility,
         }
@@ -166,6 +174,8 @@ class EmployeeTransmissionsListView(LoginRequiredMixin, ListView):
 
 
 class ChildTransmissionsAddView(LoginRequiredMixin, CreateView):
+    login_url = '/auth/login/'
+    redirect_field_name = 'redirect_to'
     child_care_facility = Child_care_facility.objects.get(
                                 name__icontains=settings.STRUCTURE,
                             )
@@ -233,6 +243,8 @@ class ChildTransmissionsAddView(LoginRequiredMixin, CreateView):
 
 
 class TransmissionsChangeView(LoginRequiredMixin, FormView):
+    login_url = '/auth/login/'
+    redirect_field_name = 'redirect_to'
     pk = None
     child_care_facility = Child_care_facility.objects.get(
                                 name__icontains=settings.STRUCTURE,
@@ -336,8 +348,9 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
             raise PermissionDenied
     
 
-
 class ParentView(LoginRequiredMixin, TemplateView):
+    login_url = '/auth/login/'
+    redirect_field_name = 'redirect_to'
     child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
@@ -349,12 +362,13 @@ class ParentView(LoginRequiredMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         try: 
-            user = FamilyMember.objects.get(username__contains=request.user.username)
-            if user.Is_parent:
-                self.extra_context["parent"] = user
-               
-                return self.render_to_response(self.get_context_data())
-            else:
-                raise PermissionDenied
+            user = FamilyMember.objects.get(username=request.user.username)
+            childs = Child.objects.filter(relative=user)
+            transmissions = DailyFact.objects.filter(child=childs)
+            self.extra_context["parent"] = user
+            self.extra_context["parent"] = user
+            return self.render_to_response(self.get_context_data())
         except:
-                raise PermissionDenied
+            if request.user.is_superuser:
+                return self.render_to_response(self.get_context_data())
+            raise PermissionDenied

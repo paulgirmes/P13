@@ -77,7 +77,7 @@ class New(models.Model):
     content = models.CharField(
         "Contenu texte",
         max_length=200,
-        blank=True
+        blank=True,
     )
     img_url = models.ImageField(
         "image",
