@@ -22,7 +22,7 @@ from .forms import (
 
 
 class EmployeeView(LoginRequiredMixin, TemplateView):
-    child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
+    child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
     messages = Message.objects.all()
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
@@ -36,7 +36,7 @@ class EmployeeView(LoginRequiredMixin, TemplateView):
                 self.extra_context["employee"] = request.user
                 return self.render_to_response(self.get_context_data())
             else:
-                user = Employee.objects.get(username__contains=request.user.username)
+                user = Employee.objects.get(username=request.user.username)
                 self.extra_context["employee"] = user
                 return self.render_to_response(self.get_context_data())
         except:
@@ -46,7 +46,7 @@ class EmployeeView(LoginRequiredMixin, TemplateView):
 class ChildListView(LoginRequiredMixin, ListView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
+    child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
     model = Child
     template_name = "day_to_day/_child_list.html"
     extra_context = {"child_care_facility" : child_care_facility,
@@ -54,7 +54,7 @@ class ChildListView(LoginRequiredMixin, ListView):
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
         allow_empty = self.get_allow_empty()
-        user = Employee.objects.get(username__contains=request.user.username)
+        user = Employee.objects.get(username=request.user.username)
         self.extra_context["employee"] = user
         if not allow_empty:
             # When pagination is enabled and object_list is a queryset,
@@ -76,7 +76,7 @@ class ChildTransmissionsView(LoginRequiredMixin, ListView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
     child_care_facility = Child_care_facility.objects.get(
-        name__icontains=settings.STRUCTURE
+        name=settings.STRUCTURE
         )
     extra_context = {"child_care_facility" : child_care_facility,
         }
@@ -88,7 +88,7 @@ class ChildTransmissionsView(LoginRequiredMixin, ListView):
             time_stamp__date=timezone.now().date()
             ).order_by("-time_stamp")
         allow_empty = self.get_allow_empty()
-        user = Employee.objects.get(username__contains=request.user.username)
+        user = Employee.objects.get(username=request.user.username)
         self.extra_context["employee"] = user
         self.extra_context["child"] = Child.objects.get(pk=kwargs.get("pk"))
         if kwargs.get("success", False)== "True":
@@ -114,7 +114,7 @@ class ChildView(LoginRequiredMixin, DetailView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
     child_care_facility = Child_care_facility.objects.get(
-                                name__icontains=settings.STRUCTURE,
+                                name=settings.STRUCTURE,
                             )
     model = Child
     template_name = "day_to_day/_child_detail.html"
@@ -128,7 +128,7 @@ class ChildView(LoginRequiredMixin, DetailView):
         }
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        user = Employee.objects.get(username__contains=request.user.username)
+        user = Employee.objects.get(username=request.user.username)
         self.extra_context["employee"] = user
         self.extra_context["emergency_contacts"] = self.emergency_contacts.filter(
                 family_link__child=self.object
@@ -143,15 +143,15 @@ class ChildView(LoginRequiredMixin, DetailView):
 class EmployeeTransmissionsListView(LoginRequiredMixin, ListView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
+    child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
     extra_context = {"child_care_facility" : child_care_facility,
         }
     model = DailyFact
     template_name = "day_to_day/_trans_list.html"
     def get(self, request, *args, **kwargs):
-        user = Employee.objects.get(username__contains=request.user.username)
+        user = Employee.objects.get(username=request.user.username)
         self.object_list = self.get_queryset().filter(
-                employee__username=user.username
+                employee=user.username
                 ).filter(
                 time_stamp__date=timezone.now().date()
                 ).order_by("-time_stamp")
@@ -351,7 +351,7 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
 class ParentView(LoginRequiredMixin, TemplateView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
+    child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
     extra_context = {"child_care_facility" : child_care_facility,
@@ -376,7 +376,7 @@ class ParentView(LoginRequiredMixin, TemplateView):
 class Child_transmissions_report(LoginRequiredMixin, ListView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
+    child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
     extra_context = {"child_care_facility" : child_care_facility,
         }
     model = DailyFact

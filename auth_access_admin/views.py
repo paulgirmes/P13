@@ -22,7 +22,7 @@ class Index(LoginRequiredMixin, TemplateView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
     child_number = Child.objects.all().count()
-    child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
+    child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
     events_today = DailyFact.objects.filter(time_stamp__date=datetime.datetime.now().date())
     medical_event_today = MedicalEvent.objects.filter(daily_fact__time_stamp__date=datetime.datetime.now().date())
     extra_context = {"child_care_facility" : child_care_facility,
