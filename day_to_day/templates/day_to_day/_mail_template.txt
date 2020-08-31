@@ -1,11 +1,21 @@
-{% load i18n %}
+{% load tz %}
 {% autoescape off %}
-{% blocktranslate %}You're receiving this email because you requested a password reset for your user account at {{ site_name }}.{% endblocktranslate %}
-{% translate "Please go to the following page and choose a new password:" %}
-{% block reset_link %}
-{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}
-{% endblock %}
-{% translate 'Your username, in case you’ve forgotten:' %} {{ user.get_username }}
-{% translate "Thanks for using our site!" %} {% blocktranslate %}The {{ site_name }} team
-{% endblocktranslate %}
+Bonjour {{ member.first_name }},
+
+Merci de trouver ci-dessous les transmissions de vos enfants pour aujourd'hui :
+{% for child in childs %}
+    pour {{child}} :{% for queryset in dailyfacts %}{% for fact in queryset %}
+        {% if fact.child == child %}
+        -->{% localtime on %}{{ fact.time_stamp|localtime }}{% endlocaltime %}:
+                {{fact.comment}},
+                {% if fact.sleep_set.all %}{% for sleep in fact.sleep_set.all %}{{ sleep }}{% endfor %}{% else %}Pas de données "sièste"{% endif %},
+                {% if fact.meal_set.all %}{% for meal in fact.meal_set.all %}{{ meal }}{% endfor %}{% else %}Pas de données "Repas"{% endif %},
+                {% if fact.feedingbottle_set.all %}{% for feedingbottle in fact.feedingbottle_set.all %}{{ feedingbottle }}{% endfor %}{% else %}Pas de données "Biberons"{% endif %},
+                {% if fact.activity_set.all %}{% for activity in fact.activity_set.all %}{{ activity }}{% endfor %}{% else %}Pas de données "Activité"{% endif %},
+                {% if fact.medicalevent_set.all %}{% for medicalevent in fact.medicalevent_set.all %}{{ medicalevent }}{% endfor %}{% else %}Pas de données "Médical"{% endif %}.{% endif %}{% endfor %}{% endfor %}
+                
+
+---------------------------------------------------------------------------------------------------------------------------------------------{% endfor %}
+{{child_care_facility.type_of_facility}} {{ child_care_facility.name }} vous souhaite une bonne soirée !
+A Demain !
 {% endautoescape %}

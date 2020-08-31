@@ -225,13 +225,14 @@ class ChildTransmissionsAddView(LoginRequiredMixin, CreateView):
             for formset, formset_name in formlist:
                 #commit=False won't allow to save the instance of formset...thus formset.save() and .delete if any errors
                 if formset.is_valid():
-                    pass
+                    self.extra_context[formset_name[0]] = formset
                 else:
                     self.extra_context[formset_name[0]] = formset
                     error.append(formset_name[1])
             if error:
                 new_transmission.delete()
                 self.extra_context["message"] = "Veuillez corriger les erreurs dans les champs suivants : "+ ", ".join(error)
+                self.extra_context["post"] = True
                 return self.render_to_response(self.get_context_data(form=form))
             else:
                 for formset, formset_name in formlist:
@@ -346,7 +347,7 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
                 return self.form_invalid(formset)
         else:
             raise PermissionDenied
-    
+
 
 class ParentView(LoginRequiredMixin, TemplateView):
     login_url = '/auth/login/'
@@ -372,6 +373,7 @@ class ParentView(LoginRequiredMixin, TemplateView):
             if request.user.is_superuser:
                 return self.render_to_response(self.get_context_data())
             raise PermissionDenied
+
 
 class Child_transmissions_report(LoginRequiredMixin, ListView):
     login_url = '/auth/login/'
