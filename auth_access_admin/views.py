@@ -22,15 +22,20 @@ class Index(LoginRequiredMixin, TemplateView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
     child_number = Child.objects.all().count()
-    child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
     events_today = DailyFact.objects.filter(time_stamp__date=datetime.datetime.now().date())
     medical_event_today = MedicalEvent.objects.filter(daily_fact__time_stamp__date=datetime.datetime.now().date())
-    extra_context = {"child_care_facility" : child_care_facility,
+    extra_context = {
         "child_number" : child_number,
-        "fill_ratio" : int(child_number/child_care_facility.max_child_number*100),
         "events_today" : events_today.count(),
         "medical_event_today": medical_event_today.count(),
         }
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context["child_care_facility"] = child_care_facility,
+        extra_context["fill_ratio"]=int(child_number/child_care_facility.max_child_number*100)
+    except:
+        extra_context["child_care_facility"] = None
+        extra_context["fill_ratio"] = None
     template_name = "auth_access_admin/_index.html"
     
     def get(self, request, *args, **kwargs):

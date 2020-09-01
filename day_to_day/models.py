@@ -55,6 +55,7 @@ class ChildScheduledDay(EmployeeScheduledDay):
     def __str__(self):
         return str(self.open_day)+" "+str(self.child)
 
+
 class Child(models.Model):
     last_name = models.CharField("Nom", max_length=100)
     first_name = models.CharField("Prénom", max_length=100)
@@ -67,6 +68,7 @@ class Child(models.Model):
     relative = models.ManyToManyField(
         FamilyMember,
         through="family_link",
+        verbose_name="Liens Familiaux"
     )
     class Meta:
         verbose_name = "Enfant"
@@ -132,6 +134,7 @@ class OpenDay(models.Model):
     
     def __str__(self):
         return str(self.date)
+
 
 class DailyFact(models.Model):
 
@@ -209,12 +212,13 @@ class Meal(models.Model):
     def __str__(self):
         meal = ""
         if self.starter_qtty_gr:
-            meal += "entrée "+str(self.starter_qtty_gr)+" gr. "
+            meal += "Entrée : "+str(self.starter_qtty_gr)+"gr. "
         if self.main_course_qtty_gr:
-            meal += "principal "+str(self.main_course_qtty_gr)+" gr. "
+            meal += "Plat Principal : "+str(self.main_course_qtty_gr)+"gr. "
         if self.desert_qtty_gr:
-            meal += "principal "+str(self.desert_qtty_gr)+" gr. "
+            meal += "Déssert : "+str(self.desert_qtty_gr)+"gr."
         return meal
+
 
 class FeedingBottle(models.Model):
 
@@ -233,7 +237,7 @@ class FeedingBottle(models.Model):
         verbose_name_plural = "Biberons"
 
     def __str__(self):
-        return str(self.drank_qtty_ml)+ "ml. "
+        return str(self.drank_qtty_ml)+ "ml."
 
 
 class Activity(models.Model):
@@ -264,7 +268,7 @@ class Activity(models.Model):
         for choice in settings.ACTIVITIES_CHOICES:
             if choice[0] == self.activity_type:
                 activity += choice[1]
-        return activity+" ."
+        return activity+"."
 
 
 class MedicalEvent(models.Model):
@@ -278,7 +282,7 @@ class MedicalEvent(models.Model):
         blank= True,
         null= True,
     )
-    given_paracetamol_qtty_mg = models.PositiveSmallIntegerField ("Paracétamol donné en MG",
+    given_paracetamol_qtty_mg = models.PositiveSmallIntegerField ("Paracétamol donné en mg",
         blank= True,
         null= True,
     )
@@ -298,12 +302,13 @@ class MedicalEvent(models.Model):
     def __str__(self):
         event_desc = self.description+". "
         if self.body_temp_deg_C:
-            event_desc += "température : "+str(self.body_temp_deg_C)+" °C "
+            event_desc += "Température : "+str(self.body_temp_deg_C)+" °C. "
         if self.given_paracetamol_qtty_mg:
-            event_desc += "Quantité de paracétamol donnée : "+str(self.body_temp_deg_C)+" mg. "
+            event_desc += "Quantité de paracétamol donnée : "+str(self.given_paracetamol_qtty_mg)+" mg. "
         if self.paracetamol_given_time:
-            event_desc += "à "+str(self.paracetamol_given_time)
+            event_desc += "à "+str(self.paracetamol_given_time)+"H."
         return event_desc
+
 
 class Message(models.Model):
     title = models.CharField("Titre",

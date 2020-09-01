@@ -22,13 +22,15 @@ from .forms import (
 
 
 class EmployeeView(LoginRequiredMixin, TemplateView):
-    child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
     messages = Message.objects.all()
+    extra_context = {"messages" : messages}
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    extra_context = {"child_care_facility" : child_care_facility,
-        "messages" : messages,
-        }
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context["child_care_facility"]=child_care_facility
+    except:
+        extra_context = {"child_care_facility" : None}
     template_name = "day_to_day/_employee_index.html"
     def get(self, request, *args, **kwargs):
         try:
@@ -46,11 +48,13 @@ class EmployeeView(LoginRequiredMixin, TemplateView):
 class ChildListView(LoginRequiredMixin, ListView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context = {"child_care_facility" : child_care_facility}
+    except:
+        extra_context = {"child_care_facility" : None}
     model = Child
     template_name = "day_to_day/_child_list.html"
-    extra_context = {"child_care_facility" : child_care_facility,
-        }
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
         allow_empty = self.get_allow_empty()
@@ -75,11 +79,11 @@ class ChildListView(LoginRequiredMixin, ListView):
 class ChildTransmissionsView(LoginRequiredMixin, ListView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(
-        name=settings.STRUCTURE
-        )
-    extra_context = {"child_care_facility" : child_care_facility,
-        }
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context = {"child_care_facility" : child_care_facility}
+    except:
+        extra_context = {"child_care_facility" : None}
     model = DailyFact
     template_name = "day_to_day/_trans_list.html"
 
@@ -113,9 +117,11 @@ class ChildTransmissionsView(LoginRequiredMixin, ListView):
 class ChildView(LoginRequiredMixin, DetailView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(
-                                name=settings.STRUCTURE,
-                            )
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context = {"child_care_facility" : child_care_facility}
+    except:
+        extra_context = {"child_care_facility" : None}
     model = Child
     template_name = "day_to_day/_child_detail.html"
     emergency_contacts = FamilyMember.objects.filter(
@@ -124,8 +130,6 @@ class ChildView(LoginRequiredMixin, DetailView):
     authorized_familly = FamilyMember.objects.filter(
                             family_link__retrieval_auth=True,
                         )
-    extra_context = {"child_care_facility" : child_care_facility,
-        }
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         user = Employee.objects.get(username=request.user.username)
@@ -143,9 +147,11 @@ class ChildView(LoginRequiredMixin, DetailView):
 class EmployeeTransmissionsListView(LoginRequiredMixin, ListView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
-    extra_context = {"child_care_facility" : child_care_facility,
-        }
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context = {"child_care_facility" : child_care_facility}
+    except:
+        extra_context = {"child_care_facility" : None}
     model = DailyFact
     template_name = "day_to_day/_trans_list.html"
     def get(self, request, *args, **kwargs):
@@ -176,11 +182,11 @@ class EmployeeTransmissionsListView(LoginRequiredMixin, ListView):
 class ChildTransmissionsAddView(LoginRequiredMixin, CreateView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(
-                                name__icontains=settings.STRUCTURE,
-                            )
-    extra_context = {"child_care_facility" : child_care_facility,
-        }
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context = {"child_care_facility" : child_care_facility}
+    except:
+        extra_context = {"child_care_facility" : None}
     template_name = "day_to_day/_trans_add.html"
     form_class = DailyFactForm
     success_url = None
@@ -247,12 +253,12 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
     pk = None
-    child_care_facility = Child_care_facility.objects.get(
-                                name__icontains=settings.STRUCTURE,
-                            )
-    extra_context = {"child_care_facility" : child_care_facility,
-        "success":None,
-        }
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context = {"child_care_facility" : child_care_facility}
+    except:
+        extra_context = {"child_care_facility" : None}
+    extra_context["success"]=None
     template_name = "day_to_day/_trans_detail.html"
     success_url = None
     form_class = DailyFactForm
@@ -352,11 +358,13 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
 class ParentView(LoginRequiredMixin, TemplateView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context = {"child_care_facility" : child_care_facility}
+    except:
+        extra_context = {"child_care_facility" : None}
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    extra_context = {"child_care_facility" : child_care_facility,
-        }
     template_name = "day_to_day/_parent_trans_list.html"
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
@@ -378,9 +386,11 @@ class ParentView(LoginRequiredMixin, TemplateView):
 class Child_transmissions_report(LoginRequiredMixin, ListView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
-    extra_context = {"child_care_facility" : child_care_facility,
-        }
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context = {"child_care_facility" : child_care_facility}
+    except:
+        extra_context = {"child_care_facility" : None}
     model = DailyFact
     template_name = "day_to_day/_parent_child_trans_list.html"
     def get(self, request, *args, **kwargs):

@@ -55,7 +55,10 @@ class Address(models.Model):
     place_name = models.CharField("nom de voie", max_length=100)
     city_name = models.CharField("Ville", max_length=100)
     postal_code = models.PositiveIntegerField("Code postal")
-    remarks = models.CharField("Compléments", max_length=200)
+    remarks = models.CharField("Compléments",
+        blank=True,
+        max_length=200,
+        )
 
     class Meta:
         verbose_name = "Adresse"
