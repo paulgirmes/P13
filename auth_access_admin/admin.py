@@ -204,6 +204,7 @@ class NewAdmin(CustomModelAdmin):
     form = NewForm
     pass
 
+
 class MessageAdmin(CustomModelAdmin):
     pass
 
@@ -235,4 +236,3 @@ admin_site.register(Address, AdressAdmin)
 admin_site.register(Child, ChildAdmin)
 admin_site.register(DailyFact, DailyFactAdmin)
 admin_site.register(Message, MessageAdmin)
-
