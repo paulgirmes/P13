@@ -1,0 +1,21 @@
+{% extends "day_to_day/_parents_index.html" %}
+{% block data %}
+{% load static %}
+
+<!-- Header -->
+<header class="masthead d-flex">
+  <div class="container text-center my-auto">
+    <h1 class="mb-1">{{ child_care_facility.name }}</h1>
+    <h3 class="mb-5">
+      <em>{{ child_care_facility.type_of_facility }}</em>
+    </h3>
+    <h3 class="text-primary">
+      <em>Veuillez sélectionner l'enfant pour lequel vous souhaitez voir les Transmissions</em>
+    </h3>
+    {% for child in childs %}
+    <a class="btn btn-primary btn-lg mt-3 mr-2" href="{% url "d_to_d:child" child.pk %}">{{child.first_name}} {{child.last_name}}</a>
+    {% endfor %}
+  </div>
+  <div class="overlay"></div>
+</header>
+{% endblock data %}

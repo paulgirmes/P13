@@ -18,7 +18,10 @@ from day_to_day.models import (Child, OpenDay, EmployeeScheduledDay,
         ChildScheduledDay, Family_link, DailyFact, Sleep, Meal,
         FeedingBottle, Activity, MedicalEvent, Message
         )
-from .forms import Login
+from .forms import (
+    Login, EmployeeCreationForm, FamilyCreationForm,
+    NewForm, DailyFactForm,
+)
 
 class ChildCareAdmin(admin.AdminSite):
     child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
@@ -85,44 +88,6 @@ class MedicalEventInline(admin.TabularInline):
     extra = 1
     template = "admin/auth_access_admin/admin//edit_inline/tabular.html"
 
-
-class EmployeeCreationForm(UserCreationForm):
-
-    class Meta(UserCreationForm.Meta):
-        model = Employee
-        fields = UserCreationForm.Meta.fields + (
-            "first_name",
-            "last_name",
-            "phone",
-            "IdScan",
-            "address",
-            "occupation",
-            "diploma",
-            "Is_manager",
-            "employee_contract",
-        )
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.employee_nr = Employee.objects.order_by("employee_nr").last().employee_nr+1
-        user.set_password(self.cleaned_data["password1"])
-        if commit:
-            user.save()
-        return user
-
-
-class FamilyCreationForm(UserCreationForm):
-
-    class Meta(UserCreationForm.Meta):
-        model = FamilyMember
-        fields = UserCreationForm.Meta.fields + (
-            "first_name",
-            "last_name",
-            "phone",
-            "IdScan",
-            "address",
-            "has_daylyfact_access",
-        )
 
 class FamilyUserAdmin(UserAdmin):
     add_form_template = "admin/auth_access_admin/admin/change_form.html"
@@ -227,9 +192,6 @@ class CustomModelAdmin(ModelAdmin):
     delete_selected_confirmation_template = "admin/auth_access_admin/admin/delete_selected_confirmation.html"
     object_history_template = "admin/auth_access_admin/admin/object_history.html"
     popup_response_template = "admin/auth_access_admin/admin/popup_response.html"
-
-
-class NewAdmin(CustomModelAdmin):
     exclude =(
         "cc_facility",
     )
@@ -238,29 +200,23 @@ class NewAdmin(CustomModelAdmin):
         super().save_model(request, obj, form, change)
 
 
-class MessageAdmin(NewAdmin):
+class NewAdmin(CustomModelAdmin):
+    form = NewForm
     pass
 
 
-class AdressAdmin(NewAdmin):
+class MessageAdmin(CustomModelAdmin):
     pass
 
 
-class ChildAdmin(NewAdmin):
+class AdressAdmin(CustomModelAdmin):
+    pass
+
+
+class ChildAdmin(CustomModelAdmin):
         inlines = [
             FamilyLinkInline,
         ]
-
-
-class DailyFactForm(ModelForm):
- class Meta:
-        widgets = {
-            'comment': Textarea(attrs={
-                'cols': 40, 'rows': 5,
-                'class': "form-control form-control-user",
-                "placeholder": "Votre commentaire"
-            }),
-        }
 
 
 class DailyFactAdmin(NewAdmin):
@@ -280,4 +236,3 @@ admin_site.register(Address, AdressAdmin)
 admin_site.register(Child, ChildAdmin)
 admin_site.register(DailyFact, DailyFactAdmin)
 admin_site.register(Message, MessageAdmin)
-

@@ -30,9 +30,15 @@
       <li class="sidebar-nav-item">
         <a class="js-scroll-trigger" href="#acces">Accès</a>
       </li>
+      {% if user.is_authenticated %}
+      <li class="sidebar-nav-item">
+        <a class="js-scroll-trigger" href={% url "auth:logout" %}>Déconnexion</a>
+      </li>
+      {% else %}
       <li class="sidebar-nav-item">
         <a class="js-scroll-trigger" href={% url "auth:login" %}>Connexion</a>
       </li>
+      {% endif %}
     </ul>
   </nav>
 

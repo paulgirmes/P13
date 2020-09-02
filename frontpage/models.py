@@ -54,9 +54,10 @@ class Child_care_facility(models.Model):
     address = models.ForeignKey(
         "auth_access_admin.Address",
         on_delete=models.CASCADE,
+        verbose_name= "Adresse",
     )
     phone = models.CharField("Téléphone", max_length=14)
-    email = models.EmailField(_('email address'))
+    email = models.EmailField("Adresse Email")
     
     class Meta:
         verbose_name = "Structure de Garde"

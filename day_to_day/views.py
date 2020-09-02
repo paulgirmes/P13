@@ -21,41 +21,50 @@ from .forms import (
 )
 
 
+
+def get_permission(instance=None, request=None):
+    try:
+        if request.user.is_superuser:
+            instance.extra_context["employee"] = request.user
+            return request.user
+        else:
+            user = Employee.objects.get(username=request.user.username)
+            instance.extra_context["employee"] = user
+            return user
+            
+    except:
+        raise PermissionDenied
+
 class EmployeeView(LoginRequiredMixin, TemplateView):
-    child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
     messages = Message.objects.all()
+    extra_context = {"messages" : messages}
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    extra_context = {"child_care_facility" : child_care_facility,
-        "messages" : messages,
-        }
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context["child_care_facility"]=child_care_facility
+    except:
+        extra_context = {"child_care_facility" : None}
     template_name = "day_to_day/_employee_index.html"
     def get(self, request, *args, **kwargs):
-        try:
-            if request.user.is_superuser:
-                self.extra_context["employee"] = request.user
-                return self.render_to_response(self.get_context_data())
-            else:
-                user = Employee.objects.get(username__contains=request.user.username)
-                self.extra_context["employee"] = user
-                return self.render_to_response(self.get_context_data())
-        except:
-            raise PermissionDenied
+        get_permission(instance=self, request=request)
+        return self.render_to_response(self.get_context_data())
 
 
 class ChildListView(LoginRequiredMixin, ListView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context = {"child_care_facility" : child_care_facility}
+    except:
+        extra_context = {"child_care_facility" : None}
     model = Child
     template_name = "day_to_day/_child_list.html"
-    extra_context = {"child_care_facility" : child_care_facility,
-        }
+
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
         allow_empty = self.get_allow_empty()
-        user = Employee.objects.get(username__contains=request.user.username)
-        self.extra_context["employee"] = user
         if not allow_empty:
             # When pagination is enabled and object_list is a queryset,
             # it's better to do a cheap query than to load the unpaginated
@@ -69,17 +78,18 @@ class ChildListView(LoginRequiredMixin, ListView):
                     'class_name': self.__class__.__name__,
                 })
         context = self.get_context_data()
+        get_permission(instance=self, request=request)
         return self.render_to_response(context)
 
 
 class ChildTransmissionsView(LoginRequiredMixin, ListView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(
-        name__icontains=settings.STRUCTURE
-        )
-    extra_context = {"child_care_facility" : child_care_facility,
-        }
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context = {"child_care_facility" : child_care_facility}
+    except:
+        extra_context = {"child_care_facility" : None}
     model = DailyFact
     template_name = "day_to_day/_trans_list.html"
 
@@ -88,10 +98,8 @@ class ChildTransmissionsView(LoginRequiredMixin, ListView):
             time_stamp__date=timezone.now().date()
             ).order_by("-time_stamp")
         allow_empty = self.get_allow_empty()
-        user = Employee.objects.get(username__contains=request.user.username)
-        self.extra_context["employee"] = user
         self.extra_context["child"] = Child.objects.get(pk=kwargs.get("pk"))
-        if kwargs.get("success", False)== "True":
+        if kwargs.get("success", False) == "True":
             self.extra_context["transmission_recorded"]="votre transmission a bien été enregistrée"
         if not allow_empty:
             # When pagination is enabled and object_list is a queryset,
@@ -107,15 +115,18 @@ class ChildTransmissionsView(LoginRequiredMixin, ListView):
                     'class_name': self.__class__.__name__,
                 })
         context = self.get_context_data()
+        get_permission(instance=self, request=request)
         return self.render_to_response(context)
 
 
 class ChildView(LoginRequiredMixin, DetailView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(
-                                name__icontains=settings.STRUCTURE,
-                            )
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context = {"child_care_facility" : child_care_facility}
+    except:
+        extra_context = {"child_care_facility" : None}
     model = Child
     template_name = "day_to_day/_child_detail.html"
     emergency_contacts = FamilyMember.objects.filter(
@@ -124,12 +135,8 @@ class ChildView(LoginRequiredMixin, DetailView):
     authorized_familly = FamilyMember.objects.filter(
                             family_link__retrieval_auth=True,
                         )
-    extra_context = {"child_care_facility" : child_care_facility,
-        }
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        user = Employee.objects.get(username__contains=request.user.username)
-        self.extra_context["employee"] = user
         self.extra_context["emergency_contacts"] = self.emergency_contacts.filter(
                 family_link__child=self.object
                 )
@@ -137,21 +144,24 @@ class ChildView(LoginRequiredMixin, DetailView):
                 family_link__child=self.object
                 )
         context = self.get_context_data(object=self.object)
+        get_permission(instance=self, request=request)
         return self.render_to_response(context)
 
 
 class EmployeeTransmissionsListView(LoginRequiredMixin, ListView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
-    extra_context = {"child_care_facility" : child_care_facility,
-        }
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context = {"child_care_facility" : child_care_facility}
+    except:
+        extra_context = {"child_care_facility" : None}
     model = DailyFact
     template_name = "day_to_day/_trans_list.html"
     def get(self, request, *args, **kwargs):
-        user = Employee.objects.get(username__contains=request.user.username)
+        user = get_permission(instance=self, request=request)
         self.object_list = self.get_queryset().filter(
-                employee__username=user.username
+                employee=user.username
                 ).filter(
                 time_stamp__date=timezone.now().date()
                 ).order_by("-time_stamp")
@@ -176,11 +186,11 @@ class EmployeeTransmissionsListView(LoginRequiredMixin, ListView):
 class ChildTransmissionsAddView(LoginRequiredMixin, CreateView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(
-                                name__icontains=settings.STRUCTURE,
-                            )
-    extra_context = {"child_care_facility" : child_care_facility,
-        }
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context = {"child_care_facility" : child_care_facility}
+    except:
+        extra_context = {"child_care_facility" : None}
     template_name = "day_to_day/_trans_add.html"
     form_class = DailyFactForm
     success_url = None
@@ -191,8 +201,6 @@ class ChildTransmissionsAddView(LoginRequiredMixin, CreateView):
         else:
             self.extra_context["message"]=None
         self.child = Child.objects.get(pk=kwargs.get("pk"))
-        self.user = Employee.objects.get(username__contains=request.user.username)
-        self.extra_context["employee"] = self.user
         self.extra_context["child"] = self.child
         self.extra_context["sleep_form"] = SleepFormSet()
         self.extra_context["meal_form"] = MealFormSet()
@@ -200,10 +208,12 @@ class ChildTransmissionsAddView(LoginRequiredMixin, CreateView):
         self.extra_context["feeding_bttle_form"] = FeedingBottleFormSet()
         self.extra_context["medical_form"] = MedicalEventFormSet()
         self.object = None
+        get_permission(instance=self, request=request)
         return super().get(request, *args, **kwargs)
-    
+
+
     def post(self, request, *args, **kwargs):
-        self.user = Employee.objects.get(username__contains=request.user.username)
+        self.user = get_permission(instance=self, request=request)
         self.object = None
         self.child = Child.objects.get(pk=kwargs.get("pk"))
         self.extra_context["post"]=True
@@ -225,13 +235,14 @@ class ChildTransmissionsAddView(LoginRequiredMixin, CreateView):
             for formset, formset_name in formlist:
                 #commit=False won't allow to save the instance of formset...thus formset.save() and .delete if any errors
                 if formset.is_valid():
-                    pass
+                    self.extra_context[formset_name[0]] = formset
                 else:
                     self.extra_context[formset_name[0]] = formset
                     error.append(formset_name[1])
             if error:
                 new_transmission.delete()
                 self.extra_context["message"] = "Veuillez corriger les erreurs dans les champs suivants : "+ ", ".join(error)
+                self.extra_context["post"] = True
                 return self.render_to_response(self.get_context_data(form=form))
             else:
                 for formset, formset_name in formlist:
@@ -246,26 +257,26 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
     pk = None
-    child_care_facility = Child_care_facility.objects.get(
-                                name__icontains=settings.STRUCTURE,
-                            )
-    extra_context = {"child_care_facility" : child_care_facility,
-        "success":None,
-        }
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context = {"child_care_facility" : child_care_facility}
+    except:
+        extra_context = {"child_care_facility" : None}
+    extra_context["success"]=None
     template_name = "day_to_day/_trans_detail.html"
     success_url = None
     form_class = DailyFactForm
+
     def get(self, request, *args, **kwargs):
+        user = get_permission(instance=self, request=request)
         if self.extra_context["success"]==True:
             self.extra_context["success"]=False
             self.extra_context["transmission_recorded"] = "Votre Modification a bien été enregistrée"
             self.extra_context["message"] = None
         else:
             self.extra_context["transmission_recorded"] = None
-        user = Employee.objects.get(username__contains=request.user.username)
         self.transmission = DailyFact.objects.get(pk=kwargs.get(self.pk))
-        if self.transmission.employee == user:
-            self.extra_context["employee"] = user
+        if self.transmission.employee == user or user.is_superuser:
             self.initial = {"child" : self.transmission.child, 
                         "comment" : self.transmission.comment,
                     }
@@ -315,9 +326,8 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
         return [form_name, form]
 
     def post(self, request, *args, **kwargs):
-        user = Employee.objects.get(username__contains=request.user.username)
+        user = get_permission(instance=self, request=request)
         self.transmission = DailyFact.objects.get(pk=kwargs.get(self.pk))
-        self.extra_context["employee"] = user
         self.initial = {"child" : self.transmission.child, 
                         "comment" : self.transmission.comment,
                     }
@@ -346,17 +356,19 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
                 return self.form_invalid(formset)
         else:
             raise PermissionDenied
-    
+
 
 class ParentView(LoginRequiredMixin, TemplateView):
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    child_care_facility = Child_care_facility.objects.get(name__icontains=settings.STRUCTURE)
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context = {"child_care_facility" : child_care_facility}
+    except:
+        extra_context = {"child_care_facility" : None}
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
-    extra_context = {"child_care_facility" : child_care_facility,
-        }
-    template_name = "day_to_day/_parents_index.html"
+    template_name = "day_to_day/_parent_trans_list.html"
     login_url = '/auth/login/'
     redirect_field_name = 'redirect_to'
 
@@ -364,11 +376,54 @@ class ParentView(LoginRequiredMixin, TemplateView):
         try: 
             user = FamilyMember.objects.get(username=request.user.username)
             childs = Child.objects.filter(relative=user)
-            transmissions = DailyFact.objects.filter(child=childs)
-            self.extra_context["parent"] = user
-            self.extra_context["parent"] = user
-            return self.render_to_response(self.get_context_data())
+            if user.has_daylyfact_access:
+                self.extra_context["parent"] = user
+                self.extra_context["childs"] = childs
+                return self.render_to_response(self.get_context_data())
         except:
             if request.user.is_superuser:
                 return self.render_to_response(self.get_context_data())
             raise PermissionDenied
+
+
+class Child_transmissions_report(LoginRequiredMixin, ListView):
+    login_url = '/auth/login/'
+    redirect_field_name = 'redirect_to'
+    try:
+        child_care_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+        extra_context = {"child_care_facility" : child_care_facility}
+    except:
+        extra_context = {"child_care_facility" : None}
+    model = DailyFact
+    template_name = "day_to_day/_parent_child_trans_list.html"
+    def get(self, request, *args, **kwargs):
+        try:
+            user = FamilyMember.objects.get(username=request.user.username)
+            if user.has_daylyfact_access:
+                pass
+            else:
+                raise PermissionDenied
+        except:
+            if request.user.is_superuser:
+                pass
+            else:
+                raise PermissionDenied
+        self.object_list = self.get_queryset().filter(
+                child = self.kwargs.get("pk")
+                ).order_by("-time_stamp")
+        allow_empty = self.get_allow_empty()
+        if not allow_empty:
+            # When pagination is enabled and object_list is a queryset,
+            # it's better to do a cheap query than to load the unpaginated
+            # queryset in memory.
+            if self.get_paginate_by(self.object_list) is not None and hasattr(self.object_list, 'exists'):
+                is_empty = not self.object_list.exists()
+            else:
+                is_empty = not self.object_list
+            if is_empty:
+                raise Http404(_('Empty list and “%(class_name)s.allow_empty” is False.') % {
+                    'class_name': self.__class__.__name__,
+                })
+        self.extra_context["child"]= Child.objects.get(pk=self.kwargs.get("pk"))
+        context = self.get_context_data()
+        return self.render_to_response(context)

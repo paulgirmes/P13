@@ -28,8 +28,10 @@
           </select>
       </div>
     </div>
-
   </div>
+      <div class="row justify-content-center">
+        <a class="btn btn-secondary ml-1 mb-3" href="{% url "d_to_d:Child_facts" child.pk %}">Retour à la fiche détails de {{ child.first_name}}</a>
+      </div>
 </div>
 
 {% for trans in object_list %}
