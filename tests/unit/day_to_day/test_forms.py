@@ -2,123 +2,286 @@
 unit tests for day_to_day forms
 """
 
-from django.test import TestCase
-from frontpage.models import New, Child_care_facility, User
-from auth_access_admin.models import Address
-
-class User_test(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.user = User.objects.create(
-            first_name = "prénom",
-            last_name = "Nom",
-            password = "123456789",
-            username = "nomprenom@hotmail.com",
-        )
-    def test_str(self):
-        self.assertEquals(str(self.user), self.user.username)
-
-    def test_username_field(self):
-        self.user = User.objects.get(username="nomprenom@hotmail.com")
-        email = self.user.get_email_field_name()
-        self.assertEquals(email,"username")
+from django.test import SimpleTestCase
+from day_to_day.forms import (
+    SleepFormSet, MealFormSet, FeedingBottleFormSet,
+    ActivityFormSet, MedicalEventFormSet, DailyFactForm,
+)
+from day_to_day.models import (
+    DailyFact, Sleep, Meal, Activity,
+    FeedingBottle, MedicalEvent,
+)
 
 
-class Child_care_facility_test(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.address = Address.objects.create(
-            place_type = "rue",
-            number =12,
-            place_name = "bellevue",
-            city_name = "toulouse",
-            postal_code = "31300"
-        )
-        cls.cc_facility = Child_care_facility.objects.create(
-            name = "les Pitchounous",
-            max_child_number = "12",
-            type_of_facility = "MAM",
-            status = "A",
-            address = cls.address,
-            phone = "013511225588",
-            email = "contact@mamlespichounous.fr",
-        )
+class SleepFormSetTest(SimpleTestCase):
 
-    def test_str(self):
+    def test_model(self):
+        form = SleepFormSet()
         self.assertEquals(
-            str(self.cc_facility),
-            self.cc_facility.name,
+            form.model,
+            Sleep,
+            )
+    
+    def test_fields(self):
+        form = SleepFormSet()
+        self.assertTrue(
+            form.empty_form.fields.get("length_minutes")
             )
 
-    def test_name_label(self):
-        field_label = self.cc_facility._meta.get_field("name").verbose_name
-        self.assertEquals(field_label, "Nom de la structure")
-
-    def test_max_child_number_label(self):
-        field_label = self.cc_facility._meta.get_field("max_child_number").verbose_name
-        self.assertEquals(field_label, "Places maximum")
-
-    def test_type_of_facility_label(self):
-        field_label = self.cc_facility._meta.get_field("type_of_facility").verbose_name
-        self.assertEquals(field_label, "Type de structure")
-
-    def test_status_label(self):
-        field_label = self.cc_facility._meta.get_field("status").verbose_name
-        self.assertEquals(field_label, "Statut")
-
-    def test_address_label(self):
-        field_label = self.cc_facility._meta.get_field("address").verbose_name
-        self.assertEquals(field_label, "Adresse")
-
-    def test_phone_label(self):
-        field_label = self.cc_facility._meta.get_field("phone").verbose_name
-        self.assertEquals(field_label, "Téléphone")
-
-    def test_email_label(self):
-        field_label = self.cc_facility._meta.get_field("email").verbose_name
-        self.assertEquals(field_label, "Adresse Email")
-
-class New_test(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.address = Address.objects.create(
-            place_type = "rue",
-            number =12,
-            place_name = "bellevue",
-            city_name = "toulouse",
-            postal_code = "31300"
+    def test_widget_extra(self):
+        form = SleepFormSet().empty_form.fields.get("length_minutes")
+        self.assertEquals(
+            form.widget.template_name, "django/forms/widgets/number.html",
         )
-        cls.cc_facility = Child_care_facility.objects.create(
-            name = "les Pitchounous",
-            max_child_number = "12",
-            type_of_facility = "MAM",
-            status = "A",
-            address = cls.address,
-            phone = "013511225588",
-            email = "contact@mamlespichounous.fr",
+        self.assertEquals(
+            form.widget.attrs, {"class": "form-control form-control-user", "min": 0},
         )
-        cls.new = New.objects.create(
-            title = "nouvelle",
-            content = "texte",
-            img_url = "media/news_img/IMG_20190106_121539.jpg",
-            cc_facility = cls.cc_facility,
+        self.assertEquals(
+            SleepFormSet().extra, 1,
         )
 
-    def test_str(self):
-        self.assertEquals(str(self.new), self.new.title)
 
-    def test_title_label(self):
-        field_label = self.new._meta.get_field("title").verbose_name
-        self.assertEquals(field_label, "Titre")
+class MealFormSetTest(SimpleTestCase):
 
-    def test_content_label(self):
-        field_label = self.new._meta.get_field("content").verbose_name
-        self.assertEquals(field_label, "Contenu texte")
+    def test_model(self):
+        form = MealFormSet()
+        self.assertEquals(
+            form.model,
+            Meal,
+            )
+    
+    def test_fields(self):
+        form = MealFormSet()
+        self.assertTrue(
+            form.empty_form.fields.get("starter_qtty_gr")
+            )
+        self.assertTrue(
+            form.empty_form.fields.get("main_course_qtty_gr")
+            )
+        self.assertTrue(
+            form.empty_form.fields.get("desert_qtty_gr")
+            )
 
-    def test_img_url_label(self):
-        field_label = self.new._meta.get_field("img_url").verbose_name
-        self.assertEquals(field_label, "image")
+    def test_widget_extra(self):
+        form = MealFormSet().empty_form.fields.get("starter_qtty_gr")
+        self.assertEquals(
+            form.widget.template_name, "django/forms/widgets/number.html",
+        )
+        self.assertEquals(
+            form.widget.attrs, {"class": "form-control form-control-user", "min": 0},
+        )
+        self.assertEquals(
+            MealFormSet().extra, 1,
+        )
+        form = MealFormSet().empty_form.fields.get("main_course_qtty_gr")
+        self.assertEquals(
+            form.widget.template_name, "django/forms/widgets/number.html",
+        )
+        self.assertEquals(
+            form.widget.attrs, {"class": "form-control form-control-user", "min": 0},
+        )
+        self.assertEquals(
+            MealFormSet().extra, 1,
+        )
+        form = MealFormSet().empty_form.fields.get("desert_qtty_gr")
+        self.assertEquals(
+            form.widget.template_name, "django/forms/widgets/number.html",
+        )
+        self.assertEquals(
+            form.widget.attrs, {"class": "form-control form-control-user", "min": 0},
+        )
+        self.assertEquals(
+            MealFormSet().extra, 1,
+        )
 
-    def test_cc_facility_label(self):
-        field_label = self.new._meta.get_field("cc_facility").verbose_name
-        self.assertEquals(field_label, "Structure de Garde")
+
+class FeedingBottleFormSetTest(SimpleTestCase):
+
+    def test_model(self):
+        form = FeedingBottleFormSet()
+        self.assertEquals(
+            form.model,
+            FeedingBottle,
+            )
+    
+    def test_fields(self):
+        form = FeedingBottleFormSet()
+        self.assertTrue(
+            form.empty_form.fields.get("prepared_qtty_ml")
+            )
+        self.assertTrue(
+            form.empty_form.fields.get("drank_qtty_ml")
+            )
+
+    def test_widget_extra(self):
+        form = FeedingBottleFormSet().empty_form.fields.get("prepared_qtty_ml")
+        self.assertEquals(
+            form.widget.template_name, "django/forms/widgets/number.html",
+        )
+        self.assertEquals(
+            form.widget.attrs, {"class": "form-control form-control-user", "min": 0},
+        )
+        self.assertEquals(
+            FeedingBottleFormSet().extra, 1,
+        )
+        form = FeedingBottleFormSet().empty_form.fields.get("drank_qtty_ml")
+        self.assertEquals(
+            form.widget.template_name, "django/forms/widgets/number.html",
+        )
+        self.assertEquals(
+            form.widget.attrs, {"class": "form-control form-control-user", "min": 0},
+        )
+        self.assertEquals(
+            FeedingBottleFormSet().extra, 1,
+        )
+
+
+class ActivityFormSetTest(SimpleTestCase):
+
+    def test_model(self):
+        form = ActivityFormSet()
+        self.assertEquals(
+            form.model,
+            Activity,
+            )
+    
+    def test_fields(self):
+        form = ActivityFormSet()
+        self.assertTrue(
+            form.empty_form.fields.get("activity_type")
+            )
+        self.assertTrue(
+            form.empty_form.fields.get("period")
+            )
+
+    def test_widget_extra(self):
+        form = ActivityFormSet().empty_form.fields.get("activity_type")
+        self.assertEquals(
+            form.widget.template_name, "django/forms/widgets/select.html",
+        )
+        self.assertEquals(
+            form.widget.attrs, {"class": "form-control form-control-user"},
+        )
+        self.assertEquals(
+            ActivityFormSet().extra, 1,
+        )
+        form = ActivityFormSet().empty_form.fields.get("period")
+        self.assertEquals(
+            form.widget.template_name, "django/forms/widgets/select.html",
+        )
+        self.assertEquals(
+            form.widget.attrs, {"class": "form-control form-control-user",},
+        )
+        self.assertEquals(
+            ActivityFormSet().extra, 1,
+        )
+
+
+class MedicalEventFormSetTest(SimpleTestCase):
+
+    def test_model(self):
+        form = MedicalEventFormSet()
+        self.assertEquals(
+            form.model,
+            MedicalEvent,
+            )
+    
+    def test_fields(self):
+        form = MedicalEventFormSet()
+        self.assertTrue(
+            form.empty_form.fields.get("description")
+            )
+        self.assertTrue(
+            form.empty_form.fields.get("body_temp_deg_C")
+            )
+        self.assertTrue(
+            form.empty_form.fields.get("given_paracetamol_qtty_mg")
+            )
+        self.assertTrue(
+            form.empty_form.fields.get("paracetamol_given_time")
+            )
+
+    def test_widget_extra(self):
+        form = MedicalEventFormSet().empty_form.fields.get("description")
+        self.assertEquals(
+            form.widget.template_name, "django/forms/widgets/textarea.html",
+        )
+        self.assertEquals(
+            form.widget.attrs, 
+            {
+                'cols': 40,
+                'class': "form-control form-control-user",
+                "placeholder": "Votre commentaire (OBLIGATOIRE)",
+                'rows': 5,
+                'maxlength': '200',
+            },
+        )
+        self.assertEquals(
+            MedicalEventFormSet().extra, 1,
+        )
+        form = MedicalEventFormSet().empty_form.fields.get("body_temp_deg_C")
+        self.assertEquals(
+            form.widget.template_name, "django/forms/widgets/number.html",
+        )
+        self.assertEquals(
+            form.widget.attrs, {"class": "form-control form-control-user", "step": "0.1"},
+        )
+        self.assertEquals(
+            MedicalEventFormSet().extra, 1,
+        )
+        form = MedicalEventFormSet().empty_form.fields.get("given_paracetamol_qtty_mg")
+        self.assertEquals(
+            form.widget.template_name, "django/forms/widgets/number.html",
+        )
+        self.assertEquals(
+            form.widget.attrs, {"class": "form-control form-control-user", "min": 0},
+        )
+        self.assertEquals(
+            MedicalEventFormSet().extra, 1,
+        )
+        form = MedicalEventFormSet().empty_form.fields.get("paracetamol_given_time")
+        self.assertEquals(
+            form.widget.template_name, "django/forms/widgets/time.html",
+        )
+        self.assertEquals(
+            form.widget.attrs, {"class": "form-control form-control-user"},
+        )
+        self.assertEquals(
+            MedicalEventFormSet().extra, 1,
+        )
+class DailyFactFormTest(SimpleTestCase):
+
+    def test_model(self):
+        form = DailyFactForm()
+        self.assertEquals(
+            form.Meta.model,
+            DailyFact,
+            )
+    
+    def test_fields(self):
+        form = DailyFactForm()
+        self.assertTrue(
+            form.fields.get("child")
+            )
+        self.assertTrue(
+            form.fields.get("comment")
+            )
+        self.assertTrue(
+            form.fields.get("employee")
+            )
+
+    def test_widget_extra(self):
+        form = DailyFactForm().fields.get("comment")
+        self.assertEquals(
+            form.widget.template_name, "django/forms/widgets/textarea.html",
+        )
+        self.assertEquals(
+            form.widget.attrs, 
+            {
+                'cols': 40,
+                'class': "form-control form-control-user",
+                "placeholder": "Votre commentaire (OBLIGATOIRE)",
+                'rows': 5,
+                'maxlength': '200',
+            },
+        )

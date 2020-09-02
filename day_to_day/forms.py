@@ -77,6 +77,6 @@ class DailyFactForm(forms.ModelForm):
             'comment': forms.Textarea(attrs={
                 'cols': 40, 'rows': 5,
                 'class': "form-control form-control-user",
-                "placeholder": "Votre commentaire"
+                "placeholder": "Votre commentaire (OBLIGATOIRE)"
             }),
         }
