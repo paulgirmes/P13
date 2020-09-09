@@ -2,17 +2,26 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 
+
 # custom user model
+
+
 class User(AbstractUser):
-    first_name = models.CharField(_('first name'), max_length=30,)
-    last_name = models.CharField(_('last name'), max_length=150,)
+    first_name = models.CharField(
+        _("first name"),
+        max_length=30,
+    )
+    last_name = models.CharField(
+        _("last name"),
+        max_length=150,
+    )
     username = models.EmailField(
-        _('email address'),
+        _("email address"),
         unique=True,
         error_messages={
-            'unique': _("A user with that username already exists."),
+            "unique": _("A user with that username already exists."),
         },
-        )
+    )
 
     EMAIL_FIELD = "username"
 
@@ -21,11 +30,7 @@ class User(AbstractUser):
 
 
 class Child_care_facility(models.Model):
-    name = models.CharField(
-        "Nom de la structure",
-        max_length=50,
-        unique=True
-    )
+    name = models.CharField("Nom de la structure", max_length=50, unique=True)
     max_child_number = models.IntegerField(
         "Places maximum",
     )
@@ -40,7 +45,7 @@ class Child_care_facility(models.Model):
             ("MC", "Crèche-Municipale"),
             ("MC", "Crèche d'entreprise"),
             ("MC", "Crèche associative"),
-        ]
+        ],
     )
     status = models.CharField(
         "Statut",
@@ -49,22 +54,23 @@ class Child_care_facility(models.Model):
             ("A", "Active"),
             ("NA", "Non Active"),
             ("EC", "En cours de création"),
-        ]
+        ],
     )
     address = models.ForeignKey(
         "auth_access_admin.Address",
         on_delete=models.CASCADE,
-        verbose_name= "Adresse",
+        verbose_name="Adresse",
     )
     phone = models.CharField("Téléphone", max_length=14)
     email = models.EmailField("Adresse Email")
-    
+
     class Meta:
         verbose_name = "Structure de Garde"
         verbose_name_plural = "Structures de Garde"
 
     def __str__(self):
         return self.name
+
 
 class New(models.Model):
     date_time = models.DateTimeField(
@@ -80,16 +86,13 @@ class New(models.Model):
         max_length=200,
         blank=True,
     )
-    img_url = models.ImageField(
-        "image",
-        upload_to="news_img"
-    )
+    img_url = models.ImageField("image", upload_to="news_img")
     cc_facility = models.ForeignKey(
         Child_care_facility,
         on_delete=models.CASCADE,
         verbose_name="Structure de Garde",
     )
-    
+
     class Meta:
         verbose_name = "News"
         verbose_name_plural = "News"

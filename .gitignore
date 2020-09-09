@@ -153,3 +153,4 @@ CC_ERP/settings.py
 .vscode/
 
 settings/__init__.py
+settings/test_settings.py

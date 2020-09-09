@@ -123,6 +123,7 @@ class EmployeeView_test(TestCase):
             request = RequestFactory().get(reverse("d_to_d:employee"))
             request.user = self.family_member
             view = views.EmployeeView()
+            view.setup(request)
             view.get(request)
 
     def test_employeepage_exists_access_superuser_allowed(self):
@@ -141,7 +142,9 @@ class EmployeeView_test(TestCase):
         self.assertEqual(
             view.extra_context.get("child_care_facility"), self.cc_facility
         )
-        self.assertEqual(view.extra_context.get("messages")[0], self.message)
+        self.assertEqual(
+            list(view.extra_context.get("messages"))[0], self.message
+        )
         self.assertEqual(view.extra_context.get("employee"), self.user)
 
 
@@ -226,6 +229,7 @@ class ChildListView_test(TestCase):
             request = RequestFactory().get(reverse("d_to_d:child_list"))
             request.user = self.family_member
             view = views.ChildListView()
+            view.setup(request)
             view.get(request)
 
     def test_childlistpage_exists_access_superuser_allowed(self):
@@ -331,7 +335,7 @@ class ChildTransmissionsView_test(TestCase):
         )
         self.assertTrue(response.status_code, 200)
 
-    def test_ChildTransmissionspage_uses_correct_template(self):
+    def test_ChildTransmissions_page_uses_correct_template(self):
         request = RequestFactory().get(
             reverse(
                 "d_to_d:Child_transmissions",
@@ -355,9 +359,10 @@ class ChildTransmissionsView_test(TestCase):
             )
             request.user = self.family_member
             view = views.ChildTransmissionsView()
+            view.setup(request)
             view.get(request, pk=self.child.pk, success=False)
 
-    def test_ChildTransmissionspage_exists_access_superuser_allowed(self):
+    def test_ChildTransmissions_page_exists_access_superuser_allowed(self):
         request = RequestFactory().get(
             reverse(
                 "d_to_d:Child_transmissions",
