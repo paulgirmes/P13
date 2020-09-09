@@ -1,12 +1,13 @@
 from django import forms
 from django.contrib.auth import password_validation
-from django.contrib.auth.forms import (
-    AuthenticationForm, UsernameField,
-    SetPasswordForm, UserCreationForm,
-)
-from django.utils.translation import gettext, gettext_lazy as _
-from .models import Employee, FamilyMember
+from django.contrib.auth.forms import (AuthenticationForm, SetPasswordForm,
+                                       UserCreationForm, UsernameField)
+from django.utils.translation import gettext_lazy as _
+
 from frontpage.models import New
+from day_to_day.models import DailyFact
+
+from .models import Employee, FamilyMember
 
 
 class Login(AuthenticationForm):
@@ -70,7 +71,8 @@ class EmployeeCreationForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.employee_nr = Employee.objects.order_by("employee_nr").last().employee_nr+1
+        user.employee_nr = Employee.objects.order_by(
+            "employee_nr").last().employee_nr+1
         user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
@@ -93,7 +95,7 @@ class FamilyCreationForm(UserCreationForm):
 
 class NewForm(forms.ModelForm):
     class Meta:
-        fields ="__all__"
+        fields = "__all__"
         model = New
         widgets = {
             "content": forms.Textarea(attrs={
@@ -106,6 +108,8 @@ class NewForm(forms.ModelForm):
 
 class DailyFactForm(forms.ModelForm):
     class Meta:
+        fields = "__all__"
+        model = DailyFact
         widgets = {
             'comment': forms.Textarea(attrs={
                 'cols': 40, 'rows': 5,
