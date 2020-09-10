@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from .models import Child_care_facility, New
+from auth_access_admin.models import FamilyMember
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -37,17 +38,31 @@ class HomePage(TemplateView):
                 "news": None,
                 "gg_adress": None,
             }
+        try:
+            user = FamilyMember.objects.get(username=request.user.username)
+            self.extra_context["user"] = user
+        except (ObjectDoesNotExist, AttributeError):
+            pass
+
         return self.render_to_response(self.get_context_data())
 
 
 class Legal(TemplateView):
     template_name = "frontpage/_legal.html"
-    try:
-        cc_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
-        extra_context = {
-            "child_care_facility": cc_facility,
-        }
-    except ObjectDoesNotExist:
-        extra_context = {
-            "child_care_facility": None,
-        }
+
+    def get(self, request, *args, **kwargs):
+        try:
+            cc_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+            self.extra_context = {
+                "child_care_facility": cc_facility,
+            }
+        except ObjectDoesNotExist:
+            self.extra_context = {
+                "child_care_facility": None,
+            }
+        try:
+            user = FamilyMember.objects.get(username=request.user.username)
+            self.extra_context["user"] = user
+        except (AttributeError, ObjectDoesNotExist):
+            pass
+        return self.render_to_response(self.get_context_data())

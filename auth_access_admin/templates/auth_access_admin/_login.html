@@ -33,14 +33,14 @@
                       Connexion
                     </button>
                     {% if form.errors %}
-                      <div>
-                        {% for error in form.errors.values %}
-                        {% autoescape off %}
-                        <hr>
-                          {{ error }}
-                        {% endautoescape %}
-                        {% endfor %}
-                      </div>
+                    <div>
+                      {% for error in form.errors.values %}
+                      {% autoescape off %}
+                      <hr>
+                      {{ error }}
+                      {% endautoescape %}
+                      {% endfor %}
+                    </div>
                     {% endif %}
                     <hr>
                   </form>
@@ -61,4 +61,4 @@
     </div>
 
   </div>
-{% endblock content %}
+  {% endblock content %}

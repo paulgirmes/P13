@@ -8,7 +8,7 @@ from auth_access_admin.forms import (Login, Password_reset_form,
                                      EmployeeCreationForm, FamilyCreationForm,
                                      NewForm, DailyFactForm)
 from auth_access_admin.models import Address, Employee
-from frontpage.models import User
+from frontpage.models import User, Child_care_facility
 
 
 class LoginTest(SimpleTestCase):
@@ -97,6 +97,15 @@ class EmployeeCreationFormTest(TestCase):
             city_name="toulouse",
             postal_code="31300"
         )
+        cls.cc_facility = Child_care_facility.objects.create(
+            name="xyz",
+            max_child_number="12",
+            type_of_facility="MAM",
+            status="A",
+            address=cls.address,
+            phone="013511225588",
+            email="contact@mamlespichounous.fr",
+        )
         cls.employee = Employee.objects.create_user(
             first_name="prénom",
             last_name="Nom",
@@ -109,7 +118,8 @@ class EmployeeCreationFormTest(TestCase):
             diploma="CPA",
             Is_manager=True,
             employee_contract="/fakepath/jfoijhzefe.jpg",
-            address=cls.address
+            address=cls.address,
+            cc_facility=cls.cc_facility,
         )
 
     def test_fields(self):

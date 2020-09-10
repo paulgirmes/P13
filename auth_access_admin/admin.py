@@ -225,6 +225,12 @@ class EmployeeUserAdmin(UserAdmin):
         ),
     )
 
+    def save_model(self, request, obj, form, change):
+        obj.cc_facility = Child_care_facility.objects.get(
+            name=settings.STRUCTURE
+        )
+        super().save_model(request, obj, form, change)
+
 
 class CustomModelAdmin(ModelAdmin):
     add_form_template = "admin/auth_access_admin/admin/change_form.html"

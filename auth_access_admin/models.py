@@ -37,6 +37,11 @@ class Employee(User):
         on_delete=models.CASCADE,
         verbose_name="Adresse",
     )
+    cc_facility = models.ForeignKey(
+        "frontpage.Child_care_facility",
+        on_delete=models.CASCADE,
+        verbose_name="Structure",
+    )
     occupation = models.CharField("Métier", max_length=100)
     employee_nr = models.PositiveSmallIntegerField(
         "Numéro d'employé",

@@ -59,6 +59,7 @@ class EmployeeView_test(TestCase):
             Is_manager=True,
             employee_contract="/fakepath/jfoijhzefe.jpg",
             address=cls.address,
+            cc_facility=cls.cc_facility,
         )
         cls.family_member = FamilyMember.objects.create(
             first_name="prénom",
@@ -188,6 +189,7 @@ class ChildListView_test(TestCase):
             Is_manager=True,
             employee_contract="/fakepath/jfoijhzefe.jpg",
             address=cls.address,
+            cc_facility=cls.cc_facility,
         )
         cls.family_member = FamilyMember.objects.create(
             first_name="prénom",
@@ -290,6 +292,7 @@ class ChildTransmissionsView_test(TestCase):
             Is_manager=True,
             employee_contract="/fakepath/jfoijhzefe.jpg",
             address=cls.address,
+            cc_facility=cls.cc_facility,
         )
         cls.family_member = FamilyMember.objects.create(
             first_name="prénom",
@@ -439,6 +442,7 @@ class ChildView_test(TestCase):
             Is_manager=True,
             employee_contract="/fakepath/jfoijhzefe.jpg",
             address=cls.address,
+            cc_facility=cls.cc_facility,
         )
         cls.family_member = FamilyMember.objects.create(
             first_name="prénom",
@@ -598,6 +602,7 @@ class EmployeeTransmissionsListView_test(TestCase):
             Is_manager=True,
             employee_contract="/fakepath/jfoijhzefe.jpg",
             address=cls.address,
+            cc_facility=cls.cc_facility,
         )
         cls.family_member = FamilyMember.objects.create(
             first_name="prénom",
@@ -732,6 +737,7 @@ class ChildTransmissionsAddView_test(TestCase):
             Is_manager=True,
             employee_contract="/fakepath/jfoijhzefe.jpg",
             address=cls.address,
+            cc_facility=cls.cc_facility,
         )
         cls.family_member = FamilyMember.objects.create(
             first_name="prénom",
@@ -1060,6 +1066,7 @@ class TransmissionsChangeView(TestCase):
             Is_manager=True,
             employee_contract="/fakepath/jfoijhzefe.jpg",
             address=cls.address,
+            cc_facility=cls.cc_facility,
         )
         cls.family_member = FamilyMember.objects.create(
             first_name="prénom",
@@ -1390,6 +1397,7 @@ class ParentView(TestCase):
             Is_manager=True,
             employee_contract="/fakepath/jfoijhzefe.jpg",
             address=cls.address,
+            cc_facility=cls.cc_facility,
         )
         cls.family_member = FamilyMember.objects.create(
             first_name="prénom",
@@ -1516,6 +1524,7 @@ class Child_transmissions_report(TestCase):
             Is_manager=True,
             employee_contract="/fakepath/jfoijhzefe.jpg",
             address=cls.address,
+            cc_facility=cls.cc_facility,
         )
         cls.family_member = FamilyMember.objects.create(
             first_name="prénom",

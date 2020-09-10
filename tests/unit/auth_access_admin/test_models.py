@@ -4,6 +4,7 @@ unit tests for auth_access_admin models
 
 from django.test import TestCase
 from auth_access_admin.models import Address, FamilyMember, Employee
+from frontpage.models import Child_care_facility
 
 
 class FamilyMember_test(TestCase):
@@ -59,6 +60,15 @@ class Employee_test(TestCase):
             city_name="toulouse",
             postal_code=31300,
         )
+        cls.cc_facility = Child_care_facility.objects.create(
+            name="xyz",
+            max_child_number="12",
+            type_of_facility="MAM",
+            status="A",
+            address=cls.address,
+            phone="013511225588",
+            email="contact@mamlespichounous.fr",
+        )
         cls.employee = Employee.objects.create_user(
             first_name="prénom",
             last_name="Nom",
@@ -71,7 +81,8 @@ class Employee_test(TestCase):
             diploma="CPA",
             Is_manager=True,
             employee_contract="/fakepath/jfoijhzefe.jpg",
-            address=cls.address
+            address=cls.address,
+            cc_facility=cls.cc_facility,
         )
 
     def test_str(self):
@@ -88,6 +99,10 @@ class Employee_test(TestCase):
     def test_address_label(self):
         field_label = self.employee._meta.get_field("address").verbose_name
         self.assertEqual(field_label, "Adresse")
+
+    def test_cc_facility_label(self):
+        field_label = self.employee._meta.get_field("cc_facility").verbose_name
+        self.assertEqual(field_label, "Structure")
 
     def test_occupation_label(self):
         field_label = self.employee._meta.get_field("occupation").verbose_name
