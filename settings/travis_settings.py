@@ -86,7 +86,7 @@ AUTH_USER_MODEL = 'frontpage.User'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': '',
+        'NAME': 'travis_ci_test',
         'USER': 'postgres',
         'PASSWORD': '',
         'HOST': '',
