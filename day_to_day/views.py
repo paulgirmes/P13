@@ -1,3 +1,8 @@
+"""
+Views definition for day_to_day application
+"""
+
+
 from django.shortcuts import reverse
 from django.http import HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
@@ -28,6 +33,11 @@ from .forms import (
 
 
 def get_permission(instance, request):
+    """
+    takes an instance of a view and a request, returns a user object if
+    user is superuser or user is an employee
+    raises permission denied if any other user
+    """
     if request.user.is_superuser:
         instance.extra_context["employee"] = request.user
         return request.user
@@ -75,7 +85,12 @@ class ChildListView(LoginRequiredMixin, ListView):
             self.extra_context = {"child_care_facility": child_care_facility}
         except ObjectDoesNotExist:
             self.extra_context = {"child_care_facility": None}
-        self.object_list = self.get_queryset()
+        if child_care_facility:
+            self.object_list = self.get_queryset().filter(
+                cc_facility=child_care_facility
+                )
+        else:
+            self.object_list = self.get_queryset()
         allow_empty = self.get_allow_empty()
         if not allow_empty:
             # When pagination is enabled and object_list is a queryset,
@@ -94,8 +109,8 @@ class ChildListView(LoginRequiredMixin, ListView):
                         "class_name": self.__class__.__name__,
                     }
                 )
-        context = self.get_context_data()
         get_permission(instance=self, request=request)
+        context = self.get_context_data()
         return self.render_to_response(context)
 
 
@@ -113,6 +128,8 @@ class ChildTransmissionsView(LoginRequiredMixin, ListView):
             self.extra_context = {"child_care_facility": child_care_facility}
         except ObjectDoesNotExist:
             self.extra_context = {"child_care_facility": None}
+        # redefinition of get_queryset to include only daylifacts
+        # for a child and for present day
         self.object_list = (
             self.get_queryset()
             .filter(child=kwargs.get("pk"))
@@ -121,6 +138,7 @@ class ChildTransmissionsView(LoginRequiredMixin, ListView):
         )
         allow_empty = self.get_allow_empty()
         self.extra_context["child"] = Child.objects.get(pk=kwargs.get("pk"))
+        # checking if a new daily fact has been successfully recorded
         if kwargs.get("success", False) == "True":
             self.extra_context[
                 "transmission_recorded"
@@ -173,8 +191,8 @@ class ChildView(LoginRequiredMixin, DetailView):
         self.extra_context[
             "authorized_familly"
         ] = self.authorized_familly.filter(family_link__child=self.object)
-        context = self.get_context_data(object=self.object)
         get_permission(instance=self, request=request)
+        context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 
 
@@ -240,6 +258,8 @@ class ChildTransmissionsAddView(LoginRequiredMixin, CreateView):
             self.extra_context = {"child_care_facility": child_care_facility}
         except ObjectDoesNotExist:
             self.extra_context = {"child_care_facility": None}
+        # checking if a post request was just made/
+        # reseting mesage if not
         if self.extra_context.get("post"):
             self.extra_context["post"] = False
         else:
@@ -256,9 +276,17 @@ class ChildTransmissionsAddView(LoginRequiredMixin, CreateView):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        try:
+            child_care_facility = Child_care_facility.objects.get(
+                name=settings.STRUCTURE
+            )
+            self.extra_context = {"child_care_facility": child_care_facility}
+        except ObjectDoesNotExist:
+            self.extra_context = {"child_care_facility": None}
         self.user = get_permission(instance=self, request=request)
         self.object = None
         self.child = Child.objects.get(pk=kwargs.get("pk"))
+        self.extra_context["child"] = self.child
         self.extra_context["post"] = True
         self.success_url = reverse(
             "d_to_d:Child_transmissions",
@@ -273,6 +301,9 @@ class ChildTransmissionsAddView(LoginRequiredMixin, CreateView):
             }
         )
         if form.is_valid():
+            # commit=False won't allow to save the instance of formset
+            # (no instance is really existing)
+            # thus form.save() and .delete() if any errors in any formset
             new_transmission = form.save()
             formlist = [
                 (
@@ -301,9 +332,8 @@ class ChildTransmissionsAddView(LoginRequiredMixin, CreateView):
                 ),
             ]
             error = []
+            # checking if error in any formset
             for formset, formset_name in formlist:
-                # commit=False won't allow to save the instance of formset...
-                # thus formset.save() and .delete if any errors
                 if formset.is_valid():
                     self.extra_context[formset_name[0]] = formset
                 else:
@@ -317,7 +347,7 @@ class ChildTransmissionsAddView(LoginRequiredMixin, CreateView):
                 )
                 self.extra_context["post"] = True
                 return self.render_to_response(
-                    self.get_context_data(form=form)
+                    self.get_context_data()
                 )
             else:
                 for formset, formset_name in formlist:
@@ -348,6 +378,7 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
         except ObjectDoesNotExist:
             self.extra_context["child_care_facility"] = child_care_facility
         user = get_permission(instance=self, request=request)
+        # checking if any post request was just made
         if self.extra_context["success"]:
             self.extra_context["success"] = False
             self.extra_context[
@@ -357,6 +388,8 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
         else:
             self.extra_context["transmission_recorded"] = None
         self.transmission = DailyFact.objects.get(pk=kwargs.get("pk"))
+        # checking if the user is the author of dailifact
+        # (modification only allowed by author)
         if self.transmission.employee == user or user.is_superuser:
             self.initial = {
                 "child": self.transmission.child,
@@ -383,7 +416,10 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
             raise PermissionDenied
 
     def form_invalid(self, formset):
-        """If the form is invalid, render the invalid form."""
+        """
+        If the form is invalid, render the invalid form.
+        redefinition to include ext_context
+        """
         self.extra_context["message"] = (
             "La modification de la donnée "
             + formset[0][1]
@@ -399,6 +435,10 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
         return self.render_to_response(self.get_context_data())
 
     def get_formset(self, post_data, user):
+        """
+        takes a request post data, returns a
+        list [form_name, verbose_name], form or formset]
+        """
         formdict = {
             "sleep_set-TOTAL_FORMS": [
                 ["sleep_form", "Sieste"],
@@ -459,6 +499,8 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
             instance=self.transmission
         )
         self.success_url = str(self.transmission.pk)
+        # checking if the user is the author of dailifact
+        # (modification only allowed by author)
         if self.transmission.employee == user:
             formset = self.get_formset(request.POST, user)
             if formset[1].is_valid() and formset[0][0] == "form":
@@ -501,11 +543,13 @@ class ParentView(LoginRequiredMixin, TemplateView):
             user = FamilyMember.objects.get(username=request.user.username)
             childs = Child.objects.filter(relative=user)
             if user.has_daylyfact_access:
+                return self.render_to_response(self.get_context_data())
                 self.extra_context["parent"] = user
                 self.extra_context["childs"] = childs
-                return self.render_to_response(self.get_context_data())
         except ObjectDoesNotExist:
             if request.user.is_superuser:
+                self.extra_context["parent"] = None
+                self.extra_context["childs"] = None
                 return self.render_to_response(self.get_context_data())
             raise PermissionDenied
 

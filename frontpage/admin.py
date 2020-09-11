@@ -1,3 +1,7 @@
+"""
+advanced admin customization for maintenance
+"""
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User, Child_care_facility, New

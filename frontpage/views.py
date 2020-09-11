@@ -1,3 +1,7 @@
+"""
+views for frontpage application
+"""
+
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from .models import Child_care_facility, New
@@ -43,7 +47,6 @@ class HomePage(TemplateView):
             self.extra_context["user"] = user
         except (ObjectDoesNotExist, AttributeError):
             pass
-
         return self.render_to_response(self.get_context_data())
 
 
@@ -52,7 +55,9 @@ class Legal(TemplateView):
 
     def get(self, request, *args, **kwargs):
         try:
-            cc_facility = Child_care_facility.objects.get(name=settings.STRUCTURE)
+            cc_facility = Child_care_facility.objects.get(
+                name=settings.STRUCTURE
+                )
             self.extra_context = {
                 "child_care_facility": cc_facility,
             }

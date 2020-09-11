@@ -86,8 +86,7 @@ class Address(models.Model):
             self.city_name,
         )
 
-    # helper to pas the address formatteds to the template for GoogleMapAPI
-
+    # helper to format the address for GoogleMapAPI in the fronpage/index
     def gg_adress_format(self):
         return (
             quote(str(self.number))
