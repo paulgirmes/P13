@@ -12,6 +12,6 @@ services:
 env: DJANGO_SETTINGS_MODULE=settings.travis_settings
 
 script: 
- - python manage.py migrate
+ - python manage.py migrate frontpage
  - python manage.py test tests.unit
  - python manage.py test tests.integration
