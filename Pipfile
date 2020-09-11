@@ -17,6 +17,7 @@ sentry-sdk = "*"
 gunicorn = "*"
 pillow = "*"
 django-debug-toolbar = "*"
+django-heroku = "*"
 
 [requires]
 python_version = "3.8"
