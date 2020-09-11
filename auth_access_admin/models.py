@@ -37,6 +37,11 @@ class Employee(User):
         on_delete=models.CASCADE,
         verbose_name="Adresse",
     )
+    cc_facility = models.ForeignKey(
+        "frontpage.Child_care_facility",
+        on_delete=models.CASCADE,
+        verbose_name="Structure",
+    )
     occupation = models.CharField("Métier", max_length=100)
     employee_nr = models.PositiveSmallIntegerField(
         "Numéro d'employé",
@@ -81,8 +86,7 @@ class Address(models.Model):
             self.city_name,
         )
 
-    # helper to pas the address formatteds to the template for GoogleMapAPI
-
+    # helper to format the address for GoogleMapAPI in the fronpage/index
     def gg_adress_format(self):
         return (
             quote(str(self.number))

@@ -1,3 +1,7 @@
+"""
+forms for day_to_day application 
+"""
+
 from django import forms
 from .models import (
     DailyFact,
@@ -7,6 +11,7 @@ from .models import (
     Activity,
     MedicalEvent,
 )
+
 
 SleepFormSet = forms.inlineformset_factory(
     DailyFact,

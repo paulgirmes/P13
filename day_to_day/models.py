@@ -1,3 +1,7 @@
+"""
+models for day_to_day application
+"""
+
 from django.db import models
 from frontpage.models import Child_care_facility
 from auth_access_admin.models import Employee, FamilyMember

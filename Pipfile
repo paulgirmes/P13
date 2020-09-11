@@ -9,6 +9,7 @@ v = {editable = true,version = "*"}
 autopep8 = "*"
 flake8 = "*"
 pylint = "*"
+selenium = "*"
 
 [packages]
 django = "*"

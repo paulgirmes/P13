@@ -19,40 +19,60 @@ class Login_page(auth_views.LoginView):
 
 
 class Index(LoginRequiredMixin, TemplateView):
+    template_name = "auth_access_admin/_index.html"
     login_url = "/auth/login/"
     redirect_field_name = "redirect_to"
-    child_number = Child.objects.all().count()
-    events_today = DailyFact.objects.filter(
-        time_stamp__date=datetime.datetime.now().date()
-    )
-    medical_event_today = MedicalEvent.objects.filter(
-        daily_fact__time_stamp__date=datetime.datetime.now().date()
-    )
-    extra_context = {
-        "child_number": child_number,
-        "events_today": events_today.count(),
-        "medical_event_today": medical_event_today.count(),
-    }
-    try:
-        child_care_facility = Child_care_facility.objects.get(
-            name=settings.STRUCTURE
-        )
-        extra_context["child_care_facility"] = (child_care_facility,)
-        extra_context["fill_ratio"] = int(
-            child_number / child_care_facility.max_child_number * 100
-        )
-    except ObjectDoesNotExist:
-        extra_context["child_care_facility"] = None
-        extra_context["fill_ratio"] = None
-    template_name = "auth_access_admin/_index.html"
+    extra_context = {}
 
     def get(self, request, *args, **kwargs):
+        try:
+            self.child_care_facility = Child_care_facility.objects.get(
+                name=settings.STRUCTURE
+            )
+            self.extra_context[
+                "child_care_facility"
+            ] = self.child_care_facility
+            childs = Child.objects.filter(
+                cc_facility__name=self.child_care_facility
+            )
+            child_number = childs.count()
+            self.extra_context["fill_ratio"] = int(
+                child_number / self.child_care_facility.max_child_number * 100
+            )
+            events_today = [
+                DailyFact.objects.filter(child=child).filter(
+                    time_stamp__date=datetime.datetime.now().date()
+                )
+                for child in childs
+            ]
+            medical_event_today = MedicalEvent.objects.filter(
+                daily_fact__time_stamp__date=datetime.datetime.now().date()
+            )
+            self.extra_context.update(
+                {
+                    "child_number": child_number,
+                    "events_today": len(events_today),
+                    "medical_event_today": medical_event_today.count(),
+                }
+            )
+        except ObjectDoesNotExist:
+            self.extra_context.update(
+                {
+                    "child_number": None,
+                    "events_today": None,
+                    "medical_event_today": None,
+                    "child_care_facility": None,
+                    "fill_ratio": None,
+                }
+            )
         try:
             if request.user.is_superuser:
                 self.extra_context["employee"] = request.user
                 return self.render_to_response(self.get_context_data())
             else:
-                user = Employee.objects.get(username=request.user.username)
+                user = Employee.objects.get(
+                    username=request.user.username,
+                )
                 if user.Is_manager:
                     self.extra_context["employee"] = user
                     return self.render_to_response(self.get_context_data())

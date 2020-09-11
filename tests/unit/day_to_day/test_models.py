@@ -3,7 +3,6 @@ unit tests for day_to_day models
 """
 
 from django.test import TestCase
-from django.conf import settings
 from day_to_day.models import (
     Child,
     Family_link,
@@ -228,6 +227,7 @@ class DailyFact_test(TestCase):
             Is_manager=True,
             employee_contract="/fakepath/jfoijhzefe.jpg",
             address=cls.address,
+            cc_facility=cls.cc_facility,
         )
         cls.daily_fact = DailyFact.objects.create(
             comment="bonne journée",
@@ -326,6 +326,7 @@ class Sleep_test(TestCase):
             Is_manager=True,
             employee_contract="/fakepath/jfoijhzefe.jpg",
             address=cls.address,
+            cc_facility=cls.cc_facility,
         )
         cls.daily_fact = DailyFact.objects.create(
             comment="bonne journée",
@@ -408,6 +409,7 @@ class Meal_test(TestCase):
             Is_manager=True,
             employee_contract="/fakepath/jfoijhzefe.jpg",
             address=cls.address,
+            cc_facility=cls.cc_facility,
         )
         cls.daily_fact = DailyFact.objects.create(
             comment="bonne journée",
@@ -509,6 +511,7 @@ class FeedingBottle_test(TestCase):
             Is_manager=True,
             employee_contract="/fakepath/jfoijhzefe.jpg",
             address=cls.address,
+            cc_facility=cls.cc_facility,
         )
         cls.daily_fact = DailyFact.objects.create(
             comment="bonne journée",
@@ -603,6 +606,7 @@ class Activity_test(TestCase):
             Is_manager=True,
             employee_contract="/fakepath/jfoijhzefe.jpg",
             address=cls.address,
+            cc_facility=cls.cc_facility,
         )
         cls.daily_fact = DailyFact.objects.create(
             comment="bonne journée",
@@ -693,6 +697,7 @@ class MedicalEvent_test(TestCase):
             Is_manager=True,
             employee_contract="/fakepath/jfoijhzefe.jpg",
             address=cls.address,
+            cc_facility=cls.cc_facility,
         )
         cls.daily_fact = DailyFact.objects.create(
             comment="bonne journée",

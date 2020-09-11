@@ -22,7 +22,7 @@
                 {{ form.comment }}
           </div>
           <div class="row justify-content-center">
-                <button type="button" class="btn  {% if sleep_form.is_valid == False and request.post %}btn-danger{% else %}btn-primary{% endif %} ml-2 mr-2 mt-1" data-toggle="modal" data-target="#sleep">
+                <button type="button" class="btn  {% if sleep_form.is_valid == False and post %}btn-danger{% else %}btn-primary{% endif %} ml-2 mr-2 mt-1" data-toggle="modal" data-target="#sleep">
                   Ajouter une sieste
                 </button>
                 <button type="button" class="btn {% if meal_form.is_valid == False and post %}btn-danger{% else %}btn-primary{% endif %} ml-2 mr-2 mt-1" data-toggle="modal" data-target="#meal">

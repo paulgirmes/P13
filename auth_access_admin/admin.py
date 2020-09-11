@@ -1,3 +1,8 @@
+"""
+Custom basic admin-site for Child care Structure
+and web-page management.
+"""
+
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.admin import UserAdmin
@@ -26,6 +31,9 @@ from .forms import (
 
 
 class ChildCareAdmin(admin.AdminSite):
+    """
+    Child Care minimal admin site class
+    """
     try:
         child_care_facility = Child_care_facility.objects.get(
             name=settings.STRUCTURE
@@ -33,17 +41,18 @@ class ChildCareAdmin(admin.AdminSite):
     except ObjectDoesNotExist:
         child_care_facility = None
     app_index_template = (
-        "admin/auth_access_admin/admin/admin/admin/app_index.html"
+        "admin/auth_access_admin/admin/app_index.html"
     )
-    index_template = "admin/auth_access_admin/admin/admin/admin/index.html"
+    index_template = "admin/auth_access_admin/admin/index.html"
     password_change_template = (
-        "admin/auth_access_admin/admin/admin/admin/user/change_password.html"
+        "admin/auth_access_admin/admin/user/change_password.html"
     )
     site_header = "administration de la structure"
     site_title = "administration"
     login_template = "auth_access_admin/_login.html"
     login_form = Login
 
+    # adds custom context for each request
     def each_context(self, request):
         context = super().each_context(request)
         if request.user.username:
@@ -64,37 +73,37 @@ admin_site = ChildCareAdmin(name="structure_admin")
 class FamilyLinkInline(admin.TabularInline):
     model = Family_link
     extra = 1
-    template = "admin/auth_access_admin/admin//edit_inline/tabular.html"
+    template = "admin/auth_access_admin/admin//edit_inline/stacked.html"
 
 
 class SleepInline(admin.TabularInline):
     model = Sleep
     extra = 1
-    template = "admin/auth_access_admin/admin//edit_inline/tabular.html"
+    template = "admin/auth_access_admin/admin//edit_inline/stacked.html"
 
 
 class MealInline(admin.TabularInline):
     model = Meal
     extra = 1
-    template = "admin/auth_access_admin/admin//edit_inline/tabular.html"
+    template = "admin/auth_access_admin/admin//edit_inline/stacked.html"
 
 
 class FeedingBottleInline(admin.TabularInline):
     model = FeedingBottle
     extra = 1
-    template = "admin/auth_access_admin/admin//edit_inline/tabular.html"
+    template = "admin/auth_access_admin/admin//edit_inline/stacked.html"
 
 
 class ActivityInline(admin.TabularInline):
     model = Activity
     extra = 1
-    template = "admin/auth_access_admin/admin//edit_inline/tabular.html"
+    template = "admin/auth_access_admin/admin//edit_inline/stacked.html"
 
 
 class MedicalEventInline(admin.TabularInline):
     model = MedicalEvent
     extra = 1
-    template = "admin/auth_access_admin/admin//edit_inline/tabular.html"
+    template = "admin/auth_access_admin/admin//edit_inline/stacked.html"
 
 
 class FamilyUserAdmin(UserAdmin):
@@ -224,6 +233,12 @@ class EmployeeUserAdmin(UserAdmin):
             },
         ),
     )
+
+    def save_model(self, request, obj, form, change):
+        obj.cc_facility = Child_care_facility.objects.get(
+            name=settings.STRUCTURE
+        )
+        super().save_model(request, obj, form, change)
 
 
 class CustomModelAdmin(ModelAdmin):

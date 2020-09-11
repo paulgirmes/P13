@@ -17,26 +17,32 @@
       <div class="card-body">
         <!-- Button trigger modal -->
         <div class="row justify-content-center">
-          <button type="button" class="btn btn-danger btn-lg  ml-2 mr-2 mt-1" data-toggle="modal" data-target="#emergency_contacts">
+          <button type="button" class="btn btn-danger btn-lg  ml-2 mr-2 mt-1" data-toggle="modal"
+            data-target="#emergency_contacts">
             Contacts d'urgence
           </button>
           <div class="dropdown">
-            <button class="btn btn-success dropdown-toggle btn-lg ml-2 mr-2 mt-1" style="white-space: unset;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-success dropdown-toggle btn-lg ml-2 mr-2 mt-1" style="white-space: unset;"
+              type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Personnes Autorisées à prendre en charge l'enfant
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               {% for contact in authorized_familly %}
-              <a class="dropdown-item" data-toggle="modal" href="#{{ contact.first_name|slugify }}{{ contact.last_name|slugify }}">{{ contact.first_name }} {{ contact.last_name }}</a>
+              <a class="dropdown-item" data-toggle="modal"
+                href="#{{ contact.first_name|slugify }}{{ contact.last_name|slugify }}">{{ contact.first_name }}
+                {{ contact.last_name }}</a>
               {% endfor %}
             </div>
           </div>
           <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle btn-lg ml-2 mr-2 mt-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-primary dropdown-toggle btn-lg ml-2 mr-2 mt-1" type="button" id="dropdownMenuButton"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               transmissions
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <a class="dropdown-item" href="{% url "d_to_d:transmission_add" child.pk %}">ajouter</a>
-              <a class="dropdown-item" href="{% url "d_to_d:Child_transmissions" child.pk False %}">Voir Les Transmissions Enregistrées pour {{ object.first_name }}</a>
+              <a class="dropdown-item" href="{% url "d_to_d:Child_transmissions" child.pk False %}">Voir Les
+                Transmissions Enregistrées pour {{ object.first_name }}</a>
             </div>
           </div>
         </div>
@@ -45,7 +51,8 @@
   </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="emergency_contacts" tabindex="-1" aria-labelledby="emergency_contacts_label" aria-hidden="true">
+<div class="modal fade" id="emergency_contacts" tabindex="-1" aria-labelledby="emergency_contacts_label"
+  aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -72,11 +79,13 @@
 
 {% for contact in authorized_familly %}
 <!-- Modal -->
-<div class="modal fade" id="{{ contact.first_name|slugify }}{{ contact.last_name|slugify }}" tabindex="-1" aria-labelledby="{{ contact.first_name|slugify }}{{ contact.last_name|slugify }}Label" aria-hidden="true">
+<div class="modal fade" id="{{ contact.first_name|slugify }}{{ contact.last_name|slugify }}" tabindex="-1"
+  aria-labelledby="{{ contact.first_name|slugify }}{{ contact.last_name|slugify }}Label" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="{{ contact.first_name|slugify }}{{ contact.last_name|slugify }}Label">{{ contact.first_name }} {{ contact.last_name }}</h5>
+        <h5 class="modal-title" id="{{ contact.first_name|slugify }}{{ contact.last_name|slugify }}Label">
+          {{ contact.first_name }} {{ contact.last_name }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

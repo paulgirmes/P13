@@ -8,8 +8,8 @@
 
 <div class="row">
 
-{% if messages%}
-{% for message in messages %}
+  {% if messages%}
+  {% for message in messages %}
   <div class="col mb-4 mr-2">
 
     <div class="card shadow mb-4">
@@ -22,10 +22,10 @@
     </div>
 
   </div>
-{% endfor %}
-{% else%}
-<div class="d-sm-flex align-items-center justify-content-between mb-4 ml-5">
-  <h5 class="h5 mb-0 text-gray-800">Aucun Message Aujourd'hui, Bonne Journée !</h1>
-</div>
-{% endif %}
-{% endblock content %}
+  {% endfor %}
+  {% else%}
+  <div class="d-sm-flex align-items-center justify-content-between mb-4 ml-5">
+    <h5 class="h5 mb-0 text-gray-800">Aucun Message Aujourd'hui, Bonne Journée !</h1>
+  </div>
+  {% endif %}
+  {% endblock content %}
