@@ -4,123 +4,6 @@
 
 @import url(fonts.css);
 
-/* body {
-    margin: 0;
-    padding: 0;
-    font-size: 14px;
-    font-family: "Roboto","Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
-    color: #333;
-    background: #fff;
-} */
-
-/* LINKS */
-/* 
-a:link, a:visited {
-    color: #447e9b;
-    text-decoration: none;
-}
-
-a:focus, a:hover {
-    color: #036;
-}
-
-a:focus {
-    text-decoration: underline;
-}
-
-a img {
-    border: none;
-}
-
-a.section:link, a.section:visited {
-    color: #fff;
-    text-decoration: none;
-}
-
-a.section:focus, a.section:hover {
-    text-decoration: underline;
-} */
-
-/* GLOBAL DEFAULTS */
-/* 
-p, ol, ul, dl {
-    margin: .2em 0 .8em 0;
-}
-
-p {
-    padding: 0;
-    line-height: 140%;
-}
-
-h1,h2,h3,h4,h5 {
-    font-weight: bold;
-}
-
-h1 {
-    margin: 0 0 20px;
-    font-weight: 300;
-    font-size: 20px;
-    color: #666;
-}
-
-h2 {
-    font-size: 16px;
-    margin: 1em 0 .5em 0;
-}
-
-h2.subhead {
-    font-weight: normal;
-    margin-top: 0;
-}
-
-h3 {
-    font-size: 14px;
-    margin: .8em 0 .3em 0;
-    color: #666;
-    font-weight: bold;
-}
-
-h4 {
-    font-size: 12px;
-    margin: 1em 0 .8em 0;
-    padding-bottom: 3px;
-}
-
-h5 {
-    font-size: 10px;
-    margin: 1.5em 0 .5em 0;
-    color: #666;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-ul li {
-    list-style-type: square;
-    padding: 1px 0;
-}
-
-li ul {
-    margin-bottom: 0;
-}
-
-li, dt, dd {
-    font-size: 13px;
-    line-height: 20px;
-}
-
-dt {
-    font-weight: bold;
-    margin-top: 4px;
-}
-
-dd {
-    margin-left: 0;
-}
-
-form {
-    margin: 0;
-    padding: 0;
-} */
 
 fieldset {
     margin: 0;
@@ -153,92 +36,6 @@ code strong {
     color: #930;
 }
 
-/* hr {
-    clear: both;
-    color: #eee;
-    background-color: #eee;
-    height: 1px;
-    border: none;
-    margin: 0;
-    padding: 0;
-    font-size: 1px;
-    line-height: 1px;
-} */
-
-/* TEXT STYLES & MODIFIERS */
-/* 
-.small {
-    font-size: 11px;
-}
-
-.tiny {
-    font-size: 10px;
-}
-
-p.tiny {
-    margin-top: -2px;
-}
-
-.mini {
-    font-size: 10px;
-}
-
-p.mini {
-    margin-top: -3px;
-}
-
-.help, p.help, form p.help, div.help, form div.help, div.help li {
-    font-size: 11px;
-    color: #999;
-}
-
-div.help ul {
-     margin-bottom: 0;
-}
-
-.help-tooltip {
-    cursor: help;
-}
-*/
-/* p img, h1 img, h2 img, h3 img, h4 img, td img {
-    vertical-align: middle;
-} */
-/*
-.quiet, a.quiet:link, a.quiet:visited {
-    color: #999;
-    font-weight: normal;
-}
-
-.float-right {
-    float: right;
-}
-
-.float-left {
-    float: left;
-}
-
-.clear {
-    clear: both;
-}
-
-.align-left {
-    text-align: left;
-}
-
-.align-right {
-    text-align: right;
-}
-
-.example {
-    margin: 10px 0;
-    padding: 5px 10px;
-    background: #efefef;
-}
-
-.nowrap {
-    white-space: nowrap;
-} */
-
 /* TABLES */
 
 table {
@@ -247,12 +44,9 @@ table {
 }
 
 td, th {
-    /* font-size: 13px; */
-    /* line-height: 16px; */
     border-bottom: 1px solid #eee;
     vertical-align: centers;
     padding: 8px;
-    /* font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif; */
 }
 
 th {
@@ -412,10 +206,8 @@ textarea, select, .form-row p, form .button {
     margin: 2px 0;
     padding: 2px 3px;
     vertical-align: middle;
-    /* font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif; */
     font-weight: normal;
     box-sizing: unset;
-    /* font-size: 13px; */
 }
 .form-row div.help {
     padding: 2px 3px;
@@ -453,48 +245,6 @@ FORM BUTTONS
 .submit-row a {
     box-sizing: unset;
 }
-
-/* .submit-row input, a.button {
-    background: #79aec8;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    color: #fff;
-    cursor: pointer;
-}  */
-/* 
-a.button {
-    padding: 4px 5px;
-} */
-
-/* .button:active, input[type=submit]:active, input[type=button]:active,
-.button:focus, input[type=submit]:focus, input[type=button]:focus,
-.button:hover, input[type=submit]:hover, input[type=button]:hover {
-    background: #609ab6;
-} */
-
-/* .button[disabled], input[type=submit][disabled], input[type=button][disabled] {
-    opacity: 0.4;
-}
-
-.button.default, input[type=submit].default, .submit-row input.default {
-    float: right;
-    border: none;
-    font-weight: 400;
-    background: #417690;
-} */
-
-/* .button.default:active, input[type=submit].default:active,
-.button.default:focus, input[type=submit].default:focus,
-.button.default:hover, input[type=submit].default:hover {
-    background: #205067;
-} */
-
-/* .button[disabled].default,
-input[type=submit][disabled].default,
-input[type=button][disabled].default {
-    opacity: 0.4;
-} */
 
 
 /* MODULES */
