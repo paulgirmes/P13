@@ -4,11 +4,11 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-v = {editable = true,version = "*"}
 autopep8 = "*"
 flake8 = "*"
 pylint = "*"
 selenium = "*"
+coverage = "*"
 
 [packages]
 django = "*"

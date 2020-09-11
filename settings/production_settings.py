@@ -38,9 +38,13 @@ DEBUG = False
 
 ALLOWED_HOSTS = [".herokuapp.com", "localhost", "127.0.0.1"]
 
-# Dev setting to mock email sending
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+# settings for email sending : smtp server...
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "pgirmes@gmail.com"
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = True
 
 # Application definition
 
