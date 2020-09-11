@@ -4,7 +4,6 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-django-debug-toolbar = "*"
 v = {editable = true,version = "*"}
 autopep8 = "*"
 flake8 = "*"
@@ -17,6 +16,7 @@ psycopg2 = "*"
 sentry-sdk = "*"
 gunicorn = "*"
 pillow = "*"
+django-debug-toolbar = "*"
 
 [requires]
 python_version = "3.8"
