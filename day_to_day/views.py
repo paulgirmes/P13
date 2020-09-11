@@ -543,9 +543,9 @@ class ParentView(LoginRequiredMixin, TemplateView):
             user = FamilyMember.objects.get(username=request.user.username)
             childs = Child.objects.filter(relative=user)
             if user.has_daylyfact_access:
-                return self.render_to_response(self.get_context_data())
                 self.extra_context["parent"] = user
                 self.extra_context["childs"] = childs
+                return self.render_to_response(self.get_context_data())
         except ObjectDoesNotExist:
             if request.user.is_superuser:
                 self.extra_context["parent"] = None

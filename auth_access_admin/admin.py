@@ -34,12 +34,6 @@ class ChildCareAdmin(admin.AdminSite):
     """
     Child Care minimal admin site class
     """
-    try:
-        child_care_facility = Child_care_facility.objects.get(
-            name=settings.STRUCTURE
-        )
-    except ObjectDoesNotExist:
-        child_care_facility = None
     app_index_template = (
         "admin/auth_access_admin/admin/app_index.html"
     )
@@ -51,10 +45,17 @@ class ChildCareAdmin(admin.AdminSite):
     site_title = "administration"
     login_template = "auth_access_admin/_login.html"
     login_form = Login
+    child_care_facility = None
 
     # adds custom context for each request
     def each_context(self, request):
         context = super().each_context(request)
+        try:
+            child_care_facility = Child_care_facility.objects.get(
+                name=settings.STRUCTURE
+            )
+        except ObjectDoesNotExist:
+            pass
         if request.user.username:
             try:
                 employee = Employee.objects.get(
