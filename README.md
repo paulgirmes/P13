@@ -1,6 +1,6 @@
 # <H1 align="center">Child Care Mini ERP</h1>
 
-<img src="https://travis-ci.org/paulgirmes/P13.svg?branch=master&amp;status=unknown" alt="build:">
+<img src="https://travis-ci.com/paulgirmes/P13.svg?token=J1YWZRU9c7XAUygKJUyG&branch=master" alt="build">
 
 <h4 align="center">A WEB application that aims to facilitate child care facilities managers' and employee's daily life. Build with 
 <a href="https://www.djangoproject.com/" target="_blank">Django</a>.</h4>
