@@ -152,7 +152,7 @@ GS_CREDENTIALS = service_account.Credentials.from_service_account_info(
         "private_key_id": os.environ.get("private_key_id"),
         "private_key": os.environ.get("private_key"),
         "client_email": "p11oc-283117@appspot.gserviceaccount.com",
-        "client_id": os.environ.get("client_id"),
+        "client_id": "-----BEGIN PRIVATE KEY----" + os.environ.get("client_id") + "-----END PRIVATE KEY-----\n",
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
         "token_uri": "https://oauth2.googleapis.com/token",
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
