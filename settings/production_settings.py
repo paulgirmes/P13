@@ -155,9 +155,13 @@ credentials = {
     }
 with open("google-credentials.json", "w") as f:
     json.dump(credentials, f)
-GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    "/app/settings/google-credentials.json"
-)
+try:
+    open("google-credentials.json")
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+        "/app/settings/google-credentials.json"
+    )
+except FileNotFoundError:
+    GS_CREDENTIALS = None
 
 
 # debug toolbar specific setting
