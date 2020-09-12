@@ -14,7 +14,7 @@ import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 from google.oauth2 import service_account
-from .gcloud import Heroku_googlecloud
+from .dj_heroku import Heroku_googlecloud
 
 sentry_sdk.init(
     dsn=os.environ.get("SENTRY_DSN"),
@@ -32,8 +32,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
-SECRET_KEY = os.environ["SECRET_KEY"]
-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
