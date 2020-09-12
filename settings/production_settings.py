@@ -11,10 +11,10 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import django_heroku
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 from google.oauth2 import service_account
+from .gcloud import Heroku_googlecloud
 
 sentry_sdk.init(
     dsn=os.environ.get("SENTRY_DSN"),
@@ -173,4 +173,4 @@ SESSION_COOKIE_SECURE = True
 
 # Heroku deployment helper (set secret key, whitenoise,
 # DB... with env.variables specs.)
-django_heroku.settings(locals(), allowed_hosts=False)
+Heroku_googlecloud.settings(locals(), allowed_hosts=False)
