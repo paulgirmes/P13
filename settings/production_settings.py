@@ -14,6 +14,7 @@ import os
 import django_heroku
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+from google.oauth2 import service_account
 
 sentry_sdk.init(
     dsn=os.environ.get("SENTRY_DSN"),
@@ -143,9 +144,21 @@ MEDIA_URL = "/media/"
 DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 GS_BUCKET_NAME = "child-care-erp"
 STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
-from google.oauth2 import service_account
 
-GS_CREDENTIALS = service_account.Credentials.from_service_account_info(os.environ.get("GG_CREDENTIALS"))
+GS_CREDENTIALS = service_account.Credentials.from_service_account_info(
+    {
+        "type": "service_account",
+        "project_id": "p11oc-283117",
+        "private_key_id": os.environ.get("private_key_id"),
+        "private_key": os.environ.get("private_key"),
+        "client_email": "p11oc-283117@appspot.gserviceaccount.com",
+        "client_id": os.environ.get("client_id"),
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/p11oc-283117%40appspot.gserviceaccount.com"
+    }
+)
 
 # debug toolbar specific setting
 INTERNAL_IPS = ["127.0.0.1"]
