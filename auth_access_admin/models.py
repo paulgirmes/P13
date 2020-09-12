@@ -48,7 +48,7 @@ class Employee(User):
         primary_key=True,
     )
     diploma = models.CharField("Plus haut diplôme obtenu", max_length=100)
-    Is_manager = models.BooleanField("Direction")
+    Is_manager = models.BooleanField("Direction", default=False)
     employee_contract = models.ImageField(
         "Scanner du contrat de travail", upload_to="e_contracts"
     )
