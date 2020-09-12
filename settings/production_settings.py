@@ -32,6 +32,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+SECRET_KEY = os.environ["SECRET_KEY"]
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -170,6 +171,7 @@ ACTIVITIES_CHOICES = [
 # and csrf token to leak while http only
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+
 
 # Heroku deployment helper (set secret key, whitenoise,
 # DB... with env.variables specs.)
