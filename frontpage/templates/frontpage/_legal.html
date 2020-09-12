@@ -43,7 +43,7 @@
           <a class="js-scroll-trigger" href={% url "d_to_d:parent" %}>Vos Transmissions</a>
         </li>
         {% endif %}
-        {% if user.is_superuser or user.Is_manager %}
+        {% if user.is_superuser or user.is_staff %}
         <li class="sidebar-nav-item">
           <a class="js-scroll-trigger" href={% url "auth:index" %}>Administration</a>
         </li>
