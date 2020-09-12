@@ -14,7 +14,8 @@ import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 from google.oauth2 import service_account
-from .dj_heroku import Heroku_googlecloud
+import django_heroku
+
 
 sentry_sdk.init(
     dsn=os.environ.get("SENTRY_DSN"),
@@ -131,22 +132,11 @@ PROJECT_ROOT = os.path.join(os.path.dirname(
     os.path.abspath(__file__)), os.pardir
     )
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 GS_BUCKET_NAME = "child-care-erp"
 GS_PROJECT_ID = "p11oc-283117"
-GS_STATIC_BUCKET_NAME = "child-care-erp"
-GS_MEDIA_BUCKET_NAME = "child-care-erp"
-STATIC_URL = 'https://storage.cloud.google.com/{}/'.format(GS_STATIC_BUCKET_NAME)
-STATIC_ROOT = "static/"
 
-MEDIA_URL = 'https://storage.cloud.google.com/{}/'.format(GS_MEDIA_BUCKET_NAME)
+MEDIA_URL = 'https://storage.cloud.google.com/{}/'.format(GS_BUCKET_NAME)
 MEDIA_ROOT = "media/"
-
-UPLOAD_ROOT = 'media/uploads/'
-
-DOWNLOAD_ROOT = os.path.join(PROJECT_ROOT, "static/media/downloads")
-DOWNLOAD_URL = STATIC_URL + "media/downloads"
-
 
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
     os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
@@ -172,4 +162,4 @@ SESSION_COOKIE_SECURE = True
 
 # Heroku deployment helper (set secret key, whitenoise,
 # DB... with env.variables specs.)
-Heroku_googlecloud.settings(locals(), allowed_hosts=False)
+django_heroku.settings(locals(), allowed_hosts=False)
