@@ -147,15 +147,15 @@ class Legal_test(TestCase):
             cc_facility=cls.cc_facility,
         )
 
-    def test_homepage_exists(self):
+    def test_legal_exists(self):
         response = self.client.get("/conditions-generales/")
         self.assertEqual(response.status_code, 200)
 
-    def test_homepage_url_accessible_by_name(self):
+    def test_legal_url_accessible_by_name(self):
         response = self.client.get(reverse("frontpage:legal"))
         self.assertEqual(response.status_code, 200)
 
-    def test_homepage_uses_correct_template(self):
+    def test_legal_uses_correct_template(self):
         response = self.client.get(reverse("frontpage:legal"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "frontpage/_legal.html")

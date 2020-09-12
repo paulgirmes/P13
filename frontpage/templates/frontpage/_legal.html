@@ -29,10 +29,25 @@
       </li>
       <li class="sidebar-nav-item">
         <a class="js-scroll-trigger" href="#acces">Accès</a>
-      </li>
-      <li class="sidebar-nav-item">
-        <a class="js-scroll-trigger" href={% url "auth:login" %}>Connexion</a>
-      </li>
+        {% if user.is_authenticated %}
+        <li class="sidebar-nav-item">
+          <a class="js-scroll-trigger" href={% url "auth:logout" %}>Déconnexion</a>
+        </li>
+        {% else %}
+        <li class="sidebar-nav-item">
+          <a class="js-scroll-trigger" id="login" href={% url "auth:login" %}>Connexion</a>
+        </li>
+        {% endif %}
+        {% if user.is_authenticated and user.has_daylyfact_access %}
+        <li class="sidebar-nav-item">
+          <a class="js-scroll-trigger" href={% url "d_to_d:parent" %}>Vos Transmissions</a>
+        </li>
+        {% endif %}
+        {% if user.is_superuser or user.is_staff %}
+        <li class="sidebar-nav-item">
+          <a class="js-scroll-trigger" href={% url "auth:index" %}>Administration</a>
+        </li>
+        {% endif %}
     </ul>
   </nav>
 

@@ -1,1 +1,1 @@
-web: gunicorn purbeurre.wsgi --log-file -
+web: gunicorn CC_ERP.wsgi --log-file -

@@ -189,7 +189,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ user.first_name }}</span>
                                 {% if employee.IdScan %}
-                                <img class="img-profile rounded-circle" src=/media/{{ employee.IdScan }}>
+                                <img class="img-profile rounded-circle" src={{ employee.IdScan.url }}>
                                 {% endif %}
                             </a>
                             <!-- Dropdown - User Information -->

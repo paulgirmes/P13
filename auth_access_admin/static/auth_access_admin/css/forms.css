@@ -261,11 +261,6 @@ body.popup .submit-row {
     overflow: auto;
 }
 
-/* .submit-row input {
-    height: 35px;
-    line-height: 15px;
-    margin: 0 0 0 5px;
-} */
 .submit-row input {
     color: #fff;
     background-color: #4e73df;
@@ -286,10 +281,7 @@ body.popup .submit-row {
     border-radius: .35rem;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
-/* .submit-row input.default {
-    margin: 0 0 0 8px;
-    text-transform: uppercase;
-} */
+
 
 .submit-row p {
     margin: 0.3em;

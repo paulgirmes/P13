@@ -89,7 +89,7 @@ class Index(LoginRequiredMixin, TemplateView):
 
 
 class Logout(LoginRequiredMixin, auth_views.LogoutView):
-    next_page = "/"
+    next_page = "frontpage:homepage"
 
 
 class Reset_Password(auth_views.PasswordResetView):

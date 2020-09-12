@@ -17,8 +17,9 @@ from django.conf import settings
 class Command(BaseCommand):
 
     help = (
-        "Sends Dailyfact Mails to FamilyMenber whit has_daylyfact_access=True,
-        + " please provide a .txt template url"
+        "Sends Dailyfact Mails to FamilyMenber which "
+        + "has_daylyfact_access=True, "
+        + "please provide a .txt template url"
     )
 
     def add_arguments(self, parser):

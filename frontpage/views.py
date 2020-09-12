@@ -7,7 +7,8 @@ from django.views.generic import TemplateView
 from .models import Child_care_facility, New
 from auth_access_admin.models import FamilyMember
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from day_to_day.views import get_permission
 
 
 def page_not_found_view(request, exception=None):
@@ -42,11 +43,15 @@ class HomePage(TemplateView):
                 "news": None,
                 "gg_adress": None,
             }
-        try:
-            user = FamilyMember.objects.get(username=request.user.username)
-            self.extra_context["user"] = user
-        except (ObjectDoesNotExist, AttributeError):
-            pass
+            try:
+                user = FamilyMember.objects.get(username=request.user.username)
+                self.extra_context["user"] = user
+            except (ObjectDoesNotExist, AttributeError):
+                try:
+                    user = get_permission(self, request)
+                    self.extra_context["user"] = user
+                except (ObjectDoesNotExist, AttributeError, PermissionDenied):
+                    return self.render_to_response(self.get_context_data())
         return self.render_to_response(self.get_context_data())
 
 
@@ -68,6 +73,10 @@ class Legal(TemplateView):
         try:
             user = FamilyMember.objects.get(username=request.user.username)
             self.extra_context["user"] = user
-        except (AttributeError, ObjectDoesNotExist):
-            pass
+        except (ObjectDoesNotExist, AttributeError):
+            try:
+                user = get_permission(self, request)
+                self.extra_context["user"] = user
+            except (ObjectDoesNotExist, AttributeError, PermissionDenied):
+                return self.render_to_response(self.get_context_data())
         return self.render_to_response(self.get_context_data())

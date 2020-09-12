@@ -4,11 +4,11 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-v = {editable = true,version = "*"}
 autopep8 = "*"
 flake8 = "*"
 pylint = "*"
 selenium = "*"
+coverage = "*"
 
 [packages]
 django = "*"
@@ -17,6 +17,11 @@ sentry-sdk = "*"
 gunicorn = "*"
 pillow = "*"
 django-debug-toolbar = "*"
+django-heroku = "*"
+django-storages = {extras = ["google"],version = "*"}
+google-auth = "*"
+google-cloud-storage = "*"
+whitenoise = "*"
 
 [requires]
 python_version = "3.8"

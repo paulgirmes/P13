@@ -335,5 +335,7 @@ class LogoutTest(TestCase):
                 username="superuser@hotmail.com", password="123456789879/"
             )
         )
-        response = self.client.get(reverse("auth:logout"))
-        self.assertRedirects(response, expected_url="/")
+        self.assertRedirects(
+            self.client.get(reverse("auth:logout")),
+            expected_url=reverse("frontpage:homepage"),
+            )

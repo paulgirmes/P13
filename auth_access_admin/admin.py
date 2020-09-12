@@ -51,7 +51,7 @@ class ChildCareAdmin(admin.AdminSite):
     def each_context(self, request):
         context = super().each_context(request)
         try:
-            child_care_facility = Child_care_facility.objects.get(
+            self.child_care_facility = Child_care_facility.objects.get(
                 name=settings.STRUCTURE
             )
         except ObjectDoesNotExist:
