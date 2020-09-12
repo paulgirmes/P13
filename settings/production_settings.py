@@ -128,6 +128,16 @@ USE_L10N = True
 USE_TZ = True
 
 
+
+# serving media/static files through google storage
+DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+GS_BUCKET_NAME = "child-care-erp"
+STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+)
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
@@ -139,15 +149,6 @@ STATICFILES_DIR = {
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
-
-# serving media/static files through google storage
-DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
-GS_BUCKET_NAME = "child-care-erp"
-STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
-
-GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
-)
 
 # debug toolbar specific setting
 INTERNAL_IPS = ["127.0.0.1"]
