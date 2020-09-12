@@ -141,24 +141,12 @@ GS_PROJECT_ID = "p11oc-283117"
 
 MEDIA_URL = 'https://storage.cloud.google.com/{}/'.format(GS_BUCKET_NAME)
 MEDIA_ROOT = "media/"
-credentials = {
-        "type": "service_account",
-        "project_id": os.environ.get("project_id"),
-        "private_key_id": os.environ.get("private_key_id"),
-        "private_key": os.environ.get("private_key"),
-        "client_email": "p11oc-283117@appspot.gserviceaccount.com",
-        "client_id": os.environ.get("client_id"),
-        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-        "token_uri": "https://oauth2.googleapis.com/token",
-        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-        "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/p11oc-283117%40appspot.gserviceaccount.com"
-    }
-with open("google-credentials.json", "w") as f:
-    json.dump(credentials, f)
+
 try:
-    open("google-credentials.json")
+    with open("app/google-credentials.json") as f:
+        pass
     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-        "/app/settings/google-credentials.json"
+        os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
     )
 except FileNotFoundError:
     GS_CREDENTIALS = None
