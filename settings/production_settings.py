@@ -136,11 +136,10 @@ GS_BUCKET_NAME = "child-care-erp"
 GS_PROJECT_ID = "p11oc-283117"
 GS_STATIC_BUCKET_NAME = "child-care-erp"
 GS_MEDIA_BUCKET_NAME = "child-care-erp"
-
-STATIC_URL = 'https://storage.googleapis.com/{}/'.format(GS_STATIC_BUCKET_NAME)
+STATIC_URL = 'https://storage.cloud.google.com/{}/'.format(GS_STATIC_BUCKET_NAME)
 STATIC_ROOT = "static/"
 
-MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_MEDIA_BUCKET_NAME)
+MEDIA_URL = 'https://storage.cloud.google.com/{}/'.format(GS_MEDIA_BUCKET_NAME)
 MEDIA_ROOT = "media/"
 
 UPLOAD_ROOT = 'media/uploads/'

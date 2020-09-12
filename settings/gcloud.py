@@ -1,15 +1,10 @@
 """
   GoogleCloudStorage extension classes for MEDIA and STATIC uploads
 """
-import logging
 from django.conf import settings
 from storages.backends.gcloud import GoogleCloudStorage
 from storages.utils import setting
 from urllib.parse import urljoin
-
-logger = logging.getLogger(__name__)
-
-MAX_CONN_AGE = 600
 
 
 class GoogleCloudMediaFileStorage(GoogleCloudStorage):
