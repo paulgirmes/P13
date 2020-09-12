@@ -128,26 +128,32 @@ USE_L10N = True
 USE_TZ = True
 
 # serving media/static files through google storage
-DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
-GS_BUCKET_NAME = "child-care-erp"
-STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+PROJECT_ROOT = os.path.join(os.path.dirname(
+    os.path.abspath(__file__)), os.pardir
+    )
+DEFAULT_FILE_STORAGE = 'gcloud.GoogleCloudMediaFileStorage'
+STATICFILES_STORAGE = 'gcloud.GoogleCloudStaticFileStorage'
+
+GS_PROJECT_ID = "p11oc-283117"
+GS_STATIC_BUCKET_NAME = "child-care-erp"
+GS_MEDIA_BUCKET_NAME = "child-care-erp"
+
+STATIC_URL = 'https://storage.googleapis.com/{}/'.format(GS_STATIC_BUCKET_NAME)
+STATIC_ROOT = "static/"
+
+MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_MEDIA_BUCKET_NAME)
+MEDIA_ROOT = "media/"
+
+UPLOAD_ROOT = 'media/uploads/'
+
+DOWNLOAD_ROOT = os.path.join(PROJECT_ROOT, "static/media/downloads")
+DOWNLOAD_URL = STATIC_URL + "media/downloads"
+
 
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
     os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
 )
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
-
-STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATICFILES_DIR = {
-    os.path.join(BASE_DIR, "static"),
-}
-
-# MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-MEDIA_URL = "/media/"
- 
 # debug toolbar specific setting
 INTERNAL_IPS = ["127.0.0.1"]
 
