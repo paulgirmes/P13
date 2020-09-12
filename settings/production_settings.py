@@ -145,19 +145,8 @@ DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 GS_BUCKET_NAME = "child-care-erp"
 STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 
-GS_CREDENTIALS = service_account.Credentials.from_service_account_info(
-    {
-        "type": "service_account",
-        "project_id": "p11oc-283117",
-        "private_key_id": os.environ.get("private_key_id"),
-        "private_key": os.environ.get("private_key"),
-        "client_email": "p11oc-283117@appspot.gserviceaccount.com",
-        "client_id": "-----BEGIN PRIVATE KEY----" + os.environ.get("client_id") + "-----END PRIVATE KEY-----\n",
-        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-        "token_uri": "https://oauth2.googleapis.com/token",
-        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-        "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/p11oc-283117%40appspot.gserviceaccount.com"
-    }
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
 )
 
 # debug toolbar specific setting
