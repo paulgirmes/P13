@@ -80,8 +80,12 @@ class EmployeeCreationForm(UserCreationForm):
             name=settings.STRUCTURE,
             )
         # automatic setting of employee nr
-        user.employee_nr = Employee.objects.order_by(
-            "employee_nr").last().employee_nr+1
+        last_employee = Employee.objects.order_by(
+            "employee_nr").last()
+        if last_employee is not None:
+            user.employee_nr = last_employee.employee_nr+1
+        else:
+            user.employee_nr = 1
         user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
