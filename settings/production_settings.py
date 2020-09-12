@@ -171,8 +171,6 @@ ACTIVITIES_CHOICES = [
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
-SECRET_KEY = os.environ["SECRET_KEY"]
-
 # Heroku deployment helper (set secret key, whitenoise,
 # DB... with env.variables specs.)
 Heroku_googlecloud.settings(locals(), allowed_hosts=False)
