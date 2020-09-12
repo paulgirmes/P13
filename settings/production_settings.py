@@ -153,8 +153,10 @@ credentials = {
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
         "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/p11oc-283117%40appspot.gserviceaccount.com"
     }
-GS_CREDENTIALS = service_account.Credentials.from_service_account_info(
-    json.loads(json.dumps(credentials)),
+with os.open("google-credentials.json", "w") as f:
+    json.dump(credentials, f)
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    "/app/settings/google-credentials.json"
 )
 
 
