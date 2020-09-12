@@ -18,6 +18,8 @@ gunicorn = "*"
 pillow = "*"
 django-debug-toolbar = "*"
 django-heroku = "*"
+django-storages = {extras = ["google"],version = "*"}
+google-auth = "*"
 
 [requires]
 python_version = "3.8"

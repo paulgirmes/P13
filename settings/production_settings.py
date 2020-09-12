@@ -42,7 +42,7 @@ ALLOWED_HOSTS = [".herokuapp.com", "localhost", "127.0.0.1"]
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "pgirmes@gmail.com"
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = True
 
@@ -139,13 +139,16 @@ STATICFILES_DIR = {
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
+# serving media/static files through google storage
+DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+GS_BUCKET_NAME = "child-care-erp"
+STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+from google.oauth2 import service_account
+
+GS_CREDENTIALS = service_account.Credentials.from_service_account_info(os.environ.get("GG_CREDENTIALS"))
+
 # debug toolbar specific setting
 INTERNAL_IPS = ["127.0.0.1"]
-
-
-# Dev setting to mock email sending
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 
 # app custom settings
 LOGIN_REDIRECT_URL = "/auth/index/"

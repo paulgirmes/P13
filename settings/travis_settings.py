@@ -143,11 +143,6 @@ MEDIA_URL = "/media/"
 # debug toolbar specific setting
 INTERNAL_IPS = ["127.0.0.1"]
 
-
-# Dev setting to mock email sending
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
-
 # app custom settings
 LOGIN_REDIRECT_URL = "/auth/index/"
 STRUCTURE = "xyz"
