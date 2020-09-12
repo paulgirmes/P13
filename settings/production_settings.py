@@ -154,7 +154,7 @@ credentials = {
         "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/p11oc-283117%40appspot.gserviceaccount.com"
     }
 GS_CREDENTIALS = service_account.Credentials.from_service_account_info(
-    json.dump(credentials),
+    json.dumps(credentials),
 )
 
 
