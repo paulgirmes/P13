@@ -127,16 +127,13 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_URL = '/static/'
 STATICFILES_DIR = {
     os.path.join(BASE_DIR, "static"),
 }
 
 # serving media files through google storage
-PROJECT_ROOT = os.path.join(os.path.dirname(
-    os.path.abspath(__file__)), os.pardir
-    )
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 GS_BUCKET_NAME = "child-care-erp"
 GS_PROJECT_ID = "p11oc-283117"

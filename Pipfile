@@ -21,6 +21,7 @@ django-heroku = "*"
 django-storages = {extras = ["google"],version = "*"}
 google-auth = "*"
 google-cloud-storage = "*"
+whitenoise = "*"
 
 [requires]
 python_version = "3.8"
