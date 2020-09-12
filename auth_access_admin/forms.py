@@ -3,12 +3,13 @@ forms declaration for auth_admin_access application
 """
 
 from django import forms
+from django.conf import settings
 from django.contrib.auth import password_validation
 from django.contrib.auth.forms import (AuthenticationForm, SetPasswordForm,
                                        UserCreationForm, UsernameField)
 from django.utils.translation import gettext_lazy as _
 
-from frontpage.models import New
+from frontpage.models import New, Child_care_facility
 from day_to_day.models import DailyFact
 
 from .models import Employee, FamilyMember
@@ -75,6 +76,9 @@ class EmployeeCreationForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
+        user.cc_facility = Child_care_facility.objects.get(
+            name=settings.STRUCTURE,
+            )
         # automatic setting of employee nr
         user.employee_nr = Employee.objects.order_by(
             "employee_nr").last().employee_nr+1
