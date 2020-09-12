@@ -47,6 +47,7 @@ when creating an employee please be carefull to the "Direction" option if checke
 * either run manage.py runserver for debug or deploy elewere as needed
 
 * a Child_Care_Facility object must be created by a super-user via the advanced admin interface with a name matching settings.STRUCTURE for the app to work properly. The super user then must create a first set of credentials for a manager via the mini admin interface.
+* if you run the tests suite please specify settings.test_settings
 
 ## Built with
 

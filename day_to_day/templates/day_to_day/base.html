@@ -60,6 +60,20 @@
                         <a class="collapse-item" href="{% url "d_to_d:tr_list" %}">Liste de mes transmissions</a>
                     </div>
                 </div>
+                {% if employee.Is_manager or employee.is_superuser %}
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseadmin"
+                    aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-fw fa-building"></i>
+                    <span>Administration</span>
+                </a>
+                <div id="collapseadmin" class="collapse" aria-labelledby="headingStructure"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">dashboard:</h6>
+                        <a class="collapse-item" href="{% url "auth:index" %}">Go!</a>
+                    </div>
+                </div>
+                {% endif %}
             </li>
 
             <!-- Divider -->

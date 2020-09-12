@@ -328,12 +328,3 @@ class LogoutTest(TestCase):
     def test_index_page_url_accessible_by_name(self):
         response = self.client.get(reverse("auth:logout"))
         self.assertEqual(response.status_code, 302)
-
-    def test_redirects(self):
-        self.assertTrue(
-            self.client.login(
-                username="superuser@hotmail.com", password="123456789879/"
-            )
-        )
-        response = self.client.get(reverse("auth:logout"))
-        self.assertRedirects(response, expected_url="/")
