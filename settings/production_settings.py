@@ -130,9 +130,9 @@ USE_TZ = True
 PROJECT_ROOT = os.path.join(os.path.dirname(
     os.path.abspath(__file__)), os.pardir
     )
-DEFAULT_FILE_STORAGE = 'gcloud.GoogleCloudMediaFileStorage'
-STATICFILES_STORAGE = 'gcloud.GoogleCloudStaticFileStorage'
-
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = "child-care-erp"
 GS_PROJECT_ID = "p11oc-283117"
 GS_STATIC_BUCKET_NAME = "child-care-erp"
 GS_MEDIA_BUCKET_NAME = "child-care-erp"
