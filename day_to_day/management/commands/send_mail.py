@@ -86,7 +86,7 @@ class Command(BaseCommand):
                 subject, from_email, to = (
                     "Voici les Transmissions de vos enfants",
                     structure.email,
-                    member.email,
+                    member.username,
                 )
                 text_content = txt_template.render(context)
                 msg = EmailMessage(subject, text_content, from_email, [to])
