@@ -1,7 +1,7 @@
 """
 forms declaration for auth_admin_access application
 """
-
+import datetime
 from django import forms
 from django.conf import settings
 from django.contrib.auth import password_validation
@@ -130,3 +130,53 @@ class DailyFactForm(forms.ModelForm):
                 "placeholder": "Votre commentaire"
             }),
         }
+
+
+class ChildForm(forms.ModelForm):
+    def _post_clean(self):
+        """
+        Sanity checks for birthdate and vaccine
+        """
+        if self.cleaned_data["birth_date"] > datetime.datetime.now().date():
+            self.add_error(
+                "birth_date",
+                ["Veuillez renseigner une date antérieure à aujourd'hui."],
+                )
+        if self.cleaned_data[
+                "vaccine_next_due_date"
+                ] < datetime.datetime.now().date():
+            self.add_error(
+                "vaccine_next_due_date",
+                ["Veuillez renseigner une date postérieure à aujourd'hui."],
+                )
+        super()._post_clean()
+
+
+class MedicalEventForm(forms.ModelForm):
+    def _post_clean(self):
+        """
+        Sanity checks for Paracetamol admin time
+        """
+        if self.cleaned_data[
+                "paracetamol_given_time"
+                ] > datetime.datetime.now().time():
+            self.add_error(
+                "paracetamol_given_time",
+                ["Veuillez renseigner une heure antérieure à maintenant."],
+                )
+        super()._post_clean()
+
+
+class FeedingBottleForm(forms.ModelForm):
+    def _post_clean(self):
+        """
+        Sanity checks for qtty's
+        """
+        if self.cleaned_data[
+                "drank_qtty_ml"
+                ] > self.cleaned_data["prepared_qtty_ml"]:
+            self.add_error(
+                "drank_qtty_ml",
+                ["La quantité bue ne peut être supérieure à celle préparée."],
+                )
+        super()._post_clean()

@@ -27,6 +27,9 @@ from .forms import (
     FamilyCreationForm,
     NewForm,
     DailyFactForm,
+    ChildForm,
+    MedicalEventForm,
+    FeedingBottleForm,
 )
 
 
@@ -93,18 +96,21 @@ class FeedingBottleInline(admin.TabularInline):
     model = FeedingBottle
     extra = 1
     template = "admin/auth_access_admin/admin//edit_inline/stacked.html"
+    form = FeedingBottleForm
 
 
 class ActivityInline(admin.TabularInline):
     model = Activity
     extra = 1
     template = "admin/auth_access_admin/admin//edit_inline/stacked.html"
+    form = MedicalEventForm
 
 
 class MedicalEventInline(admin.TabularInline):
     model = MedicalEvent
     extra = 1
     template = "admin/auth_access_admin/admin//edit_inline/stacked.html"
+    form = MedicalEventForm
 
 
 class FamilyUserAdmin(UserAdmin):
@@ -284,6 +290,7 @@ class ChildAdmin(CustomModelAdmin):
     inlines = [
         FamilyLinkInline,
     ]
+    form = ChildForm
 
 
 class DailyFactAdmin(NewAdmin):
