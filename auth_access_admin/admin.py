@@ -275,7 +275,6 @@ class CustomModelAdmin(ModelAdmin):
 
 class NewAdmin(CustomModelAdmin):
     form = NewForm
-    pass
 
 
 class MessageAdmin(CustomModelAdmin):

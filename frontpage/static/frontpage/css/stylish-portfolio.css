@@ -240,6 +240,7 @@ h6 {
   width: 100%;
   background-color: rgba(33, 37, 41, 0.2);
   position: absolute;
+  overflow: scroll;
   top: 0;
   bottom: 0;
   z-index: 1;
@@ -266,6 +267,7 @@ h6 {
     margin: 0;
   }
   .portfolio-item .caption {
+    overflow: hidden;
     transition: background-color 0.7s, -webkit-clip-path 0.25s ease-out;
     transition: clip-path 0.25s ease-out, background-color 0.7s;
     transition: clip-path 0.25s ease-out, background-color 0.7s, -webkit-clip-path 0.25s ease-out;
@@ -276,7 +278,7 @@ h6 {
     transition: opacity 0.25s;
     margin-left: 5rem;
     margin-right: 5rem;
-    margin-bottom: 5rem;
+    margin-bottom: 3rem;
   }
   .portfolio-item img {
     transition: -webkit-clip-path 0.25s ease-out;
