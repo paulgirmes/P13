@@ -1,5 +1,5 @@
 """
-forms for day_to_day application 
+forms for day_to_day application
 """
 
 from django import forms

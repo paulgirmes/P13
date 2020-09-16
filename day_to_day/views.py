@@ -388,7 +388,7 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
         else:
             self.extra_context["transmission_recorded"] = None
         self.transmission = DailyFact.objects.get(pk=kwargs.get("pk"))
-        # checking if the user is the author of dailifact
+        # checking if the user is the author of dailyfact
         # (modification only allowed by author)
         if self.transmission.employee == user or user.is_superuser:
             self.initial = {
