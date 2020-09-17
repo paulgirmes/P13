@@ -70,7 +70,6 @@ class EmployeeCreationForm(UserCreationForm):
             "address",
             "occupation",
             "diploma",
-            "Is_manager",
             "employee_contract",
         )
 

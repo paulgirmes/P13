@@ -135,7 +135,6 @@ class EmployeeCreationFormTest(TestCase):
                 "address",
                 "occupation",
                 "diploma",
-                "Is_manager",
                 "employee_contract",
             ),
         )
