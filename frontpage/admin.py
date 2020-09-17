@@ -45,6 +45,7 @@ class EmployeeCreationForm(UserCreationForm):
             "Is_manager",
             "employee_contract",
             "cc_facility",
+            "employee_nr",
         )
 
     def save(self, commit=True):
@@ -129,10 +130,10 @@ class EmployeeUserAdmin(UserAdmin):
                     "IdScan",
                     "address",
                     "occupation",
-                    "employee_nr",
                     "diploma",
                     "Is_manager",
                     "employee_contract",
+                    "cc_facility",
                 ),
             },
         ),
