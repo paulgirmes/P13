@@ -43,15 +43,15 @@ class HomePage(TemplateView):
                 "news": None,
                 "gg_adress": None,
             }
+        try:
+            user = FamilyMember.objects.get(username=request.user.username)
+            self.extra_context["familly_member"] = user
+        except (ObjectDoesNotExist, AttributeError):
             try:
-                user = FamilyMember.objects.get(username=request.user.username)
-                self.extra_context["user"] = user
-            except (ObjectDoesNotExist, AttributeError):
-                try:
-                    user = get_permission(self, request)
-                    self.extra_context["user"] = user
-                except (ObjectDoesNotExist, AttributeError, PermissionDenied):
-                    return self.render_to_response(self.get_context_data())
+                user = get_permission(self, request)
+                self.extra_context["familly_member"] = user
+            except (ObjectDoesNotExist, AttributeError, PermissionDenied):
+                return self.render_to_response(self.get_context_data())
         return self.render_to_response(self.get_context_data())
 
 
