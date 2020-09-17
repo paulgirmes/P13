@@ -31,13 +31,36 @@ advanced_admin = AdvancedAdmin()
 
 
 class EmployeeCreationForm(UserCreationForm):
+
     class Meta(UserCreationForm.Meta):
         model = Employee
         fields = UserCreationForm.Meta.fields + (
+            "first_name",
+            "last_name",
             "phone",
             "IdScan",
             "address",
+            "occupation",
+            "diploma",
+            "Is_manager",
+            "employee_contract",
+            "cc_facility",
+            "employee_nr",
         )
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        # automatic setting of employee nr
+        last_employee = Employee.objects.order_by(
+            "employee_nr").last()
+        if last_employee is not None:
+            user.employee_nr = last_employee.employee_nr+1
+        else:
+            user.employee_nr = 1
+        user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+        return user
 
 
 class FamilyCreationForm(UserCreationForm):
@@ -107,10 +130,10 @@ class EmployeeUserAdmin(UserAdmin):
                     "IdScan",
                     "address",
                     "occupation",
-                    "employee_nr",
                     "diploma",
                     "Is_manager",
                     "employee_contract",
+                    "cc_facility",
                 ),
             },
         ),
