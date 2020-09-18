@@ -476,6 +476,14 @@ class TransmissionsChangeView(LoginRequiredMixin, FormView):
         return [form_name, form]
 
     def post(self, request, *args, **kwargs):
+        if self.extra_context["success"]:
+            self.extra_context["success"] = False
+            self.extra_context[
+                "transmission_recorded"
+            ] = "Votre Modification a bien été enregistrée"
+            self.extra_context["message"] = None
+        else:
+            self.extra_context["transmission_recorded"] = None
         user = get_permission(instance=self, request=request)
         self.transmission = DailyFact.objects.get(pk=kwargs.get("pk"))
         self.initial = {

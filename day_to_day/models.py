@@ -312,6 +312,7 @@ class MedicalEvent(models.Model):
     paracetamol_given_time = models.TimeField(
         "Heure d'administration",
         blank=True,
+        null=True,
     )
     daily_fact = models.ForeignKey(
         DailyFact,

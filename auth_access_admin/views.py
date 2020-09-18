@@ -41,10 +41,11 @@ class Index(LoginRequiredMixin, TemplateView):
             )
             events_today = DailyFact.objects.filter(
                     time_stamp__date=datetime.datetime.now().date()
-                )
+                ).filter(child__cc_facility=self.child_care_facility)
+
             medical_event_today = MedicalEvent.objects.filter(
                 daily_fact__time_stamp__date=datetime.datetime.now().date()
-            )
+            ).filter(daily_fact__child__cc_facility=self.child_care_facility)
             self.extra_context.update(
                 {
                     "child_number": child_number,

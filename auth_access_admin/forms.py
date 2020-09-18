@@ -156,13 +156,23 @@ class MedicalEventForm(forms.ModelForm):
         """
         Sanity checks for Paracetamol admin time
         """
-        if self.cleaned_data[
-                "paracetamol_given_time"
-                ] > datetime.datetime.now().time():
+        if self.cleaned_data.get(
+            "paracetamol_given_time"
+            ) is None and self.cleaned_data.get(
+                "given_paracetamol_qtty_mg"):
             self.add_error(
                 "paracetamol_given_time",
-                ["Veuillez renseigner une heure antérieure à maintenant."],
+                ["Veuillez renseigner une heure."]
                 )
+
+        if self.cleaned_data.get("paracetamol_given_time") is not None:
+            if self.cleaned_data[
+                    "paracetamol_given_time"
+                    ] > datetime.datetime.now().time():
+                self.add_error(
+                    "paracetamol_given_time",
+                    ["Veuillez renseigner une heure antérieure à maintenant."],
+                    )
         super()._post_clean()
 
 
@@ -171,11 +181,18 @@ class FeedingBottleForm(forms.ModelForm):
         """
         Sanity checks for qtty's
         """
-        if self.cleaned_data[
+        if self.cleaned_data.get(
                 "drank_qtty_ml"
-                ] > self.cleaned_data["prepared_qtty_ml"]:
-            self.add_error(
-                "drank_qtty_ml",
-                ["La quantité bue ne peut être supérieure à celle préparée."],
-                )
+            ) and self.cleaned_data.get(
+                    "prepared_qtty_ml"):
+            if self.cleaned_data[
+                    "drank_qtty_ml"
+                    ] > self.cleaned_data["prepared_qtty_ml"]:
+                self.add_error(
+                    "drank_qtty_ml",
+                    [
+                        "La quantité bue ne peut être supérieure à celle "
+                        + "préparée."
+                    ],
+                    )
         super()._post_clean()
