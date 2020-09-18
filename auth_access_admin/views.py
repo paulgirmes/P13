@@ -39,12 +39,9 @@ class Index(LoginRequiredMixin, TemplateView):
             self.extra_context["fill_ratio"] = int(
                 child_number / self.child_care_facility.max_child_number * 100
             )
-            events_today = [
-                DailyFact.objects.filter(child=child).filter(
+            events_today = DailyFact.objects.filter(
                     time_stamp__date=datetime.datetime.now().date()
                 )
-                for child in childs
-            ]
             medical_event_today = MedicalEvent.objects.filter(
                 daily_fact__time_stamp__date=datetime.datetime.now().date()
             )
