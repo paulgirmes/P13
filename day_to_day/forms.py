@@ -3,6 +3,7 @@ forms for day_to_day application
 """
 
 from django import forms
+from auth_access_admin.forms import FeedingBottleForm, MedicalEventForm
 from .models import (
     DailyFact,
     Sleep,
@@ -54,6 +55,7 @@ MealFormSet = forms.inlineformset_factory(
 FeedingBottleFormSet = forms.inlineformset_factory(
     DailyFact,
     FeedingBottle,
+    form=FeedingBottleForm,
     exclude=("daily_fact",),
     widgets={
         "prepared_qtty_ml": forms.NumberInput(
@@ -91,6 +93,7 @@ ActivityFormSet = forms.inlineformset_factory(
 MedicalEventFormSet = forms.inlineformset_factory(
     DailyFact,
     MedicalEvent,
+    form=MedicalEventForm,
     exclude=("daily_fact",),
     widgets={
         "description": forms.Textarea(
