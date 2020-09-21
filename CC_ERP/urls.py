@@ -20,7 +20,8 @@ urlpatterns = [
 
 
 handler404 = "frontpage.views.page_not_found_view"
-handler500 = 'frontpage.views.error_view'
+handler500 = "frontpage.views.error_view"
+handler403 = "frontpage.views.permission_denied_view"
 
 if settings.DEBUG:
     import debug_toolbar

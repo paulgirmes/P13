@@ -1,8 +1,9 @@
 import datetime
 from django.shortcuts import reverse, redirect
+from django.http import HttpResponseRedirect
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.views.generic import TemplateView
-from django.contrib.auth import views as auth_views
+from django.contrib.auth import login as auth_login, views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from frontpage.models import Child_care_facility
@@ -16,6 +17,22 @@ from .forms import Login, Password_reset_form
 class Login_page(auth_views.LoginView):
     authentication_form = Login
     template_name = "auth_access_admin/_login.html"
+
+    def form_valid(self, form):
+        """Security check complete. Log the user in."""
+        user = form.get_user()
+        try:
+            dailyfact_access = FamilyMember.objects.get(
+                username=user.username
+            ).has_daylyfact_access
+        except ObjectDoesNotExist:
+            auth_login(self.request, form.get_user())
+            return HttpResponseRedirect(self.get_success_url())
+        if dailyfact_access:
+            auth_login(self.request, form.get_user())
+            return HttpResponseRedirect(self.get_success_url())
+        else:
+            raise PermissionDenied
 
 
 class Index(LoginRequiredMixin, TemplateView):

@@ -9,26 +9,46 @@
   <nav id="sidebar-wrapper">
     <ul class="sidebar-nav">
       <li class="sidebar-brand">
-        <a class="js-scroll-trigger" href="#page-top">{{ child_care_facility.name }}</a>
+        <a class="js-scroll-trigger" href=#page">{{ child_care_facility.name }}</a>
       </li>
       <li class="sidebar-nav-item">
-        <a class="js-scroll-trigger" href="#page-top">Accueil</a>
+        <a class="js-scroll-trigger" href={% url "frontpage:homepage" %}#page-top">accueil</a>
       </li>
       <li class="sidebar-nav-item">
-        <a class="js-scroll-trigger" href="#about">A propos</a>
+        <a class="js-scroll-trigger" href="{% url "frontpage:homepage" %}#about">A propos</a>
       </li>
       <li class="sidebar-nav-item">
-        <a class="js-scroll-trigger" href="#services">Services</a>
+        <a class="js-scroll-trigger" href="{% url "frontpage:homepage" %}#services">Notre Approche</a>
       </li>
       <li class="sidebar-nav-item">
-        <a class="js-scroll-trigger" href="#portfolio">Nouvelles</a>
+        <a class="js-scroll-trigger" href="{% url "frontpage:homepage" %}#news">Les News</a>
       </li>
       <li class="sidebar-nav-item">
-        <a class="js-scroll-trigger" href="#contact">Contact</a>
+        <a class="js-scroll-trigger" href="{% url "frontpage:homepage" %}#contact">Contact</a>
       </li>
       <li class="sidebar-nav-item">
-        <a class="js-scroll-trigger" href={% url "auth:login" %}>Connexion</a>
+        <a class="js-scroll-trigger" href="{% url "frontpage:homepage" %}#acces">Accès</a>
       </li>
+      {% if user.is_authenticated %}
+      <li class="sidebar-nav-item">
+        <a class="js-scroll-trigger" href={% url "auth:logout" %}>Déconnexion</a>
+      </li>
+      {% else %}
+      <li class="sidebar-nav-item">
+        <a class="js-scroll-trigger" id="login" href={% url "auth:login" %}>Connexion</a>
+      </li>
+      {% endif %}
+      {% if familly_member.has_daylyfact_access %}
+                  <li class="sidebar-nav-item">
+                    <a class="js-scroll-trigger" href={% url "d_to_d:parent" %}>Vos Transmissions</a>
+                  </li>
+      {% endif %}
+      {% if user.is_superuser or user.is_staff %}
+      <li class="sidebar-nav-item">
+        <a class="js-scroll-trigger" href={% url "auth:index" %}>Administration</a>
+      </li>
+      {% endif %}
+  
     </ul>
   </nav>
 
