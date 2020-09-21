@@ -19,6 +19,10 @@ def error_view(request, exception=None):
     return render(request, "frontpage/_500.html", status=500)
 
 
+def permission_denied_view(request, exception=None):
+    return render(request, "frontpage/_permission_denied.html", status=403)
+
+
 class HomePage(TemplateView):
     template_name = "frontpage/_index.html"
 
